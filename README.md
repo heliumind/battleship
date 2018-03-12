@@ -2,6 +2,6 @@
 
 # Developers
 
-**Logic**: Henry He\
-**Network**: Arber Salihu\
+**Logic**: Henry He  
+**Network**: Arber Salihu  
 **GUI**: Niklas Schwarz
