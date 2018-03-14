@@ -1,9 +1,11 @@
 #include "board.hpp"
 #include <iostream>
 
-Board::Board()
+Board::Board(const int opt)
 {
-    _board = matrix(10, std::vector<int>(10, 0));
+    if (opt == 0) {
+        _board = matrix(10, std::vector<int>(10, 0));
+    }
 }
 
 bool Board::checkCoordinates(coordinates field)

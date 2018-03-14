@@ -15,10 +15,10 @@ public:
     void sendMessage();
     bool get_win() const;
     matrix  getBoard() const;
+    Board matchboard;
     
 private:
     bool  _win;
-    Board matchboard;
 
 };
 
