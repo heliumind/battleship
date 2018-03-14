@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -12,6 +12,14 @@ TARGET = BattleShip
 TEMPLATE = app
 
 
-SOURCES += main.cpp
+SOURCES += main.cpp\
+           ship.cpp\
+           board.cpp\
+           game.cpp
 
-HEADERS  +=
+HEADERS += datatypes.hpp\
+           ship.hpp\
+           board.hpp\
+           game.hpp
+
+CONFIG  += c++14

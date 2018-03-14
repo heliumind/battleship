@@ -6,7 +6,7 @@
 class Board
 {
 public:
-    Board();
+    Board(int opt = 0); //
     int     getField(coordinates field) const;
     bool    setField(coordinates field, int ID);
     matrix  getBoard() const;
