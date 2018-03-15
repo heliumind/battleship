@@ -33,3 +33,4 @@
 
 # QT
 *.autosave
+*.pro.user

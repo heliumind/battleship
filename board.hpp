@@ -6,7 +6,7 @@
 class Board
 {
 public:
-    Board(int opt = 0); //
+    Board(int opt = 0); // for local matchboard initialize with 0, for opponent leave matrix empty
     int     getField(coordinates field) const;
     bool    setField(coordinates field, int ID);
     matrix  getBoard() const;
@@ -18,6 +18,7 @@ public:
 
 private:
     matrix  _board;
+
 };
 
 #endif //BOARD_HPP

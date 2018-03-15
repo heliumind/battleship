@@ -1,7 +1,7 @@
 #include "ship.hpp"
 
 Ship::Ship(const int ID, const position &location)
-    : _ID(ID), _location(location)
+    : _ID(ID), _location(location), _length(location.size())
 {
 };
 
@@ -32,5 +32,10 @@ bool Ship::checkAlive(const Board &board)
 position Ship::getLocation() const
 {
     return _location;
+}
+
+int Ship::getLength() const
+{
+    return _length;
 }
 

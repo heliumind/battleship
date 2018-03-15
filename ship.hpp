@@ -12,10 +12,12 @@ public:
     bool checkAlive(const Board &_board);
     int getID() const;
     position getLocation() const;
+    int getLength() const;
 
 private:
     const int _ID;
     const position _location;
+    const int _length;
 };
 
 #endif //SHIP_HPP

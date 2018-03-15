@@ -1,9 +1,9 @@
 #include "game.hpp"
 
-Game::Game()
-    : _win(false)
+Game::Game(QObject *parent)
+    : QObject(parent), _win(false)
 {
-    matchboard = Board();
+    _matchboard = Board();
 }
 
 bool Game::setShip(const Ship &ship)
@@ -12,14 +12,14 @@ bool Game::setShip(const Ship &ship)
     position location = ship.getLocation();
     std::vector< std::pair<int, int> >::iterator point;
     for (point = location.begin(); point != location.end(); point++) {
-        matchboard.setField(*point, ID);
+        _matchboard.setField(*point, ID);
     }
     return true;
 }
 
 void Game::update_win()
 {
-    _win = matchboard.checkWin();
+    _win = _matchboard.checkWin();
 }
 
 bool Game::get_win() const
@@ -33,3 +33,9 @@ bool Game::get_win() const
     }
     return _win;
 }
+
+Board Game::getBoard() const
+{
+    return _matchboard;
+}
+
