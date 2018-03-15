@@ -16,7 +16,6 @@ public:
     void receiveMessage();
     void sendMessage();
     bool get_win() const;
-<<<<<<< HEAD
     Board  getBoard() const;
     
 private:
@@ -26,13 +25,6 @@ private:
 signals:
 
 public slots:
-=======
-    matrix  getBoard() const;
-    Board matchboard;
-    
-private:
-    bool  _win;
->>>>>>> fe064bbb05153baa82a970635e06d3549ef71962
 
 };
 

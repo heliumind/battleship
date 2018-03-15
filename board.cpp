@@ -1,11 +1,7 @@
 #include "board.hpp"
 #include <iostream>
 
-<<<<<<< HEAD
-Board::Board(int opt)
-=======
 Board::Board(const int opt)
->>>>>>> fe064bbb05153baa82a970635e06d3549ef71962
 {
     if (opt == 0) {
         _board = matrix(10, std::vector<int>(10, 0));
