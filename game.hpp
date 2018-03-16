@@ -11,16 +11,21 @@ class Game : public QObject
     Q_OBJECT
 public:
     explicit Game(QObject *parent = 0);
-    bool setShip(const Ship &ship);
-    void update_win();
-    void receiveMessage();
-    void sendMessage();
-    bool get_win() const;
-    Board  getBoard() const;
+    bool    get_win() const;
+    void    update_myturn();
+    void    receiveMessage();
+    void    sendMessage();
+    Board   getBoard() const;
+    void    checkWin();
+    void    receiveShot(const coordinates point);
+    Board   _matchboard;
     
 private:
-    bool  _win;
-    Board _matchboard;
+    bool    _win;
+    //Board   _matchboard;
+    Board   _enemyboard;
+    bool    _myturn;
+    uint8_t _statuscode;
 
 signals:
 

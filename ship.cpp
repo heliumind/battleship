@@ -1,33 +1,32 @@
 #include "ship.hpp"
 
+Ship::Ship()
+    : _ID(-3), _location(0), _length(0)
+{}
+
 Ship::Ship(const int ID, const position &location)
     : _ID(ID), _location(location), _length(location.size())
 {
-};
+    switch (location.size()) {
+        case 5:
+            _shipclass = Battleship;
+            break;
+        case 4:
+            _shipclass = Cruiser;
+            break;
+        case 3:
+            _shipclass = Destroyer;
+            break;
+        case 2:
+            _shipclass = Submarine;
+    }
+}
 
 int Ship::getID() const
 {
     return _ID;
 }
 
-bool Ship::checkAlive(const Board &board)
-{
-    std::vector< std::vector<int> >::iterator row;
-    std::vector<int>::iterator col;
-    matrix _board = board.getBoard();
-    // Iterate through every row
-    for (row = _board.begin(); row != _board.end(); ++row) { 
-        // Iterator through every column
-        for (col = row->begin(); col != row->end(); ++col) {
-            if (*col == _ID) {
-                std::cout << "Ship " << _ID << " alive" << std::endl;
-                return false;
-            }
-        }
-    }
-    std::cout << "Ship " << _ID << " destroyed" << std::endl;
-    return true;
-}
 
 position Ship::getLocation() const
 {

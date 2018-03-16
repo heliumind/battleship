@@ -2,6 +2,7 @@
 #include <iostream>
 
 Board::Board(const int opt)
+    : _maxID(0)
 {
     if (opt == 0) {
         _board = matrix(10, std::vector<int>(10, 0));
@@ -72,23 +73,6 @@ bool Board::receiveShot(coordinates field)
     }
 }
 
-bool Board::checkWin() 
-{
-    std::vector< std::vector<int> >::iterator row;
-    std::vector<int>::iterator col;
-    // Iterate through every row
-    for (row = _board.begin(); row != _board.end(); row++) { 
-        // Iterator through every column
-        for (col = row->begin(); col != row->end(); col++) {
-            if (*col != 0 && *col != -1 && *col != -2) {
-                return false;
-            }
-        }
-    }
-    // Board only consists of 0, -1 and -2
-    return true;
-}
-
 void Board::printBoard()
 {
     std::vector< std::vector<int> >::iterator row;
@@ -101,4 +85,36 @@ void Board::printBoard()
         }
         std::cout << "\n";
     }
+}
+
+bool Board::checkAlive(const Ship &ship)
+{
+    int ID = ship.getID();
+    std::vector< std::vector<int> >::iterator row;
+    std::vector<int>::iterator col;
+    // Iterate through every row
+    for (row = _board.begin(); row != _board.end(); ++row) {
+        // Iterator through every column
+        for (col = row->begin(); col != row->end(); ++col) {
+            if (*col == ID) {
+                std::cout << "Ship " << ID << " alive" << std::endl;
+                return false;
+            }
+        }
+    }
+    std::cout << "Ship " << ID << " destroyed" << std::endl;
+    return true;
+}
+
+bool Board::setShip(position &location)
+{
+    _maxID++;
+    Ship ship(_maxID, location);
+    _ships.emplace(_maxID, ship);   // Add generated ship to _ships map
+    std::vector< std::pair<int, int> >::iterator point;
+    for (point = location.begin(); point != location.end(); point++) {
+        setField(*point, _maxID);
+    }
+
+    return true;
 }

@@ -16,12 +16,14 @@ TEMPLATE = app
 SOURCES += main.cpp\
            ship.cpp\
            board.cpp\
-           game.cpp
+           game.cpp \
+    control.cpp
 
 HEADERS += datatypes.hpp\
            ship.hpp\
            board.hpp\
-           game.hpp
+           game.hpp \
+    control.h
 
 CONFIG  += c++14
 CONFIG  += console
