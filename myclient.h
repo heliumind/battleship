@@ -1,6 +1,7 @@
 #ifndef MYCLIENT_H
 #define MYCLIENT_H
 
+
 #include <QTcpServer>
 #include <QTcpSocket>
 #include <QString>
@@ -9,6 +10,7 @@
 #include <QDataStream>
 #include <QByteArray>
 #include <QIODevice>
+#include <QObject>
 
 class MyClient : public QObject
 {
@@ -16,19 +18,19 @@ class MyClient : public QObject
 public:
     explicit MyClient(QObject *parent = 0);
 
+
 signals:
 
 public slots:
     void ConnectHost();
-//    void readyReadDataServer();
-    void sendDataToServer();
     void receiveServerData();
+    void sendShotToServer();
 
-private:
+    //void disconnectNow();
+
+public:
     QTcpSocket *_socket;
     QDataStream _dataStream;
-
-
 };
 
 #endif // MYCLIENT_H

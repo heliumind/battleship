@@ -1,5 +1,5 @@
-#ifndef MTCPSERVER_H
-#define MTCPSERVER_H
+#ifndef MYTCPSERVER_H
+#define MYTCPSERVER_H
 
 #include <QTcpServer>
 #include <QTcpSocket>
@@ -9,7 +9,7 @@
 #include <QDataStream>
 #include <QByteArray>
 #include <QIODevice>
-
+#include "messages.h"
 
 
 class MyTcpServer : public QObject
@@ -19,21 +19,18 @@ public:
     explicit MyTcpServer(QObject *parent = 0);
 
 signals:
-
+    void messageSent(Shot &Shot);
 public slots:
     void newConnection();
-    void receiveClientData();
-    void sendDataToClient();
-    //void disconnected();
-
+    //void sendShotToClient();
+    void receiveData();
+    //void disconnectNow();
+    //void sendParameterData();
 
 private:
     QTcpServer *server;
     QTcpSocket *_socket1;
     QDataStream _stream;
-
-
-
 };
 
 #endif // MYTCPSERVER_H
