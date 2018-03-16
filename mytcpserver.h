@@ -17,6 +17,7 @@ class MyTcpServer : public QObject
     Q_OBJECT
 public:
     explicit MyTcpServer(QObject *parent = 0);
+    MyTcpServer(MyTcpServer&&);
 
 signals:
     void messageSent(Shot &Shot);

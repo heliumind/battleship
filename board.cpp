@@ -82,10 +82,11 @@ void Board::printBoard()
     for (row = _board.begin(); row != _board.end(); ++row) { 
         // Iterator through every column
         for (col = row->begin(); col != row->end(); ++col) {
-            std::cout << *col << "  ";
+            std::cout << *col << "";
         }
-        std::cout << "\n";
+        std::cout << std::endl;
     }
+    std::cout << "\n" << std::endl;
 }
 
 bool Board::checkAlive(const Ship &ship)

@@ -3,7 +3,7 @@
 
 #include "datatypes.hpp"
 #include "ship.hpp"
-#include <unordered_map>
+#include <map>
 
 class Board
 {
@@ -19,13 +19,12 @@ public:
     void    printBoard();
     bool    setShip(position &location);
     bool    checkAlive(const Ship &ship);
-    std::unordered_map<int, Ship> _ships;
+    std::map<int, Ship> _ships;
 
 private:
     int _maxID;
     matrix  _board;
     // std::map<int, Ship> _ships;
-
 
 };
 

@@ -24,6 +24,11 @@ MyTcpServer::MyTcpServer(QObject *parent) : QObject(parent)
        }
 }
 
+MyTcpServer::MyTcpServer(MyTcpServer &&)
+{
+
+}
+
 //start connection with
 void MyTcpServer::newConnection()
 {
@@ -50,21 +55,21 @@ void MyTcpServer::newConnection()
 void MyTcpServer::receiveData()
 {
     Shot shot;
-    QDataStream inStream(_socket1);
-    quint8 block;
-    //creat vector to catch all incoming bytes
-    std::vector<uint8_t> new_block;
-    //save all incoming data into the vector
-    while(_socket1->bytesAvailable()) {
+//    QDataStream inStream(_socket1);
+//    quint8 block;
+//    //creat vector to catch all incoming bytes
+//    std::vector<uint8_t> new_block;
+//    //save all incoming data into the vector
+//    while(_socket1->bytesAvailable()) {
 
-        inStream>> block;
-        new_block.push_back(block);
-        //qDebug()<<block;
-    }
+//        inStream>> block;
+//        new_block.push_back(block);
+//        //qDebug()<<block;
+//    }
 
     //read first byte for identification
-    uint8_t cmd=new_block[0];
-    qDebug()<< new_block[0];
+    uint8_t cmd= 0x03;//new_block[0];
+    // qDebug()<< new_block[0];
     switch(cmd)
     {
     case 0x01: qDebug()<< "Parameter werden vom Server gestellt!!";
@@ -75,8 +80,8 @@ void MyTcpServer::receiveData()
 
     case 0x03: qDebug() << "Shot Message";
                            qDebug() << shot._coordinates_x;
-                           shot._coordinates_x = new_block[2];
-                           shot._coordinates_y = new_block[3];
+                           shot._coordinates_x = 1; //new_block[2];
+                           shot._coordinates_y = 1; //new_block[3];
                            qDebug() << shot._coordinates_x;
                            emit messageSent(shot);
 

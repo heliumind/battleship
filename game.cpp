@@ -6,6 +6,13 @@ Game::Game(QObject *parent)
     _matchboard = Board();
 }
 
+Game::Game(Game &&test)
+    : _matchboard(test._matchboard)
+{
+
+}
+
+
 bool Game::get_win() const
 {
     if (_win == true) {
@@ -28,6 +35,14 @@ void Game::update_myturn()
     if (allow) {
         _myturn = !_myturn;
     }
+}
+
+void Game::receiveMessage(Shot &shot)
+{
+    int x = shot._coordinates_x;
+    int y = shot._coordinates_y;
+    coordinates point = std::make_pair(x, y);
+    receiveShot(point);
 }
 
 Board Game::getBoard() const
