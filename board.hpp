@@ -17,7 +17,6 @@ public:
     bool    sendShot(coordinates field);
     bool    checkCoordinates(coordinates field);
     void    printBoard();
-    bool    checkWin();
     bool    setShip(position &location);
     bool    checkAlive(const Ship &ship);
     std::unordered_map<int, Ship> _ships;

@@ -18,18 +18,17 @@ public:
     Board   getBoard() const;
     void    checkWin();
     void    receiveShot(const coordinates point);
-    Board   _matchboard;
-    
+    void    sendShot(const coordinates point);
+    void    start();
 private:
     bool    _win;
-    //Board   _matchboard;
+    Board   _matchboard;
     Board   _enemyboard;
     bool    _myturn;
     uint8_t _statuscode;
 
 signals:
-
-public slots:
+    void    updateField(coordinates point, int flag);
 
 };
 

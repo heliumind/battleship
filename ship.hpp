@@ -10,7 +10,7 @@ class Ship
 {
 friend class Game;
 public:
-    Ship();
+    Ship(); // empty constructor needed for _ships map
     Ship(const int ID, const position &location);
     int getID() const;
     position getLocation() const;

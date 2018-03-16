@@ -13,7 +13,8 @@ bool Board::checkCoordinates(coordinates field)
 {
     int x = field.first;
     int y = field.second;
-    if ((x < 0 || x > 9) || (y < 0 || y > 9)) {
+    int max = _board.size() - 1;
+    if ((x < 0 || x > max) || (y < 0 || y > max)) {
         return false;
     }
     else {
@@ -98,12 +99,12 @@ bool Board::checkAlive(const Ship &ship)
         for (col = row->begin(); col != row->end(); ++col) {
             if (*col == ID) {
                 std::cout << "Ship " << ID << " alive" << std::endl;
-                return false;
+                return true;
             }
         }
     }
     std::cout << "Ship " << ID << " destroyed" << std::endl;
-    return true;
+    return false;
 }
 
 bool Board::setShip(position &location)
