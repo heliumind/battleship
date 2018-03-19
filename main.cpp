@@ -1,18 +1,18 @@
-#include <QCoreApplication>
-#include "game.hpp"
-#include "board.hpp"
-#include "ship.hpp"
-#include "datatypes.hpp"
+#include <QApplication>
 #include "control.h"
-#include <iostream> 
-
-int main(int argc, char **argv)
+int main(int argc, char *argv[])
 {
-    QCoreApplication a(argc, argv);
-    
+    QApplication a(argc, argv);
+
     Control controller;
 
+    controller.start();
+
+    controller.match._matchboard.printBoard();
+
+    controller.myserver.receiveData();
+
+    controller.match._matchboard.printBoard();
 
     return a.exec();
 }
-

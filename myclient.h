@@ -11,22 +11,29 @@
 #include <QByteArray>
 #include <QIODevice>
 #include <QObject>
+#include "messages.h"
 
 class MyClient : public QObject
 {
     Q_OBJECT
 public:
     explicit MyClient(QObject *parent = 0);
+    MyClient(MyClient&&);
 
 
 signals:
+    void messageSent(Message* msg);
+
 
 public slots:
     void ConnectHost();
     void receiveServerData();
-    void sendShotToServer();
-
-    //void disconnectNow();
+    void sendShot();
+    void sendShotAnswer();
+    void sendAnswer();
+    void groupID();
+    void sendGameStart();
+    void disconnectNow();
 
 public:
     QTcpSocket *_socket;

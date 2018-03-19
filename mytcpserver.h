@@ -20,17 +20,23 @@ public:
     MyTcpServer(MyTcpServer&&);
 
 signals:
-    void messageSent(Message &Shot);
+    void messageSent(Message* msg);
+
+
 public slots:
     void newConnection();
-    //void sendShotToClient();
+    void sendShot();
     void receiveData();
-    //void disconnectNow();
-    //void sendParameterData();
+    void sendParameterData();
+    void sendShotAnswer();
+    void sendAnswer();
+    void sendGameStart();
+    void groupID();
+    void disconnectNow();
 
 private:
     QTcpServer *server;
-    QTcpSocket *_socket1;
+    QTcpSocket *_socket;
     QDataStream _stream;
 };
 

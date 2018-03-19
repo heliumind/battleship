@@ -9,11 +9,10 @@
 class Message
 {
 public:
-    Message( const uint8_t _cmd_parameter,
-             const uint8_t _dlc_parameter);
-
-    const uint8_t _cmd_parameter = 0x01;
-    const uint8_t _dlc_parameter = 0x06;
+    Message( uint8_t cmd, uint8_t dlc);
+    virtual ~Message() = default;
+             const uint8_t _cmd;
+             const uint8_t _dlc;
 
 };
 
@@ -21,8 +20,7 @@ public:
 class Parameter: public Message
 {
 public:
-    Parameter(const uint8_t _cmd_parameter,
-              const uint8_t _dlc_parameter);
+    Parameter(uint8_t cmd,uint8_t dlc);
 
     uint8_t _field_x = 0x0A;
     uint8_t _field_y = 0x0A;
@@ -40,62 +38,59 @@ public:
 
 //clas for the second message; question gamestart
 
-class GameStart
+class GameStart: public Message
 {
 public:
 
-    GameStart();
-    uint8_t _cmd = 0x02;
-    //was noch?
+    GameStart(uint8_t cmd,uint8_t dlc);
+
 };
 
 
 //class for the third message; the shot
-class Shot : public Message
+class Shot: public Message
 {
 public:
 
-    Shot();
-    uint8_t _cmd = 0x02;
-    uint8_t _dlc = 0x02;
+    Shot(uint8_t cmd,uint8_t dlc);
+
     //coordinates have to change!!
     uint8_t _coordinates_x = 0x00;
     uint8_t _coordinates_y = 0x00;
 
 };
 
-class AnswerGame
+class AnswerGame: public Message
 {
 public:
-    AnswerGame();
-    uint8_t _cmd = 0x10;
-    uint8_t _dlc = 0x01;
+    AnswerGame(uint8_t cmd,uint8_t dlc);
+
     // status has to change!
     uint8_t _status = 0x00;
 };
 
 //class for the fifth message; the shot answer
-class ShotAnswer
+class ShotAnswer: public Message
 {
 public:
 
-    ShotAnswer();
-    uint8_t _cmd = 0x11;
-    uint8_t _dlc = 0x03; //variable!!!
-    uint8_t _status = 0x00;
-    uint8_t _coordinates_x = 0x00;
-    uint8_t _coordinates_y = 0x00;
+    ShotAnswer(uint8_t cmd,uint8_t dlc);
 
-    void getStatus(uint8_t status_logic);
+
+    uint8_t _status = 0x00;
+
+
+    //void getStatus(uint8_t status_logic);
 
 };
 
-class IdentificationGroup
+class IdentificationGroup: public Message
 {
 public:
-    IdentificationGroup();
-    uint8_t _cmd = 0x80;
-    uint8_t _dlc = 0x01;
+
+    IdentificationGroup(uint8_t cmd,uint8_t dlc);
+
+
     uint8_t _groupNumber = 0x00;
 
 };

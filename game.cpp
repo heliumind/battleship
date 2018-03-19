@@ -7,7 +7,7 @@ Game::Game(QObject *parent)
 }
 
 Game::Game(Game &&test)
-    : _matchboard(test._matchboard)
+    : _matchboard(test._matchboard), _enemyboard(test._enemyboard)
 {
 
 }
@@ -37,19 +37,30 @@ void Game::update_myturn()
     }
 }
 
-void Game::receiveMessage(Message* msg)
+void Game::receiveMessage(Message *msg)
 {
-    switch (msg->cmd) {
+    switch (msg->_cmd) {
 
     case 0x01: // Aushandeln der Spielfeldparameter -> gui
-    case 0x03: // Schuss -> gui & network
-        int x = shot->coordinates_x;
-        int y = shot->coordinates_y;
-        coordinates point = std::make_pair(x, y);
-        receiveShot(point);
         break;
 
-    case 0x02
+    case 0x02: // Anforderung Spielbeginn
+        break;
+
+    case 0x03: {// Schuss -> gui & network
+        Shot *shot = dynamic_cast<Shot*>(msg);
+        int x = shot->_coordinates_x;
+        int y = shot->_coordinates_y;
+        coordinates point = std::make_pair(x, y);
+        receiveShot(point);
+        break;}
+
+    case 0x10: // Antwort auf Anfrage
+
+        break;
+
+     default:
+        break;
     }
 }
 
