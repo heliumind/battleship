@@ -54,7 +54,6 @@ void MyTcpServer::newConnection()
 //receive shot data from client
 void MyTcpServer::receiveData()
 {
-    Shot shot;
 //    QDataStream inStream(_socket1);
 //    quint8 block;
 //    //creat vector to catch all incoming bytes
@@ -79,6 +78,7 @@ void MyTcpServer::receiveData()
     break;
 
     case 0x03: qDebug() << "Shot Message";
+                           Shot shot;
                            qDebug() << shot._coordinates_x;
                            shot._coordinates_x = 1; //new_block[2];
                            shot._coordinates_y = 1; //new_block[3];
@@ -88,16 +88,16 @@ void MyTcpServer::receiveData()
 
     break;
 
-    case 0x10: qDebug() << "Answer on game start";
+    //case 0x10: qDebug() << "Answer on game start";
     break;
 
-    case 0x11: qDebug() << "Answer on shot";
+    //case 0x11: qDebug() << "Answer on shot";
     break;
 
-    case 0x80: qDebug() << "Identication group";
+    //case 0x80: qDebug() << "Identication group";
     break;
 
-    default: qDebug() << "Unknown Message";
+    //default: qDebug() << "Unknown Message";
     break;
     }
 }

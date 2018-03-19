@@ -37,12 +37,20 @@ void Game::update_myturn()
     }
 }
 
-void Game::receiveMessage(Shot &shot)
+void Game::receiveMessage(Message* msg)
 {
-    int x = shot._coordinates_x;
-    int y = shot._coordinates_y;
-    coordinates point = std::make_pair(x, y);
-    receiveShot(point);
+    switch (msg->cmd) {
+
+    case 0x01: // Aushandeln der Spielfeldparameter -> gui
+    case 0x03: // Schuss -> gui & network
+        int x = shot->coordinates_x;
+        int y = shot->coordinates_y;
+        coordinates point = std::make_pair(x, y);
+        receiveShot(point);
+        break;
+
+    case 0x02
+    }
 }
 
 Board Game::getBoard() const
@@ -71,6 +79,7 @@ void Game::checkWin()
 
 void Game::receiveShot(const coordinates point)
 {
+    position location;
     if (!_matchboard.checkCoordinates(point)) {
         // coordinates are out of bound
         _statuscode = 0x11;
@@ -93,6 +102,7 @@ void Game::receiveShot(const coordinates point)
                 _matchboard.setField(point, -1);
                 _statuscode = 0x01;
                 Ship target = _matchboard._ships[flag];
+                location = target.getLocation();
                 if (!_matchboard.checkAlive(target)) {
                     _statuscode = 0x02;
                 }
@@ -111,6 +121,8 @@ void Game::receiveShot(const coordinates point)
 
 void Game::sendShot(const coordinates point) //Message Pointer)
 {
+    // Pack point in a message and send to network
+    // get status from Network
     // _matchboard.setField(point, )
 }
 

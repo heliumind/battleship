@@ -16,8 +16,8 @@ public:
     Game(Game&) = default;
     bool    get_win() const;
     void    update_myturn();
-    void    sendMessage();
     Board   getBoard() const;
+
     void    checkWin();
     void    receiveShot(const coordinates point);
     void    sendShot(const coordinates point);
@@ -32,10 +32,15 @@ private:
     // uint8_t _statuscode;
 
 signals:
-    void    updateField(coordinates point, int flag);
+    // logic -> gui
+    void    updateField(coordinates point, int flag, bool own);
+
+    // logic -> network
+    // void    sendMessage(Message* msg);
+
 
 public slots:
-    void    receiveMessage(Shot &shot);
+    void    receiveMessage(Message* msg);
 
 };
 

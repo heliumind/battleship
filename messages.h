@@ -51,7 +51,7 @@ public:
 
 
 //class for the third message; the shot
-class Shot
+class Shot : public Message
 {
 public:
 

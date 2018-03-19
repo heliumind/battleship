@@ -20,7 +20,7 @@ public:
     MyTcpServer(MyTcpServer&&);
 
 signals:
-    void messageSent(Shot &Shot);
+    void messageSent(Message &Shot);
 public slots:
     void newConnection();
     //void sendShotToClient();

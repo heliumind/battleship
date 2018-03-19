@@ -5,17 +5,14 @@ QT -= gui
 TARGET = BattleShip
 TEMPLATE = app
 
-SOURCES += mytcpserver.cpp \
-	massages.cpp \
+SOURCES += \
 	board.cpp \
 	game.cpp \
 	main.cpp \
 	control.cpp \
-	myclient.cpp \
     ship.cpp
 
-HEADERS += myclient.h \
-	mytcpserver.h \
+HEADERS += \
 	messages.h \
 	board.hpp \
 	control.h \
