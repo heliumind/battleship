@@ -14,6 +14,7 @@
 #include <QtGui>
 #include <vector>
 #include <QDebug>
+#include "datatypes.hpp"
 
 #include "button.h"
 
@@ -28,6 +29,8 @@ class Gui : public QMainWindow
 public:
     explicit Gui(QMainWindow *parent = 0);
     ~Gui();
+
+    void getError(position, int);
 
 private:
     Ui::Gui *ui;
@@ -44,19 +47,21 @@ private:
 
     //enable field buttons
     bool _setShipMode;
-    int _shipCounter;
     bool _gamerunning;
+    bool _readyToStart;
+    bool errorcheck;
+
+    int _shipCounter;
 
     std::vector< std::vector<Button*> > _map;
     std::vector< std::vector<Button*> > _enemmap;
 
-    QTcpSocket  _mySocket;
-    QTextStream _myStream;
 
     std::vector<std::pair<int, int>> _location;
     int _shipnumber;
 
     std::pair<int, int> _waitCoordinates;
+
 
 
 private slots:
@@ -75,31 +80,31 @@ private slots:
     void connectclient();
 
     //set ships
-    void setShips();
+    void startButton();
 
 
 signals:
     void sendLocation(std::pair<int, int>);
 
-    //errorcheck logic gui
-    //void giveShipError(std::vector<std::pair<int, int>>);
+    // logic gui
+    void giveShip(position);
+    void giveShoot(coordinates);
 
 
 public slots:
     void output(std::pair<int, int>);
     void getCoordinates(std::pair<int, int>);
 
-    //playtime
-    void shoot();
-    void fieldupdate(int, std::pair<int, int>);
-    void enemyfieldupdate(int, std::pair<int, int>);
+
+
 
     //ending
-    void win();
-    void loose();
+    void getWin(bool);
+
 
     //connection logic gui
     void getUpdateField(std::pair<int, int> point, int flag, bool own);
+    void getShoot(std::pair<int, int>);
 
 
 
