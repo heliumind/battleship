@@ -40,7 +40,10 @@ signals:
 
 
 public slots:
+    // logic -> network
     void    receiveMessage(Message* msg);
+
+    // logic -> gui
     void    sendShot(const coordinates point);
 };
 

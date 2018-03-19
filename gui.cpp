@@ -122,7 +122,7 @@ void Gui::getCoordinates(std::pair<int, int> point){
                 case 0:
                         _location[_shipCounter]=_waitCoordinates;
                         _shipCounter++;
-                        _map[point.first][point.second]->setEnabled(1);
+                        _map[point.first][point.second]->setFlat(1);
                         break;
                 case 1: _location[_shipCounter]=_waitCoordinates;
                         _shipCounter++;
@@ -394,7 +394,7 @@ void Gui::getWin(bool win){
 
 void Gui::getUpdateField(std::pair<int, int> point, int flag, bool own)
 {
-    if(!own){
+    if(own){
 
         _yourturn=1;
 

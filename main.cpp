@@ -8,7 +8,7 @@ int main(int argc, char *argv[])
 
     controller.start();
 
-    controller.myserver.receiveData();
+    // controller.myserver.receiveData();
 
     return a.exec();
 }
