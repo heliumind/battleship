@@ -19,7 +19,6 @@ public:
     Board   getBoard() const;
     void    checkWin();
     void    receiveShot(const coordinates point);
-    void    sendShot(const coordinates point);
     void    receiveShotAnswer(const uint8_t code, position location);
     void    start();
 private:
@@ -33,6 +32,7 @@ private:
 signals:
     // logic -> gui
     void    sendMyturn(bool);
+    void    sendWin(bool);
     void    updateField(coordinates point, int flag, bool own);
 
     // logic -> network
@@ -41,7 +41,7 @@ signals:
 
 public slots:
     void    receiveMessage(Message* msg);
-
+    void    sendShot(const coordinates point);
 };
 
 #endif // GAME_HPP

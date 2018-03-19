@@ -17,7 +17,7 @@ public:
     bool    sendShot(coordinates field);
     bool    checkCoordinates(coordinates field);
     void    printBoard();
-    bool    setShip(position &location);
+    bool    setShip(position &location, bool upmaxID = true);
     bool    checkAlive(const Ship &ship);
     std::map<int, Ship> _ships;
 

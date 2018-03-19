@@ -87,7 +87,7 @@ void Game::checkWin()
     for (row = _matchboard._board.begin(); row != _matchboard._board.end(); row++) {
         // Iterator through every column
         for (col = row->begin(); col != row->end(); col++) {
-            if (*col != 0 && *col != -1 && *col != -2) {
+            if (*col != 0 && *col != -1 && *col != -2 && *col != 3) {
                 win = false;
             }
         }
@@ -115,24 +115,31 @@ void Game::receiveShot(const coordinates point)
                 // No Hit
                 _statuscode = 0x00;
                 _matchboard.setField(point, -2);
-                emit updateField(point, -2, _myturn);
+                emit updateField(point, -2, true);
                 break;
 
             default:
                 // Opponent hit a ship
                 _matchboard.setField(point, -1);
-                emit updateField(point, -1, _myturn);
+                emit updateField(point, -1, true);
                 _statuscode = 0x01;
                 Ship target = _matchboard._ships[flag];
                 location = target.getLocation();
                 if (!_matchboard.checkAlive(target)) {
                     _statuscode = 0x02;
+                    _matchboard.setShip(location, false);
+                    std::vector< std::pair<int, int> >::iterator point;
+                    for (point = location.begin(); point != location.end(); point++) {
+                        emit updateField(*point, -3, true);
+                    }
+
                 }
                 break;
         }
         checkWin();
         if (_win) {
             _statuscode = 0x03;
+            emit sendWin(_win);
         }
     }
 
@@ -180,15 +187,26 @@ void Game::receiveShotAnswer(const uint8_t code, position location)
             _matchboard.setField(_lastShot, -1);
             emit updateField(_lastShot, -1, false);
             break;
-        case 0x02: // Getroffen und versenkt
-            _matchboard.setField(_lastShot, -1);
-            emit updateField(_lastShot, -1, false);
-            break;
+        case 0x02: {// Getroffen und versenkt
+            _matchboard.setShip(location, false);
+            std::vector< std::pair<int, int> >::iterator point;
+            for (point = location.begin(); point != location.end(); point++) {
+                emit updateField(*point, -3, false);
+            }
+            break;}
         case 0x03: // Getroffen und versenkt, Spielende
-            _matchboard.setField(_lastShot, -1);
-            emit updateField(_lastShot, -1, false);
-            _win = true;
+
+            _matchboard.setShip(location, false);
+            std::vector< std::pair<int, int> >::iterator point;
+            for (point = location.begin(); point != location.end(); point++) {
+                emit updateField(*point, -3, false);
+            }
+            checkWin();
+            if (_win == true) {
+                emit sendWin(_win);
+            }
             break;
+
     }
 
     // update_myturn();

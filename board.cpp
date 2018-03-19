@@ -108,14 +108,18 @@ bool Board::checkAlive(const Ship &ship)
     return false;
 }
 
-bool Board::setShip(position &location)
+bool Board::setShip(position &location, bool upmaxID)
 {
-    _maxID++;
-    Ship ship(_maxID, location);
-    _ships.emplace(_maxID, ship);   // Add generated ship to _ships map
+    int flag = -3;
+    if (upmaxID) {
+        _maxID++;
+        flag = _maxID;
+        Ship ship(_maxID, location);
+        _ships.emplace(_maxID, ship); // Add generated ship to _ships map
+    }
     std::vector< std::pair<int, int> >::iterator point;
     for (point = location.begin(); point != location.end(); point++) {
-        setField(*point, _maxID);
+        setField(*point, flag);
     }
 
     return true;
