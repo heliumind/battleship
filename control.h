@@ -3,7 +3,7 @@
 #include <QCoreApplication>
 #include "game.hpp"
 #include "mytcpserver.h"
-// #include "gui.h"
+#include "gui.h"
 
 class Control : public QObject
 {
@@ -12,7 +12,7 @@ public:
     explicit Control(QObject *parent = 0);
     Game match;
     MyTcpServer myserver;
-    //Gui gui;
+    Gui gui;
     void connectAll();
     void start();
 

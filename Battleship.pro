@@ -1,4 +1,4 @@
-QT += core network widgets
+QT += core network gui widgets
 
 TARGET = BattleShip
 TEMPLATE = app
@@ -11,7 +11,9 @@ SOURCES += \
     ship.cpp \
     messages.cpp \
     myclient.cpp \
-    mytcpserver.cpp
+    mytcpserver.cpp \
+    button.cpp\
+gui.cpp
 
 HEADERS += \
 	board.hpp \
@@ -21,12 +23,15 @@ HEADERS += \
     datatypes.hpp \
     messages.h \
     myclient.h \
-    mytcpserver.h
+    mytcpserver.h \
+    gui.h \
+    button.h
 
 CONFIG += c++14
 
-CONFIG += console
+#CONFIG += console
 
-CONFIG -= app_bundle
+#CONFIG -= app_bundle
 
-FORMS +=
+FORMS += \
+    gui.ui

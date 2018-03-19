@@ -12,11 +12,11 @@ void Control::connectAll()
     connect(&myserver, &MyTcpServer::messageSent, &match, &Game::receiveMessage);
 
     // logic -> gui
-    // connect(&match, &Game::updateField, &gui, &Gui::getUpdateField);
+    connect(&match, &Game::updateField, &gui, &Gui::getUpdateField);
 }
 
 void Control::start()
 {
-    // gui.show();
+    gui.show();
 }
 
