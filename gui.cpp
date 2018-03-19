@@ -358,7 +358,7 @@ void Gui::loose(){
 
 void Gui::getUpdateField(std::pair<int, int> point, int flag, bool own)
 {
-    if(own){
+    if(!own){
         if(flag== -1){
             _map[point.first][point.second]->setStyleSheet("* { background-color: rgb(225,125,055) }");
             ui->logic_status->append("Gegnerischer Treffer (- . -) ");

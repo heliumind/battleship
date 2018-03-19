@@ -3,6 +3,7 @@
 
 
 #include <iostream>
+#include "datatypes.hpp"
 
 //class for the first message the parameters
 
@@ -78,6 +79,8 @@ public:
 
 
     uint8_t _status = 0x00;
+    position _location;
+
 
 
     //void getStatus(uint8_t status_logic);

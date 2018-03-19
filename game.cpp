@@ -35,6 +35,7 @@ void Game::update_myturn()
     if (allow) {
         _myturn = !_myturn;
     }
+    emit sendMyturn(_myturn);
 }
 
 void Game::receiveMessage(Message *msg)
@@ -56,9 +57,17 @@ void Game::receiveMessage(Message *msg)
         break;}
 
     case 0x10: // Antwort auf Anfrage
-
         break;
 
+    case 0x11: {// Antwort auf Schuss
+        ShotAnswer *shotanswer = dynamic_cast<ShotAnswer*>(msg);
+        uint8_t code = shotanswer->_status;
+        position location = {std::make_pair(0,0)};
+        if (code == 0x02 || code == 0x03) {
+            location = shotanswer->_location;
+        }
+        receiveShotAnswer(code, location);
+        break;}
      default:
         break;
     }
@@ -106,11 +115,13 @@ void Game::receiveShot(const coordinates point)
                 // No Hit
                 _statuscode = 0x00;
                 _matchboard.setField(point, -2);
+                emit updateField(point, -2, _myturn);
                 break;
 
             default:
                 // Opponent hit a ship
                 _matchboard.setField(point, -1);
+                emit updateField(point, -1, _myturn);
                 _statuscode = 0x01;
                 Ship target = _matchboard._ships[flag];
                 location = target.getLocation();
@@ -126,19 +137,67 @@ void Game::receiveShot(const coordinates point)
     }
 
     // Send network statuscode
+    if(_statuscode == 0x02 || _statuscode == 0x03) {
+        uint8_t dlc = 0x01 + (location.size()*2);
+        ShotAnswer shotanswer = ShotAnswer(0x11, dlc);
+        shotanswer._status = _statuscode;
+        shotanswer._location = location;
+        Message *msgptr = &shotanswer;
+        emit MessageSent(msgptr);
+    }
+    else {
+        ShotAnswer shotanswer = ShotAnswer(0x11, 0x01);
+        shotanswer._status = _statuscode;
+        Message *msgptr = &shotanswer;
+        emit MessageSent(msgptr);
+    }
 
     // update_myturn();
 }
 
 void Game::sendShot(const coordinates point) //Message Pointer)
 {
+    _lastShot = point;
     // Pack point in a message and send to network
-    // get status from Network
-    // _matchboard.setField(point, )
+    Shot shot = Shot(0x02, 0x02);
+    uint8_t x = point.first;
+    uint8_t y = point.second;
+    shot._coordinates_x = x;
+    shot._coordinates_y = y;
+    Message *msgptr = &shot;
+    emit MessageSent(msgptr);
+}
+
+void Game::receiveShotAnswer(const uint8_t code, position location)
+{
+    _statuscode = code;
+    switch(code) {
+        case 0x00: // Nicht getroffen
+            _matchboard.setField(_lastShot, -2);
+            emit updateField(_lastShot, -2, false);
+            break;
+        case 0x01: // Getroffen
+            _matchboard.setField(_lastShot, -1);
+            emit updateField(_lastShot, -1, false);
+            break;
+        case 0x02: // Getroffen und versenkt
+            _matchboard.setField(_lastShot, -1);
+            emit updateField(_lastShot, -1, false);
+            break;
+        case 0x03: // Getroffen und versenkt, Spielende
+            _matchboard.setField(_lastShot, -1);
+            emit updateField(_lastShot, -1, false);
+            _win = true;
+            break;
+    }
+
+    // update_myturn();
 }
 
 void Game::start()
 {
     _myturn = true;
+    _win = false;
+
 
 }

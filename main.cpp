@@ -8,11 +8,7 @@ int main(int argc, char *argv[])
 
     controller.start();
 
-    controller.match._matchboard.printBoard();
-
     controller.myserver.receiveData();
-
-    controller.match._matchboard.printBoard();
 
     return a.exec();
 }

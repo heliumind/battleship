@@ -8,8 +8,9 @@ Control::Control(QObject *parent)
 
 void Control::connectAll()
 {
-    // logic -> network
+    // logic <-> network
     connect(&myserver, &MyTcpServer::messageSent, &match, &Game::receiveMessage);
+    // connect(&match, &Game::MessageSent, &myserver, &MyTcp)
 
     // logic -> gui
     connect(&match, &Game::updateField, &gui, &Gui::getUpdateField);
