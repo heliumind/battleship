@@ -3,6 +3,7 @@
 #include <QCoreApplication>
 #include "game.hpp"
 #include "mytcpserver.h"
+#include "myclient.h"
 #include "gui.h"
 
 class Control : public QObject
@@ -12,6 +13,7 @@ public:
     explicit Control(QObject *parent = 0);
     Game match;
     MyTcpServer myserver;
+    MyClient myclient;
     Gui gui;
     void connectAll();
     void start();
@@ -19,6 +21,8 @@ public:
 signals:
 
 public slots:
+    void startServer();
+    // void startClient();
 };
 
 #endif // CONTROL_H

@@ -28,10 +28,10 @@ public:
 
     uint8_t _field_x = 0x0A;
     uint8_t _field_y = 0x0A;
-    uint8_t _n_battleship = 0x00;
-    uint8_t _n_cruiser = 0x00;
-    uint8_t _n_destroyer = 0x00;
-    uint8_t _n_submarine = 0x00;
+    uint8_t _n_battleship = 0x01;
+    uint8_t _n_cruiser = 0x02;
+    uint8_t _n_destroyer = 0x03;
+    uint8_t _n_submarine = 0x04;
 
 
     //slot for interface with logic

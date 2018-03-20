@@ -49,6 +49,7 @@ public slots:
 
     // logic -> gui
     void    sendShot(const coordinates point);
+    void    setship(const position location);
 };
 
 #endif // GAME_HPP

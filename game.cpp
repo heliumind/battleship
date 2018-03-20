@@ -45,9 +45,16 @@ void Game::receiveMessage(Message *msg)
     case 0x01: // Aushandeln der Spielfeldparameter -> gui nur Client Modus
         break;
 
-    case 0x02: // Anforderung Spielbeginn
-        _myturn = false;
-        break;
+    case 0x02: {// Anforderung Spielbeginn
+        AnswerGame answergame = AnswerGame(0x10, 0x01);
+        answergame._status = 0x01; // Not ready
+        if (_matchboard._maxID == 10) { // Ready
+            AnswerGame answergame = AnswerGame(0x10, 0x01);
+            answergame._status = 0x00;
+        }
+        Message *msgptr = &answergame;
+        emit MessageSent(msgptr);
+        break;}
 
     case 0x03: {// Schuss -> gui & network
         Shot *shot = dynamic_cast<Shot*>(msg);
@@ -57,8 +64,13 @@ void Game::receiveMessage(Message *msg)
         receiveShot(point);
         break;}
 
-    case 0x10: // Antwort auf Anfrage
-        break;
+    case 0x10: {// Antwort auf Anfrage
+        AnswerGame *answergame = dynamic_cast<AnswerGame*>(msg);
+        if (answergame->_status == 0x00) {
+            _myturn = true;
+            emit sendMyturn(_myturn);
+        }
+        break;}
 
     case 0x11: {// Antwort auf Schuss
         ShotAnswer *shotanswer = dynamic_cast<ShotAnswer*>(msg);
@@ -160,7 +172,7 @@ void Game::receiveShot(const coordinates point)
         emit MessageSent(msgptr);
     }
 
-    // update_myturn();
+    update_myturn();
 }
 
 void Game::sendShot(const coordinates point) //Message Pointer)
@@ -174,6 +186,11 @@ void Game::sendShot(const coordinates point) //Message Pointer)
     shot._coordinates_y = y;
     Message *msgptr = &shot;
     emit MessageSent(msgptr);
+}
+
+void Game::setship(position location)
+{
+    _matchboard.setShip(location);
 }
 
 void Game::receiveShotAnswer(const uint8_t code, position location)
@@ -215,7 +232,5 @@ void Game::receiveShotAnswer(const uint8_t code, position location)
 
 void Game::start()
 {
-
-
 
 }

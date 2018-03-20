@@ -91,6 +91,7 @@ signals:
     void giveShoot(coordinates);
     void giveStart();
 
+    // gui -> control
     void serverMode();
     void clientMode();
 
