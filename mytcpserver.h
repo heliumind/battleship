@@ -25,16 +25,10 @@ signals:
 
 public slots:
     void newConnection();
-    void sendShot();
     void receiveData();
-    void sendParameterData();
-    void sendShotAnswer();
-    void sendAnswer();
-    void sendGameStart();
-    void sendGroupID();
     void disconnectNow();
     void initServer();
-    void receiveMessageLogic(Message *msg);
+    void sendMessage(Message *msg);
 
 private:
     QTcpServer *server;

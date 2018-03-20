@@ -28,12 +28,8 @@ signals:
 public slots:
     void ConnectHost();
     void receiveServerData();
-    void sendShot();
-    void sendShotAnswer();
-    void sendAnswer();
-    void sendGroupID();
-    void sendGameStart();
     void disconnectNow();
+    void sendMessage(Message *msg);
 
 public:
     QTcpSocket *_socket;
