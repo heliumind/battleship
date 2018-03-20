@@ -8,26 +8,29 @@
 
 MyClient::MyClient(QObject *parent) : QObject(parent)
 {
-    _socket = new QTcpSocket(this);
-    _dataStream.setDevice(_socket);
+//    _socket = new QTcpSocket(this);
+//    _dataStream.setDevice(_socket);
 
 //    //init. sending shot coordinates to server -> senden nur bei funktionsaudfruf durch die logik
 //    connect(_socket, &QTcpSocket::readyRead,
 //            this, &MyClient::sendShotToServer);
 
     //init. reading from server
-    connect(_socket, &QTcpSocket::readyRead,
-            this, &MyClient::receiveServerData);
+//    connect(_socket, &QTcpSocket::readyRead,
+//            this, &MyClient::receiveServerData);
 
 
 }
 
-void MyClient::ConnectHost()
+void MyClient::ConnectHost(QString ip, int port)
 {
-    //QByteArray data;
-   _socket->connectToHost("localhost",1234);
+    _socket = new QTcpSocket(this);
+    _dataStream.setDevice(_socket);
 
-   QObject::connect(_socket, &QTcpSocket::readyRead,
+    //QByteArray data;
+    _socket->connectToHost(ip, port);
+    emit gotServer();
+     QObject::connect(_socket, &QTcpSocket::readyRead,
                this, &MyClient::receiveServerData);
 
 }

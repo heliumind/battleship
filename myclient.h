@@ -23,10 +23,11 @@ public:
 
 signals:
     void messageSent(Message* msg);
+    void gotServer();
 
 
 public slots:
-    void ConnectHost();
+    void ConnectHost(QString ip, int port);
     void receiveServerData();
     void disconnectNow();
     void sendMessage(Message *msg);
