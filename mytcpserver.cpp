@@ -45,6 +45,7 @@ void MyTcpServer::newConnection()
 
 
     // tell client he is connected
+    emit gotClient();
     qDebug()<<"Client agrees\n";
 
 }

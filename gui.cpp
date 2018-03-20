@@ -43,11 +43,7 @@ Gui::Gui(QMainWindow *parent) :
     connect(ui->clientMode, SIGNAL(clicked()), this, SLOT(setClient()));
 
     //connect network buttons
-    connect(ui->client_connect, SIGNAL(clicked()), this, SLOT(connectclient()));
     connect(ui->server_disconnect, SIGNAL(clicked()), this, SLOT(disconnectserver()));
-
-    connect(ui->serverline, SIGNAL(returnPressed()), this, SLOT (connectserver()));
-    connect(ui->portline, SIGNAL(returnPressed()), this, SLOT (connectserver()));
 
     //connect start button
     connect(ui->gameStart, SIGNAL(clicked()), this, SLOT(startButton()));
@@ -304,7 +300,6 @@ void Gui::setServer(){
     if(_client==0 && _server==0){
         _server=1;
 
-        emit serverMode();
         QString name = ui->nameline->text();
         ui->nt_status->append("Gehe in Server Modus als " + name );
         ui->logic_status->append("Suche nach Spieler...");
@@ -322,7 +317,6 @@ void Gui::setClient(){
     if(_server==0 && _client==0){
         _client=1;
 
-        emit clientMode();
         QString name = ui->nameline->text();
         ui->nt_status->append("Gehe in Client Modus als " + name);
         ui->serverMode->setEnabled(0);
@@ -410,6 +404,7 @@ void Gui::foundServer(){
 }
 
 void Gui::foundClient(){
+    _connected= 1;
     ui->gameStart->setEnabled(1);
     ui->nt_status->append("Spieler gefunden.");
     ui->nt_status->append("Bereit für Spielstart.");

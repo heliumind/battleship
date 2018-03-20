@@ -21,7 +21,7 @@ public:
 
 signals:
     void messageSent(Message* msg);
-
+    void gotClient();
 
 public slots:
     void newConnection();

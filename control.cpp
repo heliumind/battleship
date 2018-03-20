@@ -10,7 +10,7 @@ void Control::connectAll()
 {
     // logic <-> network
     connect(&myserver, &MyTcpServer::messageSent, &match, &Game::receiveMessage);
-    // connect(&match, &Game::MessageSent, &myserver, &MyTcp)
+    connect(&match, &Game::MessageSent, &myserver, &MyTcpServer::sendMessage);
 
     // logic <-> gui
     connect(&match, &Game::sendMyturn, &gui, &Gui::getYourTurn);
@@ -21,6 +21,7 @@ void Control::connectAll()
 
     // gui <-> network
     connect(&gui, &Gui::serverMode, &myserver, &MyTcpServer::initServer);
+    connect(&myserver, &MyTcpServer::gotClient, &gui, &Gui::foundClient);
 }
 
 void Control::start()
