@@ -28,6 +28,13 @@ Gui::Gui(QMainWindow *parent) :
     _waitCoordinates=std::make_pair(-1, -1);
     _location =std::vector<std::pair<int, int>>(5);
 
+    ui->serverline->setEnabled(0);
+    ui->portline->setEnabled(0);
+    ui->client_connect->setEnabled(0);
+    ui->server_disconnect->setEnabled(0);
+    ui->server_search->setEnabled(0);
+    ui->gameStart->setEnabled(0);
+
     //connect mode buttons
     connect(ui->serverMode, SIGNAL(clicked()), this, SLOT(setServer()));
     connect(ui->clientMode, SIGNAL(clicked()), this, SLOT(setClient()));
@@ -52,7 +59,6 @@ Gui::~Gui()
     delete ui;
 }
 
-
 void Gui::setupFields(){
     //setup enemy field
     for(int i=0; i<10; i++){ // row
@@ -61,7 +67,7 @@ void Gui::setupFields(){
             Button* b1 = new Button(i, j);
             _enemmap[i][j] = b1;
             ui->enemyfield->addWidget(b1, i,j);
-            connect(b1, &Button::clickedPos, this, &Gui::output);
+            //connect(b1, &Button::clickedPos, this, &Gui::output);
             connect(b1, &Button::clickedPos, this, &Gui::getShoot);
         }
     }
@@ -72,7 +78,7 @@ void Gui::setupFields(){
             Button *b2 = new Button(i, j);
             _map[i][j] = b2;
             ui->field->addWidget(b2, i, j);
-            connect(b2, &Button::clickedPos, this, &Gui::output);
+            //connect(b2, &Button::clickedPos, this, &Gui::output);
             connect(b2, &Button::clickedPos, this, &Gui::getCoordinates);
          }
     }
@@ -122,18 +128,22 @@ void Gui::getCoordinates(std::pair<int, int> point){
                 case 0:
                         _location[_shipCounter]=_waitCoordinates;
                         _shipCounter++;
-                        _map[point.first][point.second]->setFlat(1);
+                        _map[point.first][point.second]->setEnabled(0);
                         break;
                 case 1: _location[_shipCounter]=_waitCoordinates;
+               _map[point.first][point.second]->setEnabled(0);
                         _shipCounter++;
                        break;
                 case 2: _location[_shipCounter]=_waitCoordinates;
+               _map[point.first][point.second]->setEnabled(0);
                         _shipCounter++;
                        break;
                 case 3: _location[_shipCounter]=_waitCoordinates;
+               _map[point.first][point.second]->setEnabled(0);
                         _shipCounter++;
                        break;
                 case 4: _location[_shipCounter]=_waitCoordinates;
+               _map[point.first][point.second]->setEnabled(0);
                         _shipCounter=0;
 
                         getError(_location, 5);
@@ -147,27 +157,35 @@ void Gui::getCoordinates(std::pair<int, int> point){
                             ui->logic_status->append("Setze mittelhalbgroßes Schiff(4 Felder klicken)");
                             _shipnumber++;
                             errorcheck=0;
-                        } else ui->logic_status->append("Error: Ship broken. Bitte erneut setzen.");
+                        } else {
+                            ui->logic_status->append("Error: Ship broken. Bitte erneut setzen.");
+                            for(int i=0; i<5; i++){
+                                _map[_location[i].first][_location[i].second]->setEnabled(1);
+                            }
+                        }
                         break;
                         default: ui->logic_status->append("Error.");
                 }
                 break;
-
        case 1:
-
        case 2:  switch  (_shipCounter){
            case 0:
-              _location[_shipCounter]=_waitCoordinates;
+               _location.clear();
+              _location.push_back(_waitCoordinates);
+              _map[point.first][point.second]->setEnabled(0);
               _shipCounter++;
               break;
-           case 1: _location[_shipCounter]=_waitCoordinates;
+           case 1: _location.push_back(_waitCoordinates);
+               _map[point.first][point.second]->setEnabled(0);
               _shipCounter++;
              break;
-           case 2: _location[_shipCounter]=_waitCoordinates;
+           case 2: _location.push_back(_waitCoordinates);
+               _map[point.first][point.second]->setEnabled(0);
               _shipCounter++;
              break;
 
-           case 3: _location[_shipCounter]=_waitCoordinates;
+           case 3: _location.push_back(_waitCoordinates);
+               _map[point.first][point.second]->setEnabled(0);
               _shipCounter=0;
               getError(_location, 4);
 
@@ -182,25 +200,31 @@ void Gui::getCoordinates(std::pair<int, int> point){
                   else ui->logic_status->append("Setze mittelhalbgroßes Schiff(3 Felder klicken)");
                   _shipnumber++;
                   errorcheck=0;
-              } else ui->logic_status->append("Error: Ship broken. Bitte erneut setzen.");
+              } else {
+                  ui->logic_status->append("Error: Ship broken. Bitte erneut setzen.");
+                  for(int i=0; i<4; i++){
+                      _map[_location[i].first][_location[i].second]->setEnabled(1);
+                  }
+              }
               break;
               default: ui->logic_status->append("Error.");
             } break;
-
        case 3:
-
        case 4:
-
        case 5:  switch  (_shipCounter){
            case 0:
-              _location[_shipCounter]=_waitCoordinates;
+               _location.clear();
+               _location.push_back(_waitCoordinates);
+              _map[point.first][point.second]->setEnabled(0);
               _shipCounter++;
               break;
-           case 1: _location[_shipCounter]=_waitCoordinates;
+           case 1: _location.push_back(_waitCoordinates);
+               _map[point.first][point.second]->setEnabled(0);
               _shipCounter++;
              break;
 
-           case 2: _location[_shipCounter]=_waitCoordinates;
+           case 2: _location.push_back(_waitCoordinates);
+               _map[point.first][point.second]->setEnabled(0);
               _shipCounter=0;
               getError(_location, 3);
 
@@ -215,30 +239,34 @@ void Gui::getCoordinates(std::pair<int, int> point){
                   else ui->logic_status->append("Setze U-Boot(2 Felder klicken)");
                   _shipnumber++;
                   errorcheck=0;
-              } else ui->logic_status->append("Error: Ship broken. Bitte erneut setzen.");
+              } else {
+                  ui->logic_status->append("Error: Ship broken. Bitte erneut setzen.");
+                  for(int i=0; i<3; i++){
+                      _map[_location[i].first][_location[i].second]->setEnabled(1);
+                  }
+              }
               break;
               default: ui->logic_status->append("Error.");
             } break;
-
        case 6:
-
        case 7:
-
        case 8:
-
        case 9: switch  (_shipCounter){
            case 0:
-              _location[_shipCounter]=_waitCoordinates;
+               _location.clear();
+              _location.push_back(_waitCoordinates);
+              _map[point.first][point.second]->setEnabled(0);
               _shipCounter++;
               break;
 
-           case 1: _location[_shipCounter]=_waitCoordinates;
+           case 1: _location.push_back(_waitCoordinates);
+               _map[point.first][point.second]->setEnabled(0);
               _shipCounter=0;
               getError(_location, 2);
 
               if(errorcheck){
                   emit giveShip(_location);
-                  for(int i=0; i<3; i++){
+                  for(int i=0; i<2; i++){
                       int x= _location[i].first;
                       int y= _location[i].second;
                       _map[x][y]->setStyleSheet("* { background-color: rgb(125,225,055) }");  
@@ -248,21 +276,25 @@ void Gui::getCoordinates(std::pair<int, int> point){
                   _shipnumber++;
                   _readyToStart=1;
                   _gamerunning=0;
-              } else ui->logic_status->append("Error: Ship broken. Bitte erneut setzen.");
+              } else {
+                  ui->logic_status->append("Error: Ship broken. Bitte erneut setzen.");
+                  for(int i=0; i<2; i++){
+                      _map[_location[i].first][_location[i].second]->setEnabled(1);
+                  }
+              }
               break;
               default: ui->logic_status->append("Error.");
             } break;
        case 10: ui->logic_status->append("Bereits alle Schiffe gesetzt.");
               break;
-
        default: ui->logic_status->append("Error.");
        }
     }
 }
 
-void Gui::output(std::pair<int, int> point){
+//void Gui::output(std::pair<int, int> point){
 //    ui->logic_status->append(QString::number(  point.first  ) + ", "+ QString::number(  point.second  )); //remove later//
-}
+//}
 
 
 
@@ -271,15 +303,57 @@ void Gui::setServer(){
         _server=1;
         QString name = ui->nameline->text();
         ui->nt_status->append("Gehe in Server Modus als " + name );
-    }   else if(_client==1) ui->nt_status->append("Schon in Client Modus.");
+        ui->serverMode->setEnabled(0);
+        ui->clientMode->setEnabled(0);
+        ui->nameline->setEnabled(0);
+        ui->serverline->setEnabled(0);
+        ui->portline->setEnabled(0);
+        ui->client_connect->setEnabled(0);
+        ui->server_disconnect->setEnabled(1);
+        ui->server_search->setEnabled(1);
+    }
 }
 void Gui::setClient(){
     if(_server==0 && _client==0){
         _client=1;
         QString name = ui->nameline->text();
         ui->nt_status->append("Gehe in Client Modus als " + name);
-    }   else if(_server==1) ui->nt_status->append("Schon in Server Modus.");
+        ui->serverMode->setEnabled(0);
+        ui->clientMode->setEnabled(0);
+        ui->nameline->setEnabled(0);
+        ui->serverline->setEnabled(1);
+        ui->portline->setEnabled(1);
+        ui->client_connect->setEnabled(1);
+        ui->server_disconnect->setEnabled(0);
+        ui->server_search->setEnabled(0);
+    }
 }
+
+void Gui::startButton(){
+
+    if(_connected==0 || _gamerunning==1) {
+        ui->logic_status->append("Gerade nicht möglich.");
+    }
+    else {
+        if(_readyToStart==0){
+
+            _gamerunning=1;
+            _setShipMode=1;
+            _shipnumber= 0;
+            _shipCounter= 0;
+            ui->logic_status->append("Beginne mit Plazierung der Schiffe.");
+            ui->logic_status->append("Setze Schlachtschiff (5 Felder klicken)");
+
+         }  else {
+                _readyToStart=0;
+                _setShipMode =0;
+                _gamerunning=1;
+                emit giveStart();
+                ui->logic_status->append("Spiel wird gestartet...");
+            }
+     }
+}
+
 void Gui::connectclient(){
     if(_client){
         if(_connected){
@@ -293,8 +367,10 @@ void Gui::connectclient(){
             _readyToStart=0;
             for(int i=0; i<10; i++){ // row
                 for(int j=0; j<10; j++){ // col
-                    _map[i][j]->setStyleSheet("* { background-color: rgb(225,225,255) }");
-                    _enemmap[i][j]->setStyleSheet("* { background-color: rgb(225,225,255) }");
+                    _map[i][j]->setStyleSheet("* { background-color: rgb(255,255,255) }");
+                    _enemmap[i][j]->setStyleSheet("* { background-color: rgb(255,255,255) }");
+                    _map[i][j]->setEnabled(1);
+                    _enemmap[i][j]->setEnabled(1);
                 }
             }
             ui->nt_status->append("Client: Getrennt von Server");
@@ -305,6 +381,7 @@ void Gui::connectclient(){
 
             _connected= 1;
             ui->nt_status->append("Client: Verbunden mit Server " + server + " auf Port " + ui->portline->text());
+            ui->gameStart->setEnabled(1);
         }
     }
 }
@@ -315,6 +392,7 @@ void Gui::connectserver(){
             //connect//
             _connected=1;
             ui->nt_status->append("Server: Verbunden mit Client");
+            ui->gameStart->setEnabled(1);
         }
     }
 }
@@ -331,8 +409,10 @@ void Gui::disconnectserver(){
             _readyToStart=0;
             for(int i=0; i<10; i++){ // row
                 for(int j=0; j<10; j++){ // col
-                    _map[i][j]->setStyleSheet("* { background-color: rgb(225,225,255) }");
-                    _enemmap[i][j]->setStyleSheet("* { background-color: rgb(225,225,255) }");
+                    _map[i][j]->setStyleSheet("* { background-color: rgb(255,255,255) }");
+                    _enemmap[i][j]->setStyleSheet("* { background-color: rgb(255,255,255) }");
+                    _map[i][j]->setEnabled(1);
+                    _enemmap[i][j]->setEnabled(1);
                 }
             }
             ui->nt_status->append("Client: Getrennt von Server");
@@ -342,35 +422,17 @@ void Gui::disconnectserver(){
 
 
 
-void Gui::startButton(){
-
-    if(_connected==0 || _gamerunning==1) {
-        ui->logic_status->append("Gerade nicht moeglich.");
-    }
-    else {
-        if(_readyToStart==0){
-
-            _gamerunning=1;
-            _setShipMode=1;
-            _shipnumber= 0;
-            _shipCounter= 0;
-            ui->logic_status->append("Setze Schlachtschiff (5 Felder klicken)");
-
-         }  else {
-                _readyToStart=0;
-                _setShipMode =0;
-                _gamerunning=1;
-                _yourturn=1;
-                ui->logic_status->append("Spiel wird gestartet...");
-            }
-     }
-}
-
 
 void Gui::getShoot(std::pair<int, int> loc){
     if(_yourturn){
       emit giveShoot(loc);
       _yourturn=0;
+    }
+}
+
+void Gui::getYourTurn(bool turn){
+    if(turn){
+        _yourturn=1;
     }
 }
 
@@ -382,8 +444,10 @@ void Gui::getWin(bool win){
     _readyToStart=0;
     for(int i=0; i<10; i++){ // row
         for(int j=0; j<10; j++){ // col
-            _map[i][j]->setStyleSheet("* { background-color: rgb(225,225,255) }");
-            _enemmap[i][j]->setStyleSheet("* { background-color: rgb(225,225,255) }");
+            _map[i][j]->setStyleSheet("* { background-color: rgb(255,255,255) }");
+            _enemmap[i][j]->setStyleSheet("* { background-color: rgb(255,255,255) }");
+            _map[i][j]->setEnabled(1);
+            _enemmap[i][j]->setEnabled(1);
         }
     }
     if(win)
@@ -396,9 +460,6 @@ void Gui::getUpdateField(std::pair<int, int> point, int flag, bool own)
 {
     if(own){
 
-        _yourturn=1;
-
-
         if(flag== -1){
             _map[point.first][point.second]->setStyleSheet("* { background-color: rgb(225,125,055) }");
             ui->logic_status->append("Gegnerischer Treffer (- . -) ");
@@ -410,6 +471,7 @@ void Gui::getUpdateField(std::pair<int, int> point, int flag, bool own)
         if(flag==-3) _map[point.first][point.second]->setStyleSheet("* { background-color: rgb(0,0,0) }");
 
     }   else{
+            _enemmap[point.first][point.second]->setEnabled(0);
 
             if(flag== -1){
                 _enemmap[point.first][point.second]->setStyleSheet("* { background-color: rgb(225,125,055) }");

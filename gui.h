@@ -89,24 +89,22 @@ signals:
     // logic gui
     void giveShip(position);
     void giveShoot(coordinates);
+    void giveStart();
+
+    void serverMode();
+    void clientMode();
 
 
 public slots:
-    void output(std::pair<int, int>);
+    //void output(std::pair<int, int>);
     void getCoordinates(std::pair<int, int>);
-
-
-
-
-    //ending
-    void getWin(bool);
 
 
     //connection logic gui
     void getUpdateField(std::pair<int, int> point, int flag, bool own);
     void getShoot(std::pair<int, int>);
-
-
+    void getYourTurn(bool);
+    void getWin(bool);
 
 };
 
