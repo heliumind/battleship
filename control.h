@@ -15,12 +15,14 @@ public:
     MyTcpServer myserver;
     MyClient myclient;
     Gui gui;
-    void connectAll();
+    void connectGui();
     void start();
 
 signals:
 
 public slots:
+    void setServer();
+    void setClient();
 };
 
 #endif // CONTROL_H

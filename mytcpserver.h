@@ -16,6 +16,7 @@ class MyTcpServer : public QObject
 {
     Q_OBJECT
 public:
+    friend class Control;
     explicit MyTcpServer(QObject *parent = 0);
     MyTcpServer(MyTcpServer&&);
 

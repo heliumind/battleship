@@ -49,7 +49,6 @@ void Game::receiveMessage(Message *msg)
         AnswerGame answergame = AnswerGame(0x10, 0x01);
         answergame._status = 0x01; // Not ready
         if (_matchboard._maxID == 10) { // Ready
-            AnswerGame answergame = AnswerGame(0x10, 0x01);
             answergame._status = 0x00;
         }
         Message *msgptr = &answergame;
@@ -180,12 +179,12 @@ void Game::sendShot(const coordinates point) //Message Pointer)
 {
     _lastShot = point;
     // Pack point in a message and send to network
-    Shot shot = Shot(0x02, 0x02);
+    Shot *shot = new Shot(0x02, 0x02);
     uint8_t x = point.first;
     uint8_t y = point.second;
-    shot._coordinates_x = x;
-    shot._coordinates_y = y;
-    Message *msgptr = &shot;
+    shot->_coordinates_x = x;
+    shot->_coordinates_y = y;
+    Message *msgptr = shot;
     emit MessageSent(msgptr);
 }
 
@@ -233,7 +232,8 @@ void Game::receiveShotAnswer(const uint8_t code, position location)
 
 void Game::start()
 {
-    GameStart gamestart = GameStart(0x02, 0x00);
-    Message *msgptr = &gamestart;
-    emit MessageSent(msgptr);
+   Message* msgptr = (Message *)new GameStart(0x02, 0x00);
+   //Message *msgptr = &gamestart;
+   emit MessageSent(msgptr);
+   // (Message *)new GameStart(0x02, 0x00)
 }

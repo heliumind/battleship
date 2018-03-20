@@ -1,12 +1,12 @@
 #include "control.h"
 
 Control::Control(QObject *parent)
-    : QObject(parent)
+    : QObject(parent), match(Game()), myserver(MyTcpServer())
 {
-    connectAll();
+    connectGui();
 }
 
-void Control::connectAll()
+void Control::connectGui()
 {
 
     // logic <-> gui
@@ -16,25 +16,10 @@ void Control::connectAll()
     connect(&match, &Game::updateField, &gui, &Gui::getUpdateField);
     connect(&gui, &Gui::giveShoot, &match, &Game::sendShot);
     connect(&gui, &Gui::giveShip, &match, &Game::setship);
-
-    // logic <-> network
-        // Modus Server
-    connect(&myserver, &MyTcpServer::messageSent, &match, &Game::receiveMessage);
-    connect(&match, &Game::MessageSent, &myserver, &MyTcpServer::sendMessage);
-
-        // Modus Client
-    connect(&myclient, &MyClient::messageSent, &match, &Game::receiveMessage);
-    connect(&match, &Game::MessageSent, &myclient, &MyClient::sendMessage);
-
-    // gui <-> network
-        // Modus Server
-    connect(&gui, &Gui::serverMode, &myserver, &MyTcpServer::initServer);
-    connect(&myserver, &MyTcpServer::gotClient, &gui, &Gui::foundClient);
-
-        // Modus Client
-    connect(&gui, &Gui::connectClient, &myclient, &MyClient::ConnectHost);
-    connect(&myclient, &MyClient::gotServer, &gui, &Gui::foundServer);
+    connect(&gui, &Gui::serverMode, this, &Control::setServer);
+    connect(&gui, &Gui::clientMode, this, &Control::setClient);
 }
+
 
 void Control::start()
 {
@@ -46,4 +31,27 @@ void Control::start()
 
 
 
+}
+
+void Control::setServer()
+{
+    myserver.initServer();
+
+    // logic <-> network
+    connect(&myserver, &MyTcpServer::messageSent, &match, &Game::receiveMessage);
+    connect(&match, &Game::MessageSent, &myserver, &MyTcpServer::sendMessage);
+
+    // gui <-> network
+    connect(&myserver, &MyTcpServer::gotClient, &gui, &Gui::foundClient);
+}
+
+void Control::setClient()
+{
+    // logic <-> network
+    connect(&myclient, &MyClient::messageSent, &match, &Game::receiveMessage);
+    connect(&match, &Game::MessageSent, &myclient, &MyClient::sendMessage);
+
+    // gui <-> network
+    connect(&gui, &Gui::connectClient, &myclient, &MyClient::ConnectHost);
+    connect(&myclient, &MyClient::gotServer, &gui, &Gui::foundServer);
 }

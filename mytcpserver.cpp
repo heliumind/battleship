@@ -69,7 +69,7 @@ void MyTcpServer::receiveData()
 
     //read first byte for identification
     uint8_t cmd = new_block[0];
-    qDebug()<< new_block[0];
+    qDebug()<< "Hier" <<new_block[0];
 
     switch(cmd)
     {
