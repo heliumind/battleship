@@ -233,5 +233,7 @@ void Game::receiveShotAnswer(const uint8_t code, position location)
 
 void Game::start()
 {
-
+    GameStart gamestart = GameStart(0x02, 0x00);
+    Message *msgptr = &gamestart;
+    emit MessageSent(msgptr);
 }

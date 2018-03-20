@@ -20,7 +20,6 @@ public:
     void    checkWin();
     void    receiveShot(const coordinates point);
     void    receiveShotAnswer(const uint8_t code, position location);
-    void    start();
     void    restart();
     Board   _matchboard;
 private:
@@ -49,6 +48,7 @@ public slots:
     void    receiveMessage(Message* msg);
 
     // logic -> gui
+    void    start();
     void    sendShot(const coordinates point);
     void    setship(const position location);
 };

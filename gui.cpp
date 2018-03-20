@@ -43,6 +43,7 @@ Gui::Gui(QMainWindow *parent) :
     connect(ui->clientMode, SIGNAL(clicked()), this, SLOT(setClient()));
 
     //connect network buttons
+    connect(ui->client_connect, SIGNAL(clicked()), this, SLOT(connectclient()));
     connect(ui->server_disconnect, SIGNAL(clicked()), this, SLOT(disconnectserver()));
 
     //connect start button

@@ -10,6 +10,7 @@ void Control::connectAll()
 {
 
     // logic <-> gui
+    connect(&gui, &Gui::giveStart, &match, &Game::start);
     connect(&match, &Game::sendMyturn, &gui, &Gui::getYourTurn);
     connect(&match, &Game::sendWin, &gui, &Gui::getWin);
     connect(&match, &Game::updateField, &gui, &Gui::getUpdateField);
