@@ -38,53 +38,6 @@ void Game::update_myturn()
     emit sendMyturn(_myturn);
 }
 
-void Game::receiveMessage(Message *msg)
-{
-    switch (msg->_cmd) {
-
-    case 0x01: // Aushandeln der Spielfeldparameter -> gui nur Client Modus
-        break;
-
-    case 0x02: {// Anforderung Spielbeginn
-        AnswerGame answergame = AnswerGame(0x10, 0x01);
-        answergame._status = 0x01; // Not ready
-        if (_matchboard._maxID == 10) { // Ready
-            answergame._status = 0x00;
-        }
-        Message *msgptr = &answergame;
-        emit MessageSent(msgptr);
-        break;}
-
-    case 0x03: {// Schuss -> gui & network
-        Shot *shot = dynamic_cast<Shot*>(msg);
-        int x = shot->_coordinates_x;
-        int y = shot->_coordinates_y;
-        coordinates point = std::make_pair(x, y);
-        receiveShot(point);
-        break;}
-
-    case 0x10: {// Antwort auf Anfrage
-        AnswerGame *answergame = dynamic_cast<AnswerGame*>(msg);
-        if (answergame->_status == 0x00) {
-            _myturn = true;
-            emit sendMyturn(_myturn);
-        }
-        break;}
-
-    case 0x11: {// Antwort auf Schuss
-        ShotAnswer *shotanswer = dynamic_cast<ShotAnswer*>(msg);
-        uint8_t code = shotanswer->_status;
-        position location = {std::make_pair(0,0)};
-        if (code == 0x02 || code == 0x03) {
-            location = shotanswer->_position;
-        }
-        receiveShotAnswer(code, location);
-        break;}
-     default:
-        break;
-    }
-}
-
 Board Game::getBoard() const
 {
     return _matchboard;
@@ -108,9 +61,19 @@ void Game::checkWin()
     _win = win;
 }
 
-
-void Game::receiveShot(const coordinates point)
+void Game::receiveGameStart()
 {
+    AnswerGame answergame = AnswerGame(0x10, 0x01);
+    answergame._status = 0x01; // Not ready
+    if (_matchboard._maxID == 10) { // Ready
+        answergame._status = 0x00;
+    }
+    emit sendAnswerGame(answergame);
+}
+
+void Game::receiveShot(Shot &msg)
+{
+    coordinates point = std::make_pair(msg._coordinates_x, msg._coordinates_y);
     position location;
     if (!_matchboard.checkCoordinates(point)) {
         // coordinates are out of bound
@@ -162,30 +125,35 @@ void Game::receiveShot(const coordinates point)
         ShotAnswer shotanswer = ShotAnswer(0x11, dlc);
         shotanswer._status = _statuscode;
         shotanswer._position = location;
-        Message *msgptr = &shotanswer;
-        emit MessageSent(msgptr);
+        emit sendShotAnswer(shotanswer);
     }
     else {
         ShotAnswer shotanswer = ShotAnswer(0x11, 0x01);
         shotanswer._status = _statuscode;
-        Message *msgptr = &shotanswer;
-        emit MessageSent(msgptr);
+        emit sendShotAnswer(shotanswer);
     }
 
     update_myturn();
 }
 
-void Game::sendShot(const coordinates point) //Message Pointer)
+void Game::receiveAnswerGame(AnswerGame &msg)
+{
+    if (msg._status == 0x00) {
+        _myturn = true;
+        emit sendMyturn(_myturn);
+    }
+}
+
+void Game::sendShotGui(const coordinates point)
 {
     _lastShot = point;
     // Pack point in a message and send to network
-    Shot *shot = new Shot(0x02, 0x02);
+    Shot shot = Shot(0x02, 0x02);
     uint8_t x = point.first;
     uint8_t y = point.second;
-    shot->_coordinates_x = x;
-    shot->_coordinates_y = y;
-    Message *msgptr = shot;
-    emit MessageSent(msgptr);
+    shot._coordinates_x = x;
+    shot._coordinates_y = y;
+    emit sendShot(shot);
 }
 
 void Game::setship(position location)
@@ -193,8 +161,13 @@ void Game::setship(position location)
     _matchboard.setShip(location);
 }
 
-void Game::receiveShotAnswer(const uint8_t code, position location)
+void Game::receiveShotAnswer(ShotAnswer &msg)
 {
+    uint8_t code = msg._status;
+    position location = {std::make_pair(0,0)};
+    if (code == 0x02 || code == 0x03) {
+        location = msg._position;
+    }
     _statuscode = code;
     switch(code) {
         case 0x00: // Nicht getroffen
@@ -232,8 +205,6 @@ void Game::receiveShotAnswer(const uint8_t code, position location)
 
 void Game::start()
 {
-   Message* msgptr = (Message *)new GameStart(0x02, 0x00);
-   //Message *msgptr = &gamestart;
-   emit MessageSent(msgptr);
-   // (Message *)new GameStart(0x02, 0x00)
+   GameStart gamestart = GameStart(0x02, 0x00);
+   emit sendGameStart(gamestart);
 }

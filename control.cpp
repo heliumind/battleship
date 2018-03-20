@@ -14,7 +14,7 @@ void Control::connectGui()
     connect(&match, &Game::sendMyturn, &gui, &Gui::getYourTurn);
     connect(&match, &Game::sendWin, &gui, &Gui::getWin);
     connect(&match, &Game::updateField, &gui, &Gui::getUpdateField);
-    connect(&gui, &Gui::giveShoot, &match, &Game::sendShot);
+    connect(&gui, &Gui::giveShoot, &match, &Game::sendShotGui);
     connect(&gui, &Gui::giveShip, &match, &Game::setship);
     connect(&gui, &Gui::serverMode, this, &Control::setServer);
     connect(&gui, &Gui::clientMode, this, &Control::setClient);
@@ -38,8 +38,8 @@ void Control::setServer()
     myserver.initServer();
 
     // logic <-> network
-    connect(&myserver, &MyTcpServer::messageSent, &match, &Game::receiveMessage);
-    connect(&match, &Game::MessageSent, &myserver, &MyTcpServer::sendMessage);
+    //connect every Message
+
 
     // gui <-> network
     connect(&myserver, &MyTcpServer::gotClient, &gui, &Gui::foundClient);
@@ -48,9 +48,7 @@ void Control::setServer()
 void Control::setClient()
 {
     // logic <-> network
-    connect(&myclient, &MyClient::messageSent, &match, &Game::receiveMessage);
-    connect(&match, &Game::MessageSent, &myclient, &MyClient::sendMessage);
-
+     // connect every Message
     // gui <-> network
     connect(&gui, &Gui::connectClient, &myclient, &MyClient::ConnectHost);
     connect(&myclient, &MyClient::gotServer, &gui, &Gui::foundServer);

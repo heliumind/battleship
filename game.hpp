@@ -18,8 +18,8 @@ public:
     void    update_myturn();
     Board   getBoard() const;
     void    checkWin();
-    void    receiveShot(const coordinates point);
-    void    receiveShotAnswer(const uint8_t code, position location);
+    // void    receiveShot(const coordinates point);
+    // void    receiveShotAnswer(const uint8_t code, position location);
     void    restart();
     Board   _matchboard;
 private:
@@ -38,18 +38,28 @@ signals:
     void    shipDestroyed(int size);
 
     // logic -> network
-    void    MessageSent(Message* msg);
+    void    sendParameter(Parameter &msg);
+    void    sendGameStart(GameStart &msg);
+    void    sendShot(Shot &msg);
+    void    sendAnswerGame(AnswerGame &msg);
+    void    sendShotAnswer(ShotAnswer &msg);
+    // void    MessageSent(Message* msg);
 
     // logic -> controller
 
 
 public slots:
     // logic -> network
-    void    receiveMessage(Message* msg);
+    // void    receiveParameter(Parameter &msg);
+    void    receiveGameStart();
+    void    receiveShot(Shot &msg);
+    void    receiveAnswerGame(AnswerGame &msg);
+    void    receiveShotAnswer(ShotAnswer &msg);
+    // void    receiveMessage(Message* msg);
 
     // logic -> gui
     void    start();
-    void    sendShot(const coordinates point);
+    void    sendShotGui(const coordinates point);
     void    setship(const position location);
 };
 
