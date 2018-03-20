@@ -41,8 +41,7 @@ void MyTcpServer::newConnection()
     //send shot data to client -> data ready permanent activated
    connect(_socket, &QTcpSocket::readyRead,
             this, &MyTcpServer::receiveData);
-   connect(_socket, &QTcpSocket::readyRead,
-           this, &MyTcpServer::sendShot);
+
 
 
     // tell client he is connected
@@ -204,81 +203,23 @@ void MyTcpServer::disconnectNow()
     _socket->close();
 }
 
-
-void MyTcpServer::sendShot()
-{
-    Shot shot = Shot(0x03, 0x02);
-    QDataStream outStream(_socket);
-    quint8 data1 = shot._cmd;
-    quint8 data2 = shot._dlc;
-    quint8 data3 = shot._coordinates_x;
-    quint8 data4 = shot._coordinates_y;
-    outStream << data1 << data2 << data3 << data4;
-
-}
-
-
-void MyTcpServer::sendParameterData()
-{
-     Parameter parameter = Parameter(0x01, 0x06);
-     QDataStream outStream(_socket);
-     quint8 data1 = parameter._cmd;
-     quint8 data2 = parameter._dlc;
-     quint8 data3 = parameter._field_x;
-     quint8 data4 = parameter._field_y;
-     quint8 data5 = parameter._n_battleship;
-     quint8 data6 = parameter._n_cruiser;
-     quint8 data7 = parameter._n_destroyer;
-     quint8 data8 = parameter._n_submarine;
-     outStream << data1 << data2 << data3 << data4 << data5 << data6 << data7 << data8;
-
-}
-
-void MyTcpServer::sendShotAnswer()
-{
-    ShotAnswer shotanswer = ShotAnswer(0x11, 0x01);
-    QDataStream outStream(_socket);
-    quint8 data1 = shotanswer._cmd;
-    //quint8 data2 = shotanswer._dlc_shotanswer;
-    quint8 data3 = shotanswer._status;
-
-    outStream << data1 /*<< data2*/ << data3;
-}
-
-void MyTcpServer::sendAnswer()
-{
-    AnswerGame answergame = AnswerGame(0x10, 0x01);
-
-    QDataStream outStream(_socket);
-    quint8 data1 = answergame._cmd;
-    quint8 data2 = answergame._dlc;
-    quint8 data3 = answergame._status;
-    outStream << data1 << data2 << data3;
-}
-
-void MyTcpServer::sendGroupID()
-{
-    IdentificationGroup idgroup = IdentificationGroup(0x80, 0x01);
-    QDataStream outStream(_socket);
-    quint8 data1 = idgroup._cmd;
-    quint8 data2 = idgroup._dlc;
-    quint8 data3 = idgroup._groupNumber;
-    outStream << data1 << data2 << data3;
-}
-
-void MyTcpServer::sendGameStart()
-{
-    GameStart gamestart = GameStart(0x02, 0x00);
-    QDataStream outStream(_socket);
-    quint8 data1 = gamestart._cmd;
-    quint8 data2 = gamestart._dlc;
-    outStream << data1 << data2;
-
-}
-
-void MyTcpServer::receiveMessageLogic(Message *msg)
+void MyTcpServer::sendMessage(Message *msg)
 {
     switch(msg->_cmd){
+    case 0x01:{
+        Parameter *parameter = dynamic_cast<Parameter*> (msg);
+        QDataStream outStream(_socket);
+        quint8 data1 = parameter->_cmd;
+        quint8 data2 = parameter->_dlc;
+        quint8 data3 = parameter->_field_x;
+        quint8 data4 = parameter->_field_y;
+        quint8 data5 = parameter->_n_battleship;
+        quint8 data6 = parameter->_n_cruiser;
+        quint8 data7 = parameter->_n_destroyer;
+        quint8 data8 = parameter->_n_submarine;
+        outStream << data1 << data2 << data3 << data4 << data5 << data6 << data7 << data8;
+    }
+    break;
     case 0x02:{
         GameStart *gamestart = dynamic_cast<GameStart*> (msg);
         QDataStream outStream(_socket);
@@ -318,17 +259,33 @@ void MyTcpServer::receiveMessageLogic(Message *msg)
         {
                 quint8 data4 = shotanswer->_position[0].first;
                 quint8 data5 = shotanswer->_position[0].second;
-//                quint8 data6 =
-//                quint8 data7 =
-//                quint8 data8 =
-//                quint8 data9 =
-//                quint8 data10 =
-//                quint8 data11 =
-//                quint8 data12 =
-//                quint8 data13 =
+                quint8 data6 = shotanswer->_position[1].first;
+                quint8 data7 = shotanswer->_position[1].second;
+                quint8 data8 = shotanswer->_position[2].first;
+                quint8 data9 = shotanswer->_position[2].second;
+                quint8 data10 = shotanswer->_position[3].first;
+                quint8 data11 = shotanswer->_position[3].second;
+                quint8 data12 = shotanswer->_position[4].first;
+                quint8 data13 = shotanswer->_position[4].second;
+                outStream << data1 << data2 << data3 << data4 <<
+                             data5 << data6 << data7 << data8 <<
+                             data9 << data10 << data11 << data12 <<
+                             data13;
 
         }
-
+        else
+        {
+            outStream<< data1 << data2 << data3;
+        }
+    }
+    break;
+    case 0x80:{
+        IdentificationGroup *idgroup = dynamic_cast<IdentificationGroup*>(msg);
+        QDataStream outStream(_socket);
+        quint8 data1 = idgroup->_cmd;
+        quint8 data2 = idgroup->_dlc;
+        quint8 data3 = idgroup->_groupNumber;
+        outStream << data1 << data2 << data3;
     }
     break;
     }

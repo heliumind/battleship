@@ -189,67 +189,82 @@ void MyClient::receiveServerData()
 
 }
 
-void MyClient::sendShot()
-{
-    Shot shot = Shot(0x03, 0x02);
-
-    QDataStream outStream(_socket);
-    quint8 data1 = shot._cmd;
-    quint8 data2 = shot._dlc;
-    quint8 data3 = shot._coordinates_x;
-    quint8 data4 = shot._coordinates_y;
-    outStream << data1 << data2 << data3 << data4;
-
-}
-
-
-void MyClient::sendShotAnswer()
-{
-    ShotAnswer shotanswer = ShotAnswer(0x11, /*variable*/ 0x01);
-    QDataStream outStream(_socket);
-    quint8 data1 = shotanswer._cmd;
-    //quint8 data2 = shotanswer._dlc_shotanswer;
-    quint8 data3 = shotanswer._status;
-
-    outStream << data1 /*<< data2*/ << data3;
-}
-
-void MyClient::sendAnswer()
-{
-    AnswerGame answergame = AnswerGame(0x10, 0x01);
-    QDataStream outStream(_socket);
-    quint8 data1 = answergame._cmd;
-    quint8 data2 = answergame._dlc;
-    quint8 data3 = answergame._status;
-    outStream << data1 << data2 << data3;
-}
-
-void MyClient::sendGroupID()
-{
-    IdentificationGroup idgroup = IdentificationGroup(0x80, 0x01);
-
-    QDataStream outStream(_socket);
-    quint8 data1 = idgroup._cmd;
-    quint8 data2 = idgroup._dlc;
-    quint8 data3 = idgroup._groupNumber;
-
-    outStream << data1 << data2 << data3;
-}
-
-void MyClient::sendGameStart()
-{
-    GameStart gamestart = GameStart(0x02, 0x00);
-    QDataStream outStream(_socket);
-    quint8 data1 = gamestart._cmd;
-    quint8 data2 = gamestart._dlc;
-    outStream << data1 << data2;
-}
-
 void MyClient::disconnectNow()
 {
 
     _socket->close();
 }
 
+void MyClient::sendMessage(Message *msg)
+{
+    switch(msg->_cmd){
+    case 0x02:{
+        GameStart *gamestart = dynamic_cast<GameStart*> (msg);
+        QDataStream outStream(_socket);
+        quint8 data1 = gamestart->_cmd;
+        quint8 data2 = gamestart->_dlc;
+        outStream << data1 << data2;
+    }
+    break;
 
+    case 0x03:{
+        Shot *shot = dynamic_cast<Shot*> (msg);
+        QDataStream outStream(_socket);
+        quint8 data1 = shot->_cmd;
+        quint8 data2 = shot->_dlc;
+        quint8 data3 = shot->_coordinates_x;
+        quint8 data4 = shot->_coordinates_y;
+        outStream << data1 << data2 << data3 <<data4;
+    }
+    break;
+    case 0x10:{
+        AnswerGame *answergame = dynamic_cast<AnswerGame*> (msg);
+        QDataStream outStream(_socket);
+        quint8 data1 = answergame->_cmd;
+        quint8 data2 = answergame->_dlc;
+        quint8 data3 = answergame->_status;
+        outStream << data1 << data2 << data3;
+    }
+    break;
 
+    case 0x11:{
+        ShotAnswer *shotanswer = dynamic_cast<ShotAnswer*>(msg);
+        QDataStream outStream(_socket);
+        quint8 data1 = shotanswer->_cmd;
+        quint8 data2 = shotanswer->_dlc;
+        quint8 data3 = shotanswer->_status;
+        if(data3 == 0x02 || data3 == 0x03)
+        {
+                quint8 data4 = shotanswer->_position[0].first;
+                quint8 data5 = shotanswer->_position[0].second;
+                quint8 data6 = shotanswer->_position[1].first;
+                quint8 data7 = shotanswer->_position[1].second;
+                quint8 data8 = shotanswer->_position[2].first;
+                quint8 data9 = shotanswer->_position[2].second;
+                quint8 data10 = shotanswer->_position[3].first;
+                quint8 data11 = shotanswer->_position[3].second;
+                quint8 data12 = shotanswer->_position[4].first;
+                quint8 data13 = shotanswer->_position[4].second;
+                outStream << data1 << data2 << data3 << data4 <<
+                             data5 << data6 << data7 << data8 <<
+                             data9 << data10 << data11 << data12 <<
+                             data13;
+        }
+        else
+        {
+            outStream<< data1 << data2 << data3;
+        }
+    }
+    break;
+    case 0x80:{
+        IdentificationGroup *idgroup = dynamic_cast<IdentificationGroup*>(msg);
+
+        QDataStream outStream(_socket);
+        quint8 data1 = idgroup->_cmd;
+        quint8 data2 = idgroup->_dlc;
+        quint8 data3 = idgroup->_groupNumber;
+
+        outStream << data1 << data2 << data3;
+    }
+    }
+}
