@@ -34,6 +34,7 @@ public slots:
     void sendGroupID();
     void disconnectNow();
     void initServer();
+    void receiveMessageLogic(Message *msg);
 
 private:
     QTcpServer *server;

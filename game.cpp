@@ -145,6 +145,7 @@ void Game::receiveShot(const coordinates point)
                     for (point = location.begin(); point != location.end(); point++) {
                         emit updateField(*point, -3, true);
                     }
+                    emit shipDestroyed(location.size());
 
                 }
                 break;

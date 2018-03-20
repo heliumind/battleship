@@ -36,6 +36,7 @@ signals:
     void    sendMyturn(bool);
     void    sendWin(bool);
     void    updateField(coordinates point, int flag, bool own);
+    void    shipDestroyed(int size);
 
     // logic -> network
     void    MessageSent(Message* msg);

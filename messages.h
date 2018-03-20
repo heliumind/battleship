@@ -6,7 +6,6 @@
 #include <vector>
 #include <algorithm>
 #include <utility>
-#include "datatypes.hpp"
 
 //class for the first message the parameters
 
@@ -28,10 +27,10 @@ public:
 
     uint8_t _field_x = 0x0A;
     uint8_t _field_y = 0x0A;
-    uint8_t _n_battleship = 0x01;
-    uint8_t _n_cruiser = 0x02;
-    uint8_t _n_destroyer = 0x03;
-    uint8_t _n_submarine = 0x04;
+    uint8_t _n_battleship = 0x00;
+    uint8_t _n_cruiser = 0x00;
+    uint8_t _n_destroyer = 0x00;
+    uint8_t _n_submarine = 0x00;
 
 
     //slot for interface with logic
@@ -83,7 +82,7 @@ public:
 
     uint8_t _status = 0x00;
 
-    position _position;
+    std::vector <std::pair<int, int>> _position;
     //void getStatus(uint8_t status_logic);
 
 };

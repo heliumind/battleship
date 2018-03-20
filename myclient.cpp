@@ -101,10 +101,78 @@ void MyClient::receiveServerData()
 
     case 0x11:       //fill in shot answer
      {
-                      ShotAnswer shotanswer = ShotAnswer(0x11, /*variable*/0x01);
+
+         uint8_t status = new_block[2];
+         switch(status)
+         {
+         case 0x00: { //case not hit
+                      ShotAnswer shotanswer = ShotAnswer(0x11,0x01);
                       shotanswer._status = new_block[2];
                       Message *msgptr = &shotanswer;
                       emit messageSent(msgptr);
+         }
+         break;
+         case 0x01: {//case hit
+                     ShotAnswer shotanswer = ShotAnswer(0x11,0x01);
+                     shotanswer._status = new_block[2];
+                     Message *msgptr = &shotanswer;
+                     emit messageSent(msgptr);
+         }
+         break;
+         case 0x02:{//case hit and sunk
+                     ShotAnswer shotanswer = ShotAnswer(0x11, new_block[1]);
+                     shotanswer._status = new_block[2];
+                     //std::vector<std::pair<uint8_t,uint8_t>> position;
+                     for(int i = 0; i >= shotanswer._dlc-5; i++)
+                     {
+                         //creat vector of coordinate pairs of sunken ship;
+                         shotanswer._position.push_back(std::make_pair(new_block[3+2*i],new_block[4+2*i]));
+                     }
+                     Message *msgptr = &shotanswer;
+                     emit messageSent(msgptr);
+         }
+         break;
+         case 0x03:{     //case sunken ship and game end
+                      ShotAnswer shotanswer = ShotAnswer(0x11, new_block[1]);
+                      shotanswer._status = new_block[2];
+                      //std::vector<std::pair<uint8_t,uint8_t>> position;
+                      for(int i = 0; i >= shotanswer._dlc-5; i++)
+                      {
+                          //creat vector of coordinate pairs of sunken ship;
+                          shotanswer._position.push_back(std::make_pair(new_block[3+2*i],new_block[4+2*i]));
+                      }
+                      Message *msgptr = &shotanswer;
+                      emit messageSent(msgptr);
+         }
+         break;
+         case 0x10: {
+                     ShotAnswer shotanswer = ShotAnswer(0x11, 0x01);
+                     shotanswer._status = new_block[2];
+                     Message *msgptr = &shotanswer;
+                     emit messageSent(msgptr);
+         }
+         break;
+         case 0x11:{
+                     ShotAnswer shotanswer = ShotAnswer(0x11, 0x01);
+                     shotanswer._status = new_block[2];
+                     Message *msgptr = &shotanswer;
+                     emit messageSent(msgptr);
+
+         }
+         break;
+         case 0x20:{
+                     ShotAnswer shotanswer = ShotAnswer(0x11, 0x01);
+                     shotanswer._status = new_block[2];
+                     Message *msgptr = &shotanswer;
+                     emit messageSent(msgptr);
+         }
+         break;
+
+         default:{}
+             //in statusleiste wasausgeben
+         break;
+       }
+
      }
 
     case 0x80: //fill in groupNumber
@@ -182,3 +250,6 @@ void MyClient::disconnectNow()
 
     _socket->close();
 }
+
+
+

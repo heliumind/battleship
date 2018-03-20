@@ -3,9 +3,11 @@
 #include <iostream>
 #include <algorithm>
 #include <vector>
+#include
 
 MyTcpServer::MyTcpServer(QObject *parent) : QObject(parent)
 {
+
 }
 
 void MyTcpServer::initServer()
@@ -23,9 +25,10 @@ void MyTcpServer::initServer()
         // whenever a user connects, it will emit signal
         connect(server, &QTcpServer::newConnection,
                 this, &MyTcpServer::newConnection);
-        sendShot();
+        //sendShot();
 
     }
+
 }
 
 //start connection with
@@ -38,9 +41,9 @@ void MyTcpServer::newConnection()
     //send shot data to client -> data ready permanent activated
    connect(_socket, &QTcpSocket::readyRead,
             this, &MyTcpServer::receiveData);
-
    connect(_socket, &QTcpSocket::readyRead,
            this, &MyTcpServer::sendShot);
+
 
     // tell client he is connected
     qDebug()<<"Client agrees\n";
@@ -52,23 +55,22 @@ void MyTcpServer::newConnection()
 void MyTcpServer::receiveData()
 {
 
-//    QDataStream inStream(_socket);
-//    quint8 block;
+     QDataStream inStream(_socket);
+     quint8 block;
     //creat vector to catch all incoming bytes
     std::vector<uint8_t> new_block;
     //save all incoming data into the vector
-//    while(_socket->bytesAvailable()) {
+    while(_socket->bytesAvailable()) {
 
-//        inStream>> block;
-//        new_block.push_back(block);
-//        //qDebug()<<block;
-//    }
+        inStream>> block;
+        new_block.push_back(block);
+        //qDebug()<<block;
+    }
 
     //read first byte for identification
-//    uint8_t cmd = new_block[0];
-//    qDebug()<< new_block[0];
+    uint8_t cmd = new_block[0];
+    qDebug()<< new_block[0];
 
-    uint8_t cmd = 0x03;
     switch(cmd)
     {
     // case 0x01 only sent from server
@@ -205,14 +207,12 @@ void MyTcpServer::disconnectNow()
 
 void MyTcpServer::sendShot()
 {
-
-
     Shot shot = Shot(0x03, 0x02);
     QDataStream outStream(_socket);
     quint8 data1 = shot._cmd;
     quint8 data2 = shot._dlc;
-    quint8 data3 = 0x04;//shot._coordinates_x;
-    quint8 data4 = 0x05;//shot._coordinates_y;
+    quint8 data3 = shot._coordinates_x;
+    quint8 data4 = shot._coordinates_y;
     outStream << data1 << data2 << data3 << data4;
 
 }
@@ -274,4 +274,62 @@ void MyTcpServer::sendGameStart()
     quint8 data2 = gamestart._dlc;
     outStream << data1 << data2;
 
+}
+
+void MyTcpServer::receiveMessageLogic(Message *msg)
+{
+    switch(msg->_cmd){
+    case 0x02:{
+        GameStart *gamestart = dynamic_cast<GameStart*> (msg);
+        QDataStream outStream(_socket);
+        quint8 data1 = gamestart->_cmd;
+        quint8 data2 = gamestart->_dlc;
+        outStream << data1 << data2;
+    }
+    break;
+
+    case 0x03:{
+        Shot *shot = dynamic_cast<Shot*> (msg);
+        QDataStream outStream(_socket);
+        quint8 data1 = shot->_cmd;
+        quint8 data2 = shot->_dlc;
+        quint8 data3 = shot->_coordinates_x;
+        quint8 data4 = shot->_coordinates_y;
+        outStream << data1 << data2 << data3 <<data4;
+    }
+    break;
+    case 0x10:{
+        AnswerGame *answergame = dynamic_cast<AnswerGame*> (msg);
+        QDataStream outStream(_socket);
+        quint8 data1 = answergame->_cmd;
+        quint8 data2 = answergame->_dlc;
+        quint8 data3 = answergame->_status;
+        outStream << data1 << data2 << data3;
+    }
+    break;
+
+    case 0x11:{
+        ShotAnswer *shotanswer = dynamic_cast<ShotAnswer*>(msg);
+        QDataStream outStream(_socket);
+        quint8 data1 = shotanswer->_cmd;
+        quint8 data2 = shotanswer->_dlc;
+        quint8 data3 = shotanswer->_status;
+        if(data3 == 0x02 || data3 == 0x03)
+        {
+                quint8 data4 = _position[0].first;
+                quint8 data5 = _position[0].second;
+//                quint8 data6 =
+//                quint8 data7 =
+//                quint8 data8 =
+//                quint8 data9 =
+//                quint8 data10 =
+//                quint8 data11 =
+//                quint8 data12 =
+//                quint8 data13 =
+
+        }
+
+    }
+    break;
+    }
 }
