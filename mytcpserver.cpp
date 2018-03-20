@@ -3,7 +3,7 @@
 #include <iostream>
 #include <algorithm>
 #include <vector>
-#include
+#include "datatypes.hpp"
 
 MyTcpServer::MyTcpServer(QObject *parent) : QObject(parent)
 {
@@ -316,8 +316,8 @@ void MyTcpServer::receiveMessageLogic(Message *msg)
         quint8 data3 = shotanswer->_status;
         if(data3 == 0x02 || data3 == 0x03)
         {
-                quint8 data4 = _position[0].first;
-                quint8 data5 = _position[0].second;
+                quint8 data4 = shotanswer->_position[0].first;
+                quint8 data5 = shotanswer->_position[0].second;
 //                quint8 data6 =
 //                quint8 data7 =
 //                quint8 data8 =

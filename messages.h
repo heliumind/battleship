@@ -6,6 +6,7 @@
 #include <vector>
 #include <algorithm>
 #include <utility>
+#include "datatypes.hpp"
 
 //class for the first message the parameters
 
@@ -81,8 +82,7 @@ public:
 
 
     uint8_t _status = 0x00;
-
-    std::vector <std::pair<int, int>> _position;
+    position _position;
     //void getStatus(uint8_t status_logic);
 
 };
