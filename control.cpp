@@ -13,7 +13,7 @@ void Control::connectAll()
     // connect(&match, &Game::MessageSent, &myserver, &MyTcp)
 
     // logic <-> gui
-    // connect(&match, &Game::sendMyturn,
+//    connect(&match, &Game::sendMyturn,
     connect(&match, &Game::sendWin, &gui, &Gui::getWin);
     connect(&match, &Game::updateField, &gui, &Gui::getUpdateField);
     connect(&gui, &Gui::giveShoot, &match, &Game::sendShot);
@@ -22,5 +22,8 @@ void Control::connectAll()
 void Control::start()
 {
     gui.show();
+
+    // Modus 1: Server
+
 }
 

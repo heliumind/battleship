@@ -8,7 +8,13 @@ int main(int argc, char *argv[])
 
     controller.start();
 
-    // controller.myserver.receiveData();
+    controller.match._matchboard.printBoard();
+    std::cout << "Win: " << controller.match.get_win() << std::endl;
+
+    //controller.myserver.receiveData();
+
+    controller.match._matchboard.printBoard();
+    std::cout << "Win: " << controller.match.get_win() << std::endl;
 
     return a.exec();
 }

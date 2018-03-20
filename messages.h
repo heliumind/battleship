@@ -3,6 +3,9 @@
 
 
 #include <iostream>
+#include <vector>
+#include <algorithm>
+#include <utility>
 #include "datatypes.hpp"
 
 //class for the first message the parameters
@@ -12,9 +15,9 @@ class Message
 public:
     Message( uint8_t cmd, uint8_t dlc);
     virtual ~Message() = default;
+
              const uint8_t _cmd;
              const uint8_t _dlc;
-
 };
 
 
@@ -79,10 +82,8 @@ public:
 
 
     uint8_t _status = 0x00;
-    position _location;
 
-
-
+    position _position;
     //void getStatus(uint8_t status_logic);
 
 };

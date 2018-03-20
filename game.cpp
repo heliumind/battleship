@@ -42,10 +42,11 @@ void Game::receiveMessage(Message *msg)
 {
     switch (msg->_cmd) {
 
-    case 0x01: // Aushandeln der Spielfeldparameter -> gui
+    case 0x01: // Aushandeln der Spielfeldparameter -> gui nur Client Modus
         break;
 
     case 0x02: // Anforderung Spielbeginn
+        _myturn = false;
         break;
 
     case 0x03: {// Schuss -> gui & network
@@ -64,7 +65,7 @@ void Game::receiveMessage(Message *msg)
         uint8_t code = shotanswer->_status;
         position location = {std::make_pair(0,0)};
         if (code == 0x02 || code == 0x03) {
-            location = shotanswer->_location;
+            location = shotanswer->_position;
         }
         receiveShotAnswer(code, location);
         break;}
@@ -148,7 +149,7 @@ void Game::receiveShot(const coordinates point)
         uint8_t dlc = 0x01 + (location.size()*2);
         ShotAnswer shotanswer = ShotAnswer(0x11, dlc);
         shotanswer._status = _statuscode;
-        shotanswer._location = location;
+        shotanswer._position = location;
         Message *msgptr = &shotanswer;
         emit MessageSent(msgptr);
     }
@@ -209,13 +210,12 @@ void Game::receiveShotAnswer(const uint8_t code, position location)
 
     }
 
-    // update_myturn();
+    update_myturn();
 }
 
 void Game::start()
 {
-    _myturn = true;
-    _win = false;
+
 
 
 }

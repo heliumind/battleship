@@ -21,9 +21,11 @@ public:
     void    receiveShot(const coordinates point);
     void    receiveShotAnswer(const uint8_t code, position location);
     void    start();
+    void    restart();
+    Board   _matchboard;
 private:
     bool    _win;
-    Board   _matchboard;
+//    Board   _matchboard;
     Board   _enemyboard;
     bool    _myturn;
     uint8_t _statuscode;
@@ -37,6 +39,8 @@ signals:
 
     // logic -> network
     void    MessageSent(Message* msg);
+
+    // logic -> controller
 
 
 public slots:

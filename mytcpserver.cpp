@@ -43,10 +43,11 @@ void MyTcpServer::newConnection()
 //receive shot data from client
 void MyTcpServer::receiveData()
 {
-    // QDataStream inStream(_socket);
-    // quint8 block;
+
+//    QDataStream inStream(_socket);
+//    quint8 block;
     //creat vector to catch all incoming bytes
-    //std::vector<uint8_t> new_block;
+    std::vector<uint8_t> new_block;
     //save all incoming data into the vector
 //    while(_socket->bytesAvailable()) {
 
@@ -56,8 +57,9 @@ void MyTcpServer::receiveData()
 //    }
 
     //read first byte for identification
-    //uint8_t cmd=new_block[0];
-    //qDebug()<< new_block[0];
+//    uint8_t cmd = new_block[0];
+//    qDebug()<< new_block[0];
+
     uint8_t cmd = 0x03;
     switch(cmd)
     {
@@ -72,11 +74,9 @@ void MyTcpServer::receiveData()
 
     case 0x03:       //fill in coordinates that where shot at
     {                Shot shot = Shot(0x03, 0x02);
-                     qDebug() << shot._coordinates_x;
                      //shot._cmd = block[0];
                      shot._coordinates_x = 1; // new_block[2];
                      shot._coordinates_y = 1; //new_block[3];
-                     qDebug() << shot._coordinates_x;
                      Message *msgptr = &shot;
                      //emitiert das shot angekommen ist
                      emit messageSent(msgptr);
@@ -84,39 +84,110 @@ void MyTcpServer::receiveData()
     break;
 
     case 0x10:
+
         {            //fill in anser on gamestart;
                      AnswerGame answergame = AnswerGame(0x10, 0x01);
                      qDebug() << answergame._status;
                      // answergame._status = new_block[2];
                      Message *msgptr =  &answergame;
                      emit messageSent(msgptr);
+
         }
 
     break;
 
    case 0x11:       //fill in shot answer
     {
-                     ShotAnswer shotanswer = ShotAnswer(0x11, /*variable*/0x01);
-                     // shotanswer._status = new_block[2];
+
+        uint8_t status = new_block[2];
+        switch(status)
+        {
+        case 0x00: { //case not hit
+                     ShotAnswer shotanswer = ShotAnswer(0x11,0x01);
+                     shotanswer._status = new_block[2];
                      Message *msgptr = &shotanswer;
                      emit messageSent(msgptr);
+        }
+        break;
+        case 0x01: {//case hit
+                    ShotAnswer shotanswer = ShotAnswer(0x11,0x01);
+                    shotanswer._status = new_block[2];
+                    Message *msgptr = &shotanswer;
+                    emit messageSent(msgptr);
+        }
+        break;
+        case 0x02:{//case hit and sunk
+                    ShotAnswer shotanswer = ShotAnswer(0x11, new_block[1]);
+                    shotanswer._status = new_block[2];
+                    //std::vector<std::pair<uint8_t,uint8_t>> position;
+                    for(int i = 0; i >= shotanswer._dlc-5; i++)
+                    {
+                        //creat vector of coordinate pairs of sunken ship;
+                        shotanswer._position.push_back(std::make_pair(new_block[3+2*i],new_block[4+2*i]));
+                    }
+                    Message *msgptr = &shotanswer;
+                    emit messageSent(msgptr);
+        }
+        break;
+        case 0x03:{     //case sunken ship and game end
+                     ShotAnswer shotanswer = ShotAnswer(0x11, new_block[1]);
+                     shotanswer._status = new_block[2];
+                     //std::vector<std::pair<uint8_t,uint8_t>> position;
+                     for(int i = 0; i >= shotanswer._dlc-5; i++)
+                     {
+                         //creat vector of coordinate pairs of sunken ship;
+                         shotanswer._position.push_back(std::make_pair(new_block[3+2*i],new_block[4+2*i]));
+                     }
+                     Message *msgptr = &shotanswer;
+                     emit messageSent(msgptr);
+        }
+        break;
+        case 0x10: {
+                    ShotAnswer shotanswer = ShotAnswer(0x11, 0x01);
+                    shotanswer._status = new_block[2];
+                    Message *msgptr = &shotanswer;
+                    emit messageSent(msgptr);
+        }
+        break;
+        case 0x11:{
+                    ShotAnswer shotanswer = ShotAnswer(0x11, 0x01);
+                    shotanswer._status = new_block[2];
+                    Message *msgptr = &shotanswer;
+                    emit messageSent(msgptr);
+
+        }
+        break;
+        case 0x20:{
+                    ShotAnswer shotanswer = ShotAnswer(0x11, 0x01);
+                    shotanswer._status = new_block[2];
+                    Message *msgptr = &shotanswer;
+                    emit messageSent(msgptr);
+        }
+        break;
+
+        default:{}
+            //in statusleiste wasausgeben
+        break;
+      }
+
     }
     break;
     case 0x80: //fill in groupNumber
                      {
                      IdentificationGroup id = IdentificationGroup(0x80, 0x01);
-                     // id._groupNumber = new_block[2];
+                     id._groupNumber = new_block[2];
                      Message *msgptr = &id;
                      emit messageSent(msgptr);
     }
     break;
     default:
-    {
+    {              //print in status window unknown message
                    qDebug() << "Unknown Message";
     }
     }
 
 }
+
 // gui-> click
 void MyTcpServer::disconnectNow()
 {
@@ -175,7 +246,7 @@ void MyTcpServer::sendAnswer()
     outStream << data1 << data2 << data3;
 }
 
-void MyTcpServer::groupID()
+void MyTcpServer::sendGroupID()
 {
     IdentificationGroup idgroup = IdentificationGroup(0x80, 0x01);
     QDataStream outStream(_socket);

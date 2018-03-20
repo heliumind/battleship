@@ -156,7 +156,7 @@ void MyClient::sendAnswer()
     outStream << data1 << data2 << data3;
 }
 
-void MyClient::groupID()
+void MyClient::sendGroupID()
 {
     IdentificationGroup idgroup = IdentificationGroup(0x80, 0x01);
 

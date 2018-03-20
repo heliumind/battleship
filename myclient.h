@@ -31,7 +31,7 @@ public slots:
     void sendShot();
     void sendShotAnswer();
     void sendAnswer();
-    void groupID();
+    void sendGroupID();
     void sendGameStart();
     void disconnectNow();
 

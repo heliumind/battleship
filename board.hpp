@@ -19,12 +19,12 @@ public:
     void    printBoard();
     bool    setShip(position &location, bool upmaxID = true);
     bool    checkAlive(const Ship &ship);
-    std::map<int, Ship> _ships;
+    // std::map<int, Ship> _ships;
 
 private:
     int _maxID;
     matrix  _board;
-    // std::map<int, Ship> _ships;
+    std::map<int, Ship> _ships;
 
 };
 
