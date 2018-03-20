@@ -53,6 +53,10 @@ private:
 
     int _shipCounter;
 
+    int _4count;
+    int _3count;
+    int _2count;
+
     std::vector< std::vector<Button*> > _map;
     std::vector< std::vector<Button*> > _enemmap;
 
@@ -73,7 +77,6 @@ private slots:
     void setClient();
 
     //connect server
-    void connectserver();
     void disconnectserver();
 
     //connect client
@@ -95,6 +98,11 @@ signals:
     void serverMode();
     void clientMode();
 
+    //gui ->network
+    void disconnectServer();
+    void disconnectClient();
+    void connectClient(QString, int);
+
 
 public slots:
     //void output(std::pair<int, int>);
@@ -106,6 +114,11 @@ public slots:
     void getShoot(std::pair<int, int>);
     void getYourTurn(bool);
     void getWin(bool);
+    void getShipDestroyed(int);
+
+    //connection network gui
+    void foundClient();
+    void foundServer();
 
 };
 

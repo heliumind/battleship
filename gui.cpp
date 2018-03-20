@@ -16,6 +16,10 @@ Gui::Gui(QMainWindow *parent) :
 
     setupFields();
 
+    _4count=0;
+    _3count=0;
+    _2count=0;
+
     //initial server mode
     _server     = 0;
     _client     = 0;
@@ -32,7 +36,6 @@ Gui::Gui(QMainWindow *parent) :
     ui->portline->setEnabled(0);
     ui->client_connect->setEnabled(0);
     ui->server_disconnect->setEnabled(0);
-    ui->server_search->setEnabled(0);
     ui->gameStart->setEnabled(0);
 
     //connect mode buttons
@@ -41,7 +44,6 @@ Gui::Gui(QMainWindow *parent) :
 
     //connect network buttons
     connect(ui->client_connect, SIGNAL(clicked()), this, SLOT(connectclient()));
-    connect(ui->server_search, SIGNAL(clicked()), this, SLOT(connectserver()));
     connect(ui->server_disconnect, SIGNAL(clicked()), this, SLOT(disconnectserver()));
 
     connect(ui->serverline, SIGNAL(returnPressed()), this, SLOT (connectserver()));
@@ -301,8 +303,11 @@ void Gui::getCoordinates(std::pair<int, int> point){
 void Gui::setServer(){
     if(_client==0 && _server==0){
         _server=1;
+
+        emit serverMode();
         QString name = ui->nameline->text();
         ui->nt_status->append("Gehe in Server Modus als " + name );
+        ui->logic_status->append("Suche nach Spieler...");
         ui->serverMode->setEnabled(0);
         ui->clientMode->setEnabled(0);
         ui->nameline->setEnabled(0);
@@ -310,12 +315,13 @@ void Gui::setServer(){
         ui->portline->setEnabled(0);
         ui->client_connect->setEnabled(0);
         ui->server_disconnect->setEnabled(1);
-        ui->server_search->setEnabled(1);
     }
 }
 void Gui::setClient(){
     if(_server==0 && _client==0){
         _client=1;
+
+        emit clientMode();
         QString name = ui->nameline->text();
         ui->nt_status->append("Gehe in Client Modus als " + name);
         ui->serverMode->setEnabled(0);
@@ -325,7 +331,6 @@ void Gui::setClient(){
         ui->portline->setEnabled(1);
         ui->client_connect->setEnabled(1);
         ui->server_disconnect->setEnabled(0);
-        ui->server_search->setEnabled(0);
     }
 }
 
@@ -350,6 +355,16 @@ void Gui::startButton(){
                 _gamerunning=1;
                 emit giveStart();
                 ui->logic_status->append("Spiel wird gestartet...");
+                ui->b50->setStyleSheet("* { background-color: rgb(025,225,055) }");
+                ui->b40->setStyleSheet("* { background-color: rgb(025,225,055) }");
+                ui->b41->setStyleSheet("* { background-color: rgb(025,225,055) }");
+                ui->b30->setStyleSheet("* { background-color: rgb(025,225,055) }");
+                ui->b31->setStyleSheet("* { background-color: rgb(025,225,055) }");
+                ui->b32->setStyleSheet("* { background-color: rgb(025,225,055) }");
+                ui->b20->setStyleSheet("* { background-color: rgb(025,225,055) }");
+                ui->b21->setStyleSheet("* { background-color: rgb(025,225,055) }");
+                ui->b22->setStyleSheet("* { background-color: rgb(025,225,055) }");
+                ui->b23->setStyleSheet("* { background-color: rgb(025,225,055) }");
             }
      }
 }
@@ -358,7 +373,7 @@ void Gui::connectclient(){
     if(_client){
         if(_connected){
 
-            //disconnect//
+            emit disconnectClient();
             _connected= 0;
             _yourturn   = 0;
             _setShipMode= 0;
@@ -376,31 +391,33 @@ void Gui::connectclient(){
             ui->nt_status->append("Client: Getrennt von Server");
         }   else {
 
-            //connect//
             QString server  = ui->serverline->text();
+            int port = ui->portline->text().toShort();
 
-            _connected= 1;
-            ui->nt_status->append("Client: Verbunden mit Server " + server + " auf Port " + ui->portline->text());
-            ui->gameStart->setEnabled(1);
+            emit connectClient(server, port);
+            ui->nt_status->append("Verbinde zum Server " + server + " auf Port " + ui->portline->text() +"...");
         }
     }
 }
-void Gui::connectserver(){
-    if(_server){
-        if(!(_connected)){
 
-            //connect//
-            _connected=1;
-            ui->nt_status->append("Server: Verbunden mit Client");
-            ui->gameStart->setEnabled(1);
-        }
-    }
+void Gui::foundServer(){
+    _connected= 1;
+    ui->nt_status->append("Client: Verbunden mit Server.");
+    ui->gameStart->setEnabled(1);
+    ui->nt_status->append("Bereit für Spielstart.");
 }
+
+void Gui::foundClient(){
+    ui->gameStart->setEnabled(1);
+    ui->nt_status->append("Spieler gefunden.");
+    ui->nt_status->append("Bereit für Spielstart.");
+}
+
 void Gui::disconnectserver(){
     if(_server){
         if(_connected){
 
-            //disconnect//
+            emit disconnectServer();
             _connected=0;
             _yourturn   = 0;
             _setShipMode= 0;
@@ -440,16 +457,8 @@ void Gui::getWin(bool win){
     _yourturn   = 0;
     _setShipMode= 0;
     _shipCounter= 0;
-    _gamerunning= 0;
     _readyToStart=0;
-    for(int i=0; i<10; i++){ // row
-        for(int j=0; j<10; j++){ // col
-            _map[i][j]->setStyleSheet("* { background-color: rgb(255,255,255) }");
-            _enemmap[i][j]->setStyleSheet("* { background-color: rgb(255,255,255) }");
-            _map[i][j]->setEnabled(1);
-            _enemmap[i][j]->setEnabled(1);
-        }
-    }
+
     if(win)
     ui->logic_status->append("YOU WIN");
     else
@@ -483,4 +492,65 @@ void Gui::getUpdateField(std::pair<int, int> point, int flag, bool own)
             }
             if(flag==-3) _enemmap[point.first][point.second]->setStyleSheet("* { background-color: rgb(0,0,0) }");
         }
+}
+
+void Gui::getShipDestroyed(int target){
+    switch(target){
+    case 5: ui->b50->setStyleSheet("* { background-color: rgb(225,025,055) }");
+            ui->b50->setEnabled(0);
+        break;
+
+    case 4: switch(_4count){
+            case 0: ui->b40->setStyleSheet("* { background-color: rgb(225,025,055) }");
+                    ui->b40->setEnabled(0);
+                    _4count++;
+                break;
+            case 1: ui->b41->setStyleSheet("* { background-color: rgb(225,025,055) }");
+                    ui->b41->setEnabled(0);
+                    _4count++;
+                break;
+            default: ui->logic_status->append("Error: Schiff bereits zerstört.");
+            }
+        break;
+
+    case 3: switch(_3count){
+        case 0: ui->b30->setStyleSheet("* { background-color: rgb(225,025,055) }");
+                ui->b30->setEnabled(0);
+                _3count++;
+            break;
+        case 1: ui->b31->setStyleSheet("* { background-color: rgb(225,025,055) }");
+                ui->b31->setEnabled(0);
+                _3count++;
+            break;
+        case 2: ui->b32->setStyleSheet("* { background-color: rgb(225,025,055) }");
+                ui->b32->setEnabled(0);
+                _3count++;
+            break;
+        default: ui->logic_status->append("Error: Schiff bereits zerstört.");
+        }
+        break;
+
+    case 2: switch(_2count){
+        case 0: ui->b20->setStyleSheet("* { background-color: rgb(225,025,055) }");
+                ui->b20->setEnabled(0);
+                _2count++;
+            break;
+        case 1: ui->b21->setStyleSheet("* { background-color: rgb(225,025,055) }");
+                ui->b21->setEnabled(0);
+                _2count++;
+            break;
+        case 2: ui->b22->setStyleSheet("* { background-color: rgb(225,025,055) }");
+                ui->b22->setEnabled(0);
+                _2count++;
+            break;
+        case 3: ui->b23->setStyleSheet("* { background-color: rgb(225,025,055) }");
+                ui->b23->setEnabled(0);
+                _2count++;
+            break;
+        default: ui->logic_status->append("Error: Schiff bereits zerstört.");
+        }
+        break;
+
+    default: ui->logic_status->append("Explosion Error.");
+    }
 }
