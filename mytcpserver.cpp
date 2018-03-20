@@ -6,33 +6,41 @@
 
 MyTcpServer::MyTcpServer(QObject *parent) : QObject(parent)
 {
-       server = new QTcpServer(this);
-       _stream.setDevice(_socket);
+}
 
-       // whenever a user connects, it will emit signal
-       connect(server, &QTcpServer::newConnection,
-               this, &MyTcpServer::newConnection);
+void MyTcpServer::initServer()
+{
+    server = new QTcpServer(this);
 
-            //listen for a client to connect
-       if(!server->listen(QHostAddress::Any, /*gui input*/ 1234))
-       {
-           qDebug() << "Server could not start";
-       }
-       else
-       {
-           qDebug() << "Server started!";
-       }
+    if(!server->listen(QHostAddress::Any, /*gui input*/ 1234))
+    {
+        qDebug() << "Server could not start";
+        server->deleteLater();
+    }
+    else
+    {
+        qDebug() << "Server started!";
+        // whenever a user connects, it will emit signal
+        connect(server, &QTcpServer::newConnection,
+                this, &MyTcpServer::newConnection);
+        sendShot();
+
+    }
 }
 
 //start connection with
 void MyTcpServer::newConnection()
 {
+    _stream.setDevice(_socket);
     //w8ing for the next connection
     _socket = server->nextPendingConnection();
 
     //send shot data to client -> data ready permanent activated
    connect(_socket, &QTcpSocket::readyRead,
             this, &MyTcpServer::receiveData);
+
+   connect(_socket, &QTcpSocket::readyRead,
+           this, &MyTcpServer::sendShot);
 
     // tell client he is connected
     qDebug()<<"Client agrees\n";
@@ -197,12 +205,14 @@ void MyTcpServer::disconnectNow()
 
 void MyTcpServer::sendShot()
 {
+
+
     Shot shot = Shot(0x03, 0x02);
     QDataStream outStream(_socket);
     quint8 data1 = shot._cmd;
     quint8 data2 = shot._dlc;
-    quint8 data3 = shot._coordinates_x;
-    quint8 data4 = shot._coordinates_y;
+    quint8 data3 = 0x04;//shot._coordinates_x;
+    quint8 data4 = 0x05;//shot._coordinates_y;
     outStream << data1 << data2 << data3 << data4;
 
 }

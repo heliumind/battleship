@@ -21,8 +21,6 @@ public:
 signals:
 
 public slots:
-    void startServer();
-    // void startClient();
 };
 
 #endif // CONTROL_H

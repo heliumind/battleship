@@ -9,7 +9,6 @@ Control::Control(QObject *parent)
 void Control::connectAll()
 {
     // logic <-> network
-    connect(&gui, &Gui::serverMode, this, &Control::startServer);
     connect(&myserver, &MyTcpServer::messageSent, &match, &Game::receiveMessage);
     // connect(&match, &Game::MessageSent, &myserver, &MyTcp)
 
@@ -19,6 +18,9 @@ void Control::connectAll()
     connect(&match, &Game::updateField, &gui, &Gui::getUpdateField);
     connect(&gui, &Gui::giveShoot, &match, &Game::sendShot);
     connect(&gui, &Gui::giveShip, &match, &Game::setship);
+
+    // gui <-> network
+    connect(&gui, &Gui::serverMode, &myserver, &MyTcpServer::initServer);
 }
 
 void Control::start()
@@ -27,14 +29,8 @@ void Control::start()
 
     // Modus 1: Server
 
-    myserver.sendParameterData();
+    // myserver.sendParameterData();
 
 
 
 }
-
-void Control::startServer()
-{
-    myserver.newConnection();
-}
-

@@ -311,6 +311,7 @@ void Gui::setServer(){
         ui->client_connect->setEnabled(0);
         ui->server_disconnect->setEnabled(1);
         ui->server_search->setEnabled(1);
+        emit serverMode();
     }
 }
 void Gui::setClient(){
@@ -326,6 +327,7 @@ void Gui::setClient(){
         ui->client_connect->setEnabled(1);
         ui->server_disconnect->setEnabled(0);
         ui->server_search->setEnabled(0);
+        emit clientMode();
     }
 }
 

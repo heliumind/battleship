@@ -33,6 +33,7 @@ public slots:
     void sendGameStart();
     void sendGroupID();
     void disconnectNow();
+    void initServer();
 
 private:
     QTcpServer *server;
