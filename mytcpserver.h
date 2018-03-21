@@ -24,12 +24,26 @@ signals:
     void messageSent(Message* msg);
     void gotClient();
 
+    void    receiveGameStart();
+    void    receiveShot(Shot &msg);
+    void    receiveAnswerGame(AnswerGame &msg);
+    void    receiveShotAnswer(ShotAnswer &msg);
+    void    receiveGroupId(IdentificationGroup &msg);
+
 public slots:
     void newConnection();
     void receiveData();
     void disconnectNow();
     void initServer();
-    void sendMessage(Message *msg);
+    //void sendMessage(Message *msg);
+
+
+    void    sendParameter(Parameter &msg);
+    void    sendGameStart(GameStart &msg);
+    void    sendShot(Shot &msg);
+    void    sendAnswerGame(AnswerGame &msg);
+    void    sendShotAnswer(ShotAnswer &msg);
+    void    sendGroupId(IdentificationGroup &msg);
 
 private:
     QTcpServer *server;

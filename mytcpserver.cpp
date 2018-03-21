@@ -77,8 +77,7 @@ void MyTcpServer::receiveData()
 
     case 0x02:
     {               GameStart gamestart = GameStart(0x02, 0x00);
-                    Message *msgptr = &gamestart;
-                    emit messageSent(msgptr);
+                    emit receiveGameStart();
     }
     break;
 
@@ -87,9 +86,8 @@ void MyTcpServer::receiveData()
                      //shot._cmd = block[0];
                      shot._coordinates_x = 1; // new_block[2];
                      shot._coordinates_y = 1; //new_block[3];
-                     Message *msgptr = &shot;
                      //emitiert das shot angekommen ist
-                     emit messageSent(msgptr);
+                     emit receiveShot(shot);
     }
     break;
 
@@ -99,8 +97,7 @@ void MyTcpServer::receiveData()
                      AnswerGame answergame = AnswerGame(0x10, 0x01);
                      qDebug() << answergame._status;
                      // answergame._status = new_block[2];
-                     Message *msgptr =  &answergame;
-                     emit messageSent(msgptr);
+                     emit receiveAnswerGame(answergame);
 
         }
 
@@ -115,15 +112,13 @@ void MyTcpServer::receiveData()
         case 0x00: { //case not hit
                      ShotAnswer shotanswer = ShotAnswer(0x11,0x01);
                      shotanswer._status = new_block[2];
-                     Message *msgptr = &shotanswer;
-                     emit messageSent(msgptr);
+                     emit receiveShotAnswer(shotanswer);
         }
         break;
         case 0x01: {//case hit
                     ShotAnswer shotanswer = ShotAnswer(0x11,0x01);
                     shotanswer._status = new_block[2];
-                    Message *msgptr = &shotanswer;
-                    emit messageSent(msgptr);
+                    emit receiveShotAnswer(shotanswer);
         }
         break;
         case 0x02:{//case hit and sunk
@@ -135,8 +130,7 @@ void MyTcpServer::receiveData()
                         //creat vector of coordinate pairs of sunken ship;
                         shotanswer._position.push_back(std::make_pair(new_block[3+2*i],new_block[4+2*i]));
                     }
-                    Message *msgptr = &shotanswer;
-                    emit messageSent(msgptr);
+                    emit receiveShotAnswer(shotanswer);
         }
         break;
         case 0x03:{     //case sunken ship and game end
@@ -148,30 +142,26 @@ void MyTcpServer::receiveData()
                          //creat vector of coordinate pairs of sunken ship;
                          shotanswer._position.push_back(std::make_pair(new_block[3+2*i],new_block[4+2*i]));
                      }
-                     Message *msgptr = &shotanswer;
-                     emit messageSent(msgptr);
+                     emit receiveShotAnswer(shotanswer);
         }
         break;
         case 0x10: {
                     ShotAnswer shotanswer = ShotAnswer(0x11, 0x01);
                     shotanswer._status = new_block[2];
-                    Message *msgptr = &shotanswer;
-                    emit messageSent(msgptr);
+                    emit receiveShotAnswer(shotanswer);
         }
         break;
         case 0x11:{
                     ShotAnswer shotanswer = ShotAnswer(0x11, 0x01);
                     shotanswer._status = new_block[2];
-                    Message *msgptr = &shotanswer;
-                    emit messageSent(msgptr);
+                    emit receiveShotAnswer(shotanswer);
 
         }
         break;
         case 0x20:{
                     ShotAnswer shotanswer = ShotAnswer(0x11, 0x01);
                     shotanswer._status = new_block[2];
-                    Message *msgptr = &shotanswer;
-                    emit messageSent(msgptr);
+                    emit receiveShotAnswer(shotanswer);
         }
         break;
 
@@ -186,8 +176,7 @@ void MyTcpServer::receiveData()
                      {
                      IdentificationGroup id = IdentificationGroup(0x80, 0x01);
                      id._groupNumber = new_block[2];
-                     Message *msgptr = &id;
-                     emit messageSent(msgptr);
+                     emit receiveGroupId(id);
     }
     break;
     default:
@@ -204,90 +193,171 @@ void MyTcpServer::disconnectNow()
     _socket->close();
 }
 
-void MyTcpServer::sendMessage(Message *msg)
+void MyTcpServer::sendParameter(Parameter &msg)
 {
-    switch(msg->_cmd){
-    case 0x01:{
-        Parameter *parameter = dynamic_cast<Parameter*> (msg);
-        QDataStream outStream(_socket);
-        quint8 data1 = parameter->_cmd;
-        quint8 data2 = parameter->_dlc;
-        quint8 data3 = parameter->_field_x;
-        quint8 data4 = parameter->_field_y;
-        quint8 data5 = parameter->_n_battleship;
-        quint8 data6 = parameter->_n_cruiser;
-        quint8 data7 = parameter->_n_destroyer;
-        quint8 data8 = parameter->_n_submarine;
-        outStream << data1 << data2 << data3 << data4 << data5 << data6 << data7 << data8;
-    }
-    break;
-    case 0x02:{
-        GameStart *gamestart = dynamic_cast<GameStart*> (msg);
-        QDataStream outStream(_socket);
-        quint8 data1 = gamestart->_cmd;
-        quint8 data2 = gamestart->_dlc;
-        outStream << data1 << data2;
-    }
-    break;
+            QDataStream outStream(_socket);
+            quint8 data1 = msg._cmd;
+            quint8 data2 = msg._dlc;
+            quint8 data3 = msg._field_x;
+            quint8 data4 = msg._field_y;
+            quint8 data5 = msg._n_battleship;
+            quint8 data6 = msg._n_cruiser;
+            quint8 data7 = msg._n_destroyer;
+            quint8 data8 = msg._n_submarine;
+            outStream << data1 << data2 << data3 << data4 << data5 << data6 << data7 << data8;
+}
 
-    case 0x03:{
-        Shot *shot = dynamic_cast<Shot*> (msg);
-        QDataStream outStream(_socket);
-        quint8 data1 = shot->_cmd;
-        quint8 data2 = shot->_dlc;
-        quint8 data3 = shot->_coordinates_x;
-        quint8 data4 = shot->_coordinates_y;
-        outStream << data1 << data2 << data3 <<data4;
-    }
-    break;
-    case 0x10:{
-        AnswerGame *answergame = dynamic_cast<AnswerGame*> (msg);
-        QDataStream outStream(_socket);
-        quint8 data1 = answergame->_cmd;
-        quint8 data2 = answergame->_dlc;
-        quint8 data3 = answergame->_status;
-        outStream << data1 << data2 << data3;
-    }
-    break;
+void MyTcpServer::sendGameStart(GameStart &msg)
+{
+    QDataStream outStream(_socket);
+    quint8 data1 = msg._cmd;
+    quint8 data2 = msg._dlc;
+    outStream << data1 << data2;
+}
 
-    case 0x11:{
-        ShotAnswer *shotanswer = dynamic_cast<ShotAnswer*>(msg);
-        QDataStream outStream(_socket);
-        quint8 data1 = shotanswer->_cmd;
-        quint8 data2 = shotanswer->_dlc;
-        quint8 data3 = shotanswer->_status;
-        if(data3 == 0x02 || data3 == 0x03)
-        {
-                quint8 data4 = shotanswer->_position[0].first;
-                quint8 data5 = shotanswer->_position[0].second;
-                quint8 data6 = shotanswer->_position[1].first;
-                quint8 data7 = shotanswer->_position[1].second;
-                quint8 data8 = shotanswer->_position[2].first;
-                quint8 data9 = shotanswer->_position[2].second;
-                quint8 data10 = shotanswer->_position[3].first;
-                quint8 data11 = shotanswer->_position[3].second;
-                quint8 data12 = shotanswer->_position[4].first;
-                quint8 data13 = shotanswer->_position[4].second;
-                outStream << data1 << data2 << data3 << data4 <<
-                             data5 << data6 << data7 << data8 <<
-                             data9 << data10 << data11 << data12 <<
-                             data13;
+void MyTcpServer::sendShot(Shot &msg)
+{
+    QDataStream outStream(_socket);
+    quint8 data1 = msg._cmd;
+    quint8 data2 = msg._dlc;
+    quint8 data3 = msg._coordinates_x;
+    quint8 data4 = msg._coordinates_y;
+    outStream << data1 << data2 << data3 <<data4;
+}
 
-        }
-        else
-        {
-            outStream<< data1 << data2 << data3;
-        }
+void MyTcpServer::sendAnswerGame(AnswerGame &msg)
+{
+    QDataStream outStream(_socket);
+    quint8 data1 = msg._cmd;
+    quint8 data2 = msg._dlc;
+    quint8 data3 = msg._status;
+    outStream << data1 << data2 << data3;
+}
+
+void MyTcpServer::sendShotAnswer(ShotAnswer &msg)
+{
+    QDataStream outStream(_socket);
+    quint8 data1 = msg._cmd;
+    quint8 data2 = msg._dlc;
+    quint8 data3 = msg._status;
+    if(data3 == 0x02 || data3 == 0x03)
+    {
+            quint8 data4 = msg._position[0].first;
+            quint8 data5 = msg._position[0].second;
+            quint8 data6 = msg._position[1].first;
+            quint8 data7 = msg._position[1].second;
+            quint8 data8 = msg._position[2].first;
+            quint8 data9 = msg._position[2].second;
+            quint8 data10 = msg._position[3].first;
+            quint8 data11 = msg._position[3].second;
+            quint8 data12 = msg._position[4].first;
+            quint8 data13 = msg._position[4].second;
+            outStream << data1 << data2 << data3 << data4 <<
+                         data5 << data6 << data7 << data8 <<
+                         data9 << data10 << data11 << data12 <<
+                         data13;
+
     }
-    break;
-    case 0x80:{
-        IdentificationGroup *idgroup = dynamic_cast<IdentificationGroup*>(msg);
-        QDataStream outStream(_socket);
-        quint8 data1 = idgroup->_cmd;
-        quint8 data2 = idgroup->_dlc;
-        quint8 data3 = idgroup->_groupNumber;
-        outStream << data1 << data2 << data3;
-    }
-    break;
+    else
+    {
+        outStream<< data1 << data2 << data3;
     }
 }
+
+void MyTcpServer::sendGroupId(IdentificationGroup &msg)
+{
+    QDataStream outStream(_socket);
+    quint8 data1 = msg._cmd;
+    quint8 data2 = msg._dlc;
+    quint8 data3 = msg._groupNumber;
+    outStream << data1 << data2 << data3;
+}
+
+//void MyTcpServer::sendMessage(Message *msg)
+//{
+//    switch(msg->_cmd){
+//    case 0x01:{
+//        Parameter *parameter = dynamic_cast<Parameter*> (msg);
+//        QDataStream outStream(_socket);
+//        quint8 data1 = parameter->_cmd;
+//        quint8 data2 = parameter->_dlc;
+//        quint8 data3 = parameter->_field_x;
+//        quint8 data4 = parameter->_field_y;
+//        quint8 data5 = parameter->_n_battleship;
+//        quint8 data6 = parameter->_n_cruiser;
+//        quint8 data7 = parameter->_n_destroyer;
+//        quint8 data8 = parameter->_n_submarine;
+//        outStream << data1 << data2 << data3 << data4 << data5 << data6 << data7 << data8;
+//    }
+//    break;
+//    case 0x02:{
+//        void MyTcpServer::sendGameStart(GameStart &msg);
+//        //GameStart *gamestart = dynamic_cast<GameStart*> (msg);
+//        QDataStream outStream(_socket);
+//        quint8 data1 = gamestart->_cmd;
+//        quint8 data2 = gamestart->_dlc;
+//        outStream << data1 << data2;
+//    }
+//    break;
+
+//    case 0x03:{
+//        Shot *shot = dynamic_cast<Shot*> (msg);
+//        QDataStream outStream(_socket);
+//        quint8 data1 = shot->_cmd;
+//        quint8 data2 = shot->_dlc;
+//        quint8 data3 = shot->_coordinates_x;
+//        quint8 data4 = shot->_coordinates_y;
+//        outStream << data1 << data2 << data3 <<data4;
+//    }
+//    break;
+//    case 0x10:{
+//        AnswerGame *answergame = dynamic_cast<AnswerGame*> (msg);
+//        QDataStream outStream(_socket);
+//        quint8 data1 = answergame->_cmd;
+//        quint8 data2 = answergame->_dlc;
+//        quint8 data3 = answergame->_status;
+//        outStream << data1 << data2 << data3;
+//    }
+//    break;
+
+//    case 0x11:{
+//        ShotAnswer *shotanswer = dynamic_cast<ShotAnswer*>(msg);
+//        QDataStream outStream(_socket);
+//        quint8 data1 = shotanswer->_cmd;
+//        quint8 data2 = shotanswer->_dlc;
+//        quint8 data3 = shotanswer->_status;
+//        if(data3 == 0x02 || data3 == 0x03)
+//        {
+//                quint8 data4 = shotanswer->_position[0].first;
+//                quint8 data5 = shotanswer->_position[0].second;
+//                quint8 data6 = shotanswer->_position[1].first;
+//                quint8 data7 = shotanswer->_position[1].second;
+//                quint8 data8 = shotanswer->_position[2].first;
+//                quint8 data9 = shotanswer->_position[2].second;
+//                quint8 data10 = shotanswer->_position[3].first;
+//                quint8 data11 = shotanswer->_position[3].second;
+//                quint8 data12 = shotanswer->_position[4].first;
+//                quint8 data13 = shotanswer->_position[4].second;
+//                outStream << data1 << data2 << data3 << data4 <<
+//                             data5 << data6 << data7 << data8 <<
+//                             data9 << data10 << data11 << data12 <<
+//                             data13;
+
+//        }
+//        else
+//        {
+//            outStream<< data1 << data2 << data3;
+//        }
+//    }
+//    break;
+//    case 0x80:{
+//        IdentificationGroup *idgroup = dynamic_cast<IdentificationGroup*>(msg);
+//        QDataStream outStream(_socket);
+//        quint8 data1 = idgroup->_cmd;
+//        quint8 data2 = idgroup->_dlc;
+//        quint8 data3 = idgroup->_groupNumber;
+//        outStream << data1 << data2 << data3;
+//    }
+//    break;
+//    }
+//}
