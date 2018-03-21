@@ -248,7 +248,7 @@ void MyClient::sendShotAnswer(ShotAnswer &msg)
     outStream<< data1 << data2 << data3;
     if(data3 == 0x02 || data3 == 0x03)
     {
-        std::vector<quint8> location = std::vector<quint8>(data2);
+        std::vector<quint8> location = std::vector<quint8>(data2-1);
         for (auto &point: msg._position) {
             outStream << point.first << point.second;
         }
