@@ -256,10 +256,9 @@ void MyClient::sendShotAnswer(ShotAnswer &msg)
     if(data3 == 0x02 || data3 == 0x03)
     {
         outStream<< data1 << data2 << data3;
-        std::vector<quint8> location = std::vector<quint8>(data2-1);
         qDebug() << "no points: " << msg._position.size();
         for (auto &point: msg._position) {
-            outStream << point.first << point.second;
+            outStream << quint8(point.first) << quint8(point.second);
             qDebug() << "point.first= " <<point.first << "; point.second= " << point.second;
         }
 //    if(data3 == 0x02 || data3 == 0x03)

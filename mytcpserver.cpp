@@ -276,9 +276,9 @@ void MyTcpServer::sendShotAnswer(ShotAnswer &msg)
     quint8 data1 = msg._cmd;
     quint8 data2 = msg._dlc;
     quint8 data3 = msg._status;
-    outStream<< data1 << data2 << data3;
     if(data3 == 0x02 || data3 == 0x03)
     {
+        outStream<< data1 << data2 << data3;
         for (auto &point: msg._position) {
             outStream << quint8(point.first) << quint8(point.second);
         }
