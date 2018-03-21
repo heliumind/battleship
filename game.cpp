@@ -63,6 +63,7 @@ void Game::checkWin()
 
 void Game::receiveGameStart()
 {
+    _startMessage = true;
     AnswerGame answergame = AnswerGame(0x10, 0x01);
     answergame._status = 0x01; // Not ready
     if (_matchboard._maxID == 10) { // Ready
@@ -206,5 +207,13 @@ void Game::receiveShotAnswer(ShotAnswer &msg)
 void Game::start()
 {
    GameStart gamestart = GameStart(0x02, 0x00);
-   emit sendGameStart(gamestart);
+   // _matchboard.printBoard();
+   if (!_startMessage) {
+    _startMessage = true;
+    emit sendGameStart(gamestart);
+   }
+   else {
+       _myturn = false;
+       emit sendMyturn(_myturn);
+   }
 }

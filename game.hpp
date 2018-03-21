@@ -29,7 +29,7 @@ private:
     bool    _myturn;
     uint8_t _statuscode;
     coordinates _lastShot;
-    bool _start;
+    bool _startMessage;
 
 signals:
     // logic -> gui
@@ -44,7 +44,6 @@ signals:
     void    sendShot(Shot &msg);
     void    sendAnswerGame(AnswerGame &msg);
     void    sendShotAnswer(ShotAnswer &msg);
-    // void    MessageSent(Message* msg);
 
     // logic -> controller
 
@@ -57,7 +56,6 @@ public slots:
     void    receiveAnswerGame(AnswerGame &msg);
     void    receiveShotAnswer(ShotAnswer &msg);
     // void    receiveGroupId(IdentificationGroup &msg);
-    // void    receiveMessage(Message* msg);
 
     // logic -> gui
     void    start();
