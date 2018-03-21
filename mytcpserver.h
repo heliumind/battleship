@@ -37,7 +37,7 @@ public slots:
     void newConnection();
     void receiveData();
     void disconnectNow();
-    void initServer();
+    void initServer(int port);
     //void sendMessage(Message *msg);
 
     // logic -> network

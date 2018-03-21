@@ -10,11 +10,11 @@ MyTcpServer::MyTcpServer(QObject *parent) : QObject(parent)
 
 }
 
-void MyTcpServer::initServer()
+void MyTcpServer::initServer(int port)
 {
     server = new QTcpServer(this);
 
-    if(!server->listen(QHostAddress::Any, /*gui input*/ 1234))
+    if(!server->listen(QHostAddress::Any, port))
     {
         qDebug() << "Server could not start";
         //server->deleteLater();

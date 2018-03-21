@@ -33,8 +33,6 @@ void Control::start()
 
 void Control::setServer()
 {
-    myserver.initServer();
-
     // logic <-> network
     connect(&myserver, &MyTcpServer::receiveGameStart, &match, &Game::receiveGameStart);
     connect(&myserver, &MyTcpServer::receiveShot, &match, &Game::receiveShot);
@@ -52,6 +50,7 @@ void Control::setServer()
     // gui <-> network
     connect(&myserver, &MyTcpServer::gotClient, &gui, &Gui::foundClient);
     connect(&gui, &Gui::disconnectServer, &myserver, &MyTcpServer::disconnectNow);
+    connect(&gui, &Gui::openServer, &myserver, &MyTcpServer::initServer);
 
 }
 
