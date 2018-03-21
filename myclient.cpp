@@ -30,6 +30,7 @@ void MyClient::ConnectHost(QString ip, int port)
     //QByteArray data;
     _socket->connectToHost(ip, port);
     emit gotServer();
+
      QObject::connect(_socket, &QTcpSocket::readyRead,
                this, &MyClient::receiveServerData);
 
@@ -47,11 +48,11 @@ void MyClient::receiveServerData()
     while(_socket->bytesAvailable()) {
         inStream >> block;
         new_block.push_back(block);
-        qDebug()<<block;
+        qDebug()<< "Debug ausgabe in while: "<< block;
     }
     //read first byte for identification
     uint8_t cmd=new_block[0];
-    qDebug()<< new_block[0];
+    qDebug()<< "nach block[0]" << new_block[0];
     switch(cmd)
     {
     case 0x01:
@@ -70,6 +71,8 @@ void MyClient::receiveServerData()
 
     case 0x02:
     {                GameStart gamestart = GameStart(0x02, 0x00);
+        qDebug() << "Gamstart received cmd: " << gamestart._cmd;
+        qDebug() << "Gemstart received dlc: " << gamestart._dlc;
                      emit receiveGameStart();
 
     }
@@ -201,6 +204,9 @@ void MyClient::sendShot(Shot &msg)
     quint8 data3 = msg._coordinates_x;
     quint8 data4 = msg._coordinates_y;
     outStream << data1 << data2 << data3 <<data4;
+    QObject::connect(_socket, &QTcpSocket::readyRead,
+              this, &MyClient::receiveServerData);
+
 }
 
 void MyClient::sendAnswerGame(AnswerGame &msg)
@@ -210,6 +216,9 @@ void MyClient::sendAnswerGame(AnswerGame &msg)
     quint8 data2 = msg._dlc;
     quint8 data3 = msg._status;
     outStream << data1 << data2 << data3;
+    QObject::connect(_socket, &QTcpSocket::readyRead,
+              this, &MyClient::receiveServerData);
+
 }
 
 void MyClient::sendShotAnswer(ShotAnswer &msg)
@@ -239,6 +248,9 @@ void MyClient::sendShotAnswer(ShotAnswer &msg)
     {
         outStream<< data1 << data2 << data3;
     }
+    QObject::connect(_socket, &QTcpSocket::readyRead,
+              this, &MyClient::receiveServerData);
+
 }
 
 void MyClient::sendIdentificationGroup(IdentificationGroup &msg)
@@ -249,4 +261,7 @@ void MyClient::sendIdentificationGroup(IdentificationGroup &msg)
     quint8 data3 = msg._groupNumber;
 
     outStream << data1 << data2 << data3;
+    QObject::connect(_socket, &QTcpSocket::readyRead,
+              this, &MyClient::receiveServerData);
+
 }

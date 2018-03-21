@@ -17,7 +17,7 @@ void MyTcpServer::initServer()
     if(!server->listen(QHostAddress::Any, /*gui input*/ 1234))
     {
         qDebug() << "Server could not start";
-        server->deleteLater();
+        //server->deleteLater();
     }
     else
     {
@@ -39,10 +39,11 @@ void MyTcpServer::newConnection()
     _socket = server->nextPendingConnection();
 
     //send shot data to client -> data ready permanent activated
-   connect(_socket, &QTcpSocket::readyRead,
-            this, &MyTcpServer::receiveData);
 
 
+
+    connect(_socket, &QTcpSocket::readyRead,
+             this, &MyTcpServer::receiveData);
 
     // tell client he is connected
     emit gotClient();
@@ -69,7 +70,7 @@ void MyTcpServer::receiveData()
 
     //read first byte for identification
     uint8_t cmd = new_block[0];
-    qDebug()<< "Hier" <<new_block[0];
+    //qDebug()<< "Hier" <<new_block[0];
 
     switch(cmd)
     {
@@ -77,7 +78,10 @@ void MyTcpServer::receiveData()
 
     case 0x02:
     {               GameStart gamestart = GameStart(0x02, 0x00);
+                    qDebug() << "Gamstart cmd: " << gamestart._cmd;
+                    qDebug() << "Gemstart dlc: " << gamestart._dlc;
                     emit receiveGameStart();
+
     }
     break;
 
@@ -95,7 +99,7 @@ void MyTcpServer::receiveData()
 
         {            //fill in anser on gamestart;
                      AnswerGame answergame = AnswerGame(0x10, 0x01);
-                     qDebug() << answergame._status;
+                     qDebug() << "AnswerGAme:" << answergame._status;
                      // answergame._status = new_block[2];
                      emit receiveAnswerGame(answergame);
 
@@ -207,12 +211,16 @@ void MyTcpServer::sendParameter(Parameter &msg)
             outStream << data1 << data2 << data3 << data4 << data5 << data6 << data7 << data8;
 }
 
+
+
 void MyTcpServer::sendGameStart(GameStart &msg)
 {
     QDataStream outStream(_socket);
     quint8 data1 = msg._cmd;
     quint8 data2 = msg._dlc;
     outStream << data1 << data2;
+
+
 }
 
 void MyTcpServer::sendShot(Shot &msg)
@@ -223,6 +231,7 @@ void MyTcpServer::sendShot(Shot &msg)
     quint8 data3 = msg._coordinates_x;
     quint8 data4 = msg._coordinates_y;
     outStream << data1 << data2 << data3 <<data4;
+
 }
 
 void MyTcpServer::sendAnswerGame(AnswerGame &msg)
@@ -257,10 +266,12 @@ void MyTcpServer::sendShotAnswer(ShotAnswer &msg)
                          data9 << data10 << data11 << data12 <<
                          data13;
 
+
     }
     else
     {
         outStream<< data1 << data2 << data3;
+
     }
 }
 
@@ -271,6 +282,7 @@ void MyTcpServer::sendGroupId(IdentificationGroup &msg)
     quint8 data2 = msg._dlc;
     quint8 data3 = msg._groupNumber;
     outStream << data1 << data2 << data3;
+
 }
 
 //void MyTcpServer::sendMessage(Message *msg)
