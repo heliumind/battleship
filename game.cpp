@@ -197,7 +197,6 @@ void Game::receiveShotAnswer(ShotAnswer &msg)
                 emit updateField(*point, -3, false);
             }
             emit sendWin(true);
-            }
             break;
 
     }
