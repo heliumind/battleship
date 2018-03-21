@@ -63,8 +63,9 @@ Gui::~Gui()
     delete ui;
 }
 
+//setting up maps
 void Gui::setupFields(){
-    //setup enemy field
+    //enemy field
     for(int i=0; i<10; i++){ // row
         for(int j=0; j<10; j++){ // col
 
@@ -75,7 +76,7 @@ void Gui::setupFields(){
             connect(b1, &Button::clickedPos, this, &Gui::getShoot);
         }
     }
-    //setup playerfield
+    //playerfield
     for(int i=0; i<10; i++){
         for(int j=0; j<10; j++){
 
@@ -88,36 +89,39 @@ void Gui::setupFields(){
     }
 }
 
-
+//check for illegal ship placement
 void Gui::getError(position loc, int limit){
 
-    std::vector<int> xvec(limit);
-    std::vector<int> yvec(limit);
-    for(int i=0; i<limit; i++){
-        xvec.push_back(loc[i].first);
-        yvec.push_back(loc[i].second);
-    }
-    std::sort(xvec.begin(), xvec.begin()+limit-1);
-    std::sort(yvec.begin(), yvec.begin()+limit-1);
     bool flag1 = 0;
     bool flag2 = 0;
-    int before= xvec[0];
-    int cons=   yvec[0];
+    bool flag3 = 0;
+    bool flag4 = 0;
 
-     for(int i=1 ;i<limit; i++){
-         if(xvec[i] != before+i) flag1=1;
-         if(yvec[i] != cons)  flag1=1;
+    std::sort(loc.begin(), loc.end());
+    int before= loc[0].first;
+    int cons= loc[0].second;
+
+     for(int i=0 ;i<limit; i++){
+         if(loc[i].first!=before+i) flag1=1;
+         if(loc[i].second!=cons)  flag1=1;
      }
-
-     before= yvec[0];
-     cons=   yvec[0];
-     for(int i=1 ;i<limit; i++){
-         if(yvec[i] != before+i) flag2=1;
-         if(xvec[i] != cons)     flag2=1;
+     for(int i=0 ;i<limit; i++){
+         if(loc[i].first!=before-i) flag2=1;
+         if(loc[i].second!=cons)  flag2=1;
      }
-
-    if(flag1==0 || flag2==0) errorcheck=1;
+     before= loc[0].second;
+     cons= loc[0].first;
+     for(int i=0 ;i<limit; i++){
+         if(loc[i].second!=before+i) flag3=1;
+         if(loc[i].first!=cons)     flag3=1;
+     }
+     for(int i=0 ;i<limit; i++){
+         if(loc[i].second!=before-i) flag4=1;
+         if(loc[i].first!=cons)     flag4=1;
+     }
+    if(flag1==0 || flag2==0 || flag3==0 || flag4==0) errorcheck=1;
     else errorcheck=0;
+
 }
 
 //counts fields of placed shipparts already placed
@@ -397,9 +401,9 @@ void Gui::connectclient(){
             QString server  = ui->serverline->text();
             int port = ui->portline->text().toShort();
 
-            emit connectClient(server, port);
             ui->nt_status->append("Verbinde zum Server " + server + " auf Port " + ui->portline->text() +"...");
             ui->logic_status->append("Verbinde zum Server...");
+            emit connectClient(server, port);
         }
     }
 }
@@ -408,14 +412,14 @@ void Gui::foundServer(){
     _connected= 1;
     ui->nt_status->append("Verbunden mit Server.");
     ui->gameStart->setEnabled(1);
-    ui->logic_status->append("Bereit für Spielstart. Drücke Start.");
+    ui->logic_status->append("Bereit für Spielstart. Drücke Start....");
 }
 
 void Gui::foundClient(){
     _connected= 1;
     ui->gameStart->setEnabled(1);
     ui->nt_status->append("Spieler gefunden.");
-    ui->logic_status->append("Bereit für Spielstart. Drücke Start.");
+    ui->logic_status->append("Bereit für Spielstart. Drücke Start...");
 }
 
 void Gui::disconnectserver(){
@@ -449,7 +453,6 @@ void Gui::disconnectserver(){
 void Gui::getShoot(std::pair<int, int> loc){
     if(_yourturn){
       emit giveShoot(loc);
-      _yourturn=0;
       ui->logic_status->append("Schieße auf Feld "+ QString::number(loc.first)+", "+ QString::number(loc.second));
     } else ui->logic_status->append("Schuss nicht möglich. Nicht am Zug!");
 }
@@ -458,11 +461,13 @@ void Gui::getYourTurn(bool turn){
     if(turn){
         ui->logic_status->append("DEIN ZUG!");
         _yourturn=1;
+    } else {
+        _yourturn=0;
+        ui->logic_status->append("Gegner schießt...");
     }
 }
 
 void Gui::getWin(bool win){
-    _yourturn   = 0;
     _setShipMode= 0;
     _shipCounter= 0;
     _readyToStart=0;
@@ -475,7 +480,7 @@ void Gui::getWin(bool win){
 
 void Gui::getUpdateField(std::pair<int, int> point, int flag, bool own)
 {
-    ui->logic_status->append("Gegner schießt...");
+
     if(own){
 
         if(flag== -1){
