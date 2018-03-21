@@ -28,7 +28,7 @@ bool Game::get_win() const
 void Game::update_myturn()
 {
     bool allow = false;
-    if (_statuscode == 0x00 || _statuscode == 0x02 || _statuscode == 0x03) {
+    if (_statuscode == 0x00 || _statuscode == 0x01 || _statuscode == 0x02 || _statuscode == 0x03) {
         allow = true;
     }
 
