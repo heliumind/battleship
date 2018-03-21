@@ -113,7 +113,6 @@ void Game::receiveShot(Shot &msg)
                     for (auto point = location.begin(); point != location.end(); point++) {
                         emit updateField(*point, -3, true);
                     }
-                    emit shipDestroyed(location.size());
 
                 }
                 break;
@@ -189,6 +188,7 @@ void Game::receiveShotAnswer(ShotAnswer &msg)
             for (auto point = location.begin(); point != location.end(); point++) {
                 emit updateField(*point, -3, false);
             }
+            emit shipDestroyed(location.size());
             break;}
         case 0x03: // Getroffen und versenkt, Spielende
 
@@ -196,6 +196,7 @@ void Game::receiveShotAnswer(ShotAnswer &msg)
             for (auto point = location.begin(); point != location.end(); point++) {
                 emit updateField(*point, -3, false);
             }
+            emit shipDestroyed(location.size());
             emit sendWin(true);
             break;
 
