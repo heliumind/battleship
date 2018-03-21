@@ -103,6 +103,10 @@ private slots:
     */
     void connectclient();
     /**
+    * @brief creating server
+    */
+    void connectserver();
+    /**
     * @brief closing of server
     */
     void disconnectserver();
@@ -163,6 +167,13 @@ signals:
     void clientMode();
 
     //gui -> network
+    /**
+    * @brief sending open the Server
+    *
+    * @param port where server is opened
+    */
+    void openServer(int);
+
     /**
     * @brief sending closing server to network
     */

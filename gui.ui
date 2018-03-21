@@ -20,59 +20,59 @@
       <x>50</x>
       <y>260</y>
       <width>241</width>
-      <height>231</height>
+      <height>271</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout_2">
-     <item row="6" column="0" colspan="2">
+     <item row="10" column="1" colspan="2">
       <widget class="QPushButton" name="server_disconnect">
        <property name="text">
-        <string>Trennen</string>
+        <string>Schließen</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="0">
+     <item row="1" column="1">
       <widget class="QLabel" name="client_server">
        <property name="text">
         <string>Server</string>
        </property>
       </widget>
      </item>
-     <item row="2" column="0">
+     <item row="2" column="1">
       <widget class="QLabel" name="client_port">
        <property name="text">
         <string>Port</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="1">
+     <item row="1" column="2">
       <widget class="QLineEdit" name="serverline"/>
      </item>
-     <item row="2" column="1">
+     <item row="2" column="2">
       <widget class="QLineEdit" name="portline"/>
      </item>
-     <item row="0" column="0" colspan="2" alignment="Qt::AlignHCenter">
+     <item row="0" column="1" colspan="2" alignment="Qt::AlignHCenter">
       <widget class="QLabel" name="client">
        <property name="text">
         <string>CLIENT</string>
        </property>
       </widget>
      </item>
-     <item row="3" column="0" colspan="2">
+     <item row="3" column="1" colspan="2">
       <widget class="QPushButton" name="client_connect">
        <property name="text">
         <string>Verbinden/Trennen</string>
        </property>
       </widget>
      </item>
-     <item row="5" column="0" colspan="2" alignment="Qt::AlignHCenter">
+     <item row="6" column="1" colspan="2" alignment="Qt::AlignHCenter">
       <widget class="QLabel" name="server">
        <property name="text">
         <string>SERVER</string>
        </property>
       </widget>
      </item>
-     <item row="4" column="0" colspan="2">
+     <item row="4" column="1" colspan="2">
       <spacer name="verticalSpacer">
        <property name="orientation">
         <enum>Qt::Vertical</enum>
@@ -84,6 +84,23 @@
         </size>
        </property>
       </spacer>
+     </item>
+     <item row="7" column="2">
+      <widget class="QLineEdit" name="server_line"/>
+     </item>
+     <item row="7" column="1">
+      <widget class="QLabel" name="server_line_2">
+       <property name="text">
+        <string>Port</string>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="1" colspan="2">
+      <widget class="QPushButton" name="server_connect">
+       <property name="text">
+        <string>Lauschen...</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </widget>
@@ -184,7 +201,7 @@
     <property name="geometry">
      <rect>
       <x>90</x>
-      <y>590</y>
+      <y>620</y>
       <width>161</width>
       <height>81</height>
      </rect>
