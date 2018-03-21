@@ -112,12 +112,14 @@ void MyClient::receiveServerData()
                       emit receiveShotAnswer(shotanswer);
          }
          break;
+
          case 0x01: {//case hit
                      ShotAnswer shotanswer = ShotAnswer(0x11,0x01);
                      shotanswer._status = new_block[2];
                      emit receiveShotAnswer(shotanswer);
          }
          break;
+
          case 0x02:{//case hit and sunk
                      ShotAnswer shotanswer = ShotAnswer(0x11, new_block[1]);
                      shotanswer._status = new_block[2];
@@ -130,6 +132,7 @@ void MyClient::receiveServerData()
                      emit receiveShotAnswer(shotanswer);
          }
          break;
+
          case 0x03:{     //case sunken ship and game end
                       ShotAnswer shotanswer = ShotAnswer(0x11, new_block[1]);
                       shotanswer._status = new_block[2];
@@ -142,12 +145,14 @@ void MyClient::receiveServerData()
                       emit receiveShotAnswer(shotanswer);
          }
          break;
+
          case 0x10: {
                      ShotAnswer shotanswer = ShotAnswer(0x11, 0x01);
                      shotanswer._status = new_block[2];
                      emit receiveShotAnswer(shotanswer);
          }
          break;
+
          case 0x11:{
                      ShotAnswer shotanswer = ShotAnswer(0x11, 0x01);
                      shotanswer._status = new_block[2];
@@ -155,6 +160,7 @@ void MyClient::receiveServerData()
 
          }
          break;
+
          case 0x20:{
                      ShotAnswer shotanswer = ShotAnswer(0x11, 0x01);
                      shotanswer._status = new_block[2];
@@ -170,6 +176,7 @@ void MyClient::receiveServerData()
        }
 
      }
+    break;
 
     case 0x80: //fill in groupNumber
                      {
@@ -177,6 +184,7 @@ void MyClient::receiveServerData()
                      id._groupNumber = new_block[2];
                      emit receiveIdentificationGroup(id);
     }
+    break;
 
     default: qDebug() << "Default out put ";
     break;

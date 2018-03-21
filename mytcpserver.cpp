@@ -182,6 +182,7 @@ void MyTcpServer::receiveData()
 
     }
     break;
+
     case 0x80: //fill in groupNumber
                      {
                      IdentificationGroup id = IdentificationGroup(0x80, 0x01);
@@ -189,6 +190,7 @@ void MyTcpServer::receiveData()
                      emit receiveGroupId(id);
     }
     break;
+
     default:
     {              //print in status window unknown message
                    qDebug() << "Default message";
@@ -196,6 +198,7 @@ void MyTcpServer::receiveData()
     break;
     }
 }
+
 
 // gui-> click
 void MyTcpServer::disconnectNow()
