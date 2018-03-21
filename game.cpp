@@ -104,8 +104,7 @@ void Game::receiveShot(Shot &msg)
                 if (!_matchboard.checkAlive(target)) {
                     _statuscode = 0x02;
                     _matchboard.setShip(location, false);
-                    std::vector< std::pair<int, int> >::iterator point;
-                    for (point = location.begin(); point != location.end(); point++) {
+                    for (auto point = location.begin(); point != location.end(); point++) {
                         emit updateField(*point, -3, true);
                     }
                     emit shipDestroyed(location.size());
@@ -181,16 +180,14 @@ void Game::receiveShotAnswer(ShotAnswer &msg)
             break;
         case 0x02: {// Getroffen und versenkt
             _matchboard.setShip(location, false);
-            std::vector< std::pair<int, int> >::iterator point;
-            for (point = location.begin(); point != location.end(); point++) {
+            for (auto point = location.begin(); point != location.end(); point++) {
                 emit updateField(*point, -3, false);
             }
             break;}
         case 0x03: // Getroffen und versenkt, Spielende
 
             _matchboard.setShip(location, false);
-            std::vector< std::pair<int, int> >::iterator point;
-            for (point = location.begin(); point != location.end(); point++) {
+            for (auto point = location.begin(); point != location.end(); point++) {
                 emit updateField(*point, -3, false);
             }
             checkWin();
