@@ -1,7 +1,7 @@
 #include "game.hpp"
 
 Game::Game(QObject *parent)
-    : QObject(parent), _win(false), _myturn(false)
+    : QObject(parent), _win(false)
 {
     _matchboard = Board();
 }
