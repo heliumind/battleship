@@ -43,6 +43,12 @@ void Control::setServer()
     connect(&myserver, &MyTcpServer::receiveShotAnswer, &match, &Game::receiveShotAnswer);
     // connect(&myserver, &MyTcpServer::receiveGroupId, &match, &Game::receiveGroupId);
 
+    connect(&match, &Game::sendParameter, &myserver, &MyTcpServer::sendParameter);
+    connect(&match, &Game::sendGameStart, &myserver, &MyTcpServer::sendGameStart);
+    connect(&match, &Game::sendShot, &myserver, &MyTcpServer::sendShot);
+    connect(&match, &Game::sendAnswerGame, &myserver, &MyTcpServer::sendAnswerGame);
+    connect(&match, &Game::sendShotAnswer, &myserver, &MyTcpServer::sendShotAnswer);
+    // connect(&match, &Game::sendGroupId, &myserver, MyTcpServer::sendGroupId)
 
     // gui <-> network
     connect(&myserver, &MyTcpServer::gotClient, &gui, &Gui::foundClient);
