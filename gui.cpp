@@ -229,7 +229,6 @@ void Gui::startButton(){
             ui->logic_status->append("Setze Schlachtschiff (5 Felder klicken)");
 
          }  else {
-                _readyToStart=0;
                 _setShipMode =0;
                 _gamerunning=1;
                 emit giveStart();

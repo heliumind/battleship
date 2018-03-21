@@ -214,10 +214,9 @@ void Game::sendParameterNet()
     emit sendParameter(param);
 }
 
-void Game::start()
+void Game::start() //
 {
    GameStart gamestart = GameStart(0x02, 0x00);
-   // _matchboard.printBoard();
    if (!_startMessage) {
     _startMessage = true;
     emit sendGameStart(gamestart);
