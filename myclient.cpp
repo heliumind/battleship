@@ -30,6 +30,7 @@ void MyClient::ConnectHost(QString ip, int port)
     //QByteArray data;
     _socket->connectToHost(ip, port);
     emit gotServer();
+
      QObject::connect(_socket, &QTcpSocket::readyRead,
                this, &MyClient::receiveServerData);
 
@@ -193,7 +194,8 @@ void MyClient::sendGameStart(GameStart &msg)
     quint8 data1 = msg._cmd;
     quint8 data2 = msg._dlc;
     outStream << data1 << data2;
-}
+
+ }
 
 void MyClient::sendShot(Shot &msg)
 {
