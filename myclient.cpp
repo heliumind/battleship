@@ -30,9 +30,6 @@ void MyClient::ConnectHost(QString ip, int port)
     //QByteArray data;
     _socket->connectToHost(ip, port);
     emit gotServer();
-     QObject::connect(_socket, &QTcpSocket::readyRead,
-               this, &MyClient::receiveServerData);
-
 }
 
 
@@ -193,6 +190,9 @@ void MyClient::sendGameStart(GameStart &msg)
     quint8 data1 = msg._cmd;
     quint8 data2 = msg._dlc;
     outStream << data1 << data2;
+    QObject::connect(_socket, &QTcpSocket::readyRead,
+              this, &MyClient::receiveServerData);
+
 }
 
 void MyClient::sendShot(Shot &msg)
@@ -203,6 +203,9 @@ void MyClient::sendShot(Shot &msg)
     quint8 data3 = msg._coordinates_x;
     quint8 data4 = msg._coordinates_y;
     outStream << data1 << data2 << data3 <<data4;
+    QObject::connect(_socket, &QTcpSocket::readyRead,
+              this, &MyClient::receiveServerData);
+
 }
 
 void MyClient::sendAnswerGame(AnswerGame &msg)
@@ -212,6 +215,9 @@ void MyClient::sendAnswerGame(AnswerGame &msg)
     quint8 data2 = msg._dlc;
     quint8 data3 = msg._status;
     outStream << data1 << data2 << data3;
+    QObject::connect(_socket, &QTcpSocket::readyRead,
+              this, &MyClient::receiveServerData);
+
 }
 
 void MyClient::sendShotAnswer(ShotAnswer &msg)
@@ -241,6 +247,9 @@ void MyClient::sendShotAnswer(ShotAnswer &msg)
     {
         outStream<< data1 << data2 << data3;
     }
+    QObject::connect(_socket, &QTcpSocket::readyRead,
+              this, &MyClient::receiveServerData);
+
 }
 
 void MyClient::sendIdentificationGroup(IdentificationGroup &msg)
@@ -251,4 +260,7 @@ void MyClient::sendIdentificationGroup(IdentificationGroup &msg)
     quint8 data3 = msg._groupNumber;
 
     outStream << data1 << data2 << data3;
+    QObject::connect(_socket, &QTcpSocket::readyRead,
+              this, &MyClient::receiveServerData);
+
 }
