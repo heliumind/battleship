@@ -221,7 +221,10 @@ void MyTcpServer::receiveData()
 // gui-> click
 void MyTcpServer::disconnectNow()
 {
+    qDebug() << "wir sind bei disconnect";
+    emit disconnectGuiServer();
     _socket->close();
+
 }
 
 void MyTcpServer::sendParameter(Parameter &msg)

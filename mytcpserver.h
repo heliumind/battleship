@@ -23,6 +23,8 @@ public:
 signals:
     // network -> client
     void gotClient();
+    void disconnectGuiServer();
+
 
     // network -> logic
     void    receiveGameStart();

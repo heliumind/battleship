@@ -32,6 +32,7 @@ signals:
 
     // network -> gui
     void gotServer();
+    void disconnectGui();
 
 
 public slots:

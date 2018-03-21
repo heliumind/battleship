@@ -164,7 +164,7 @@ void Gui::connectclient(){
                     _enemmap[i][j]->setEnabled(1);
                 }
             }
-            ui->nt_status->append("Client: Getrennt von Server");
+            ui->nt_status->append("Getrennt von Server.");
         }   else {
 
             QString server  = ui->serverline->text();
@@ -603,3 +603,4 @@ void Gui::chatButton(){
 void Gui::getChat(QString message){
     ui->chat_box->append("Gegner: " +message);
 }
+

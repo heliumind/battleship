@@ -215,7 +215,7 @@ void MyClient::receiveServerData()
 
 void MyClient::disconnectNow()
 {
-
+    emit disconnectGui();
     _socket->close();
 }
 

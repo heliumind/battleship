@@ -51,6 +51,8 @@ void Control::setServer()
 
     // gui <-> network
     connect(&myserver, &MyTcpServer::gotClient, &gui, &Gui::foundClient);
+    connect(&gui, &Gui::disconnectServer, &myserver, &MyTcpServer::disconnectNow);
+
 }
 
 void Control::setClient()
@@ -76,4 +78,6 @@ void Control::setClient()
     // gui <-> network
     connect(&gui, &Gui::connectClient, &myclient, &MyClient::ConnectHost);
     connect(&myclient, &MyClient::gotServer, &gui, &Gui::foundServer);
+    connect(&gui, &Gui::disconnectClient, &myclient, &MyClient::disconnectNow);
+
 }
