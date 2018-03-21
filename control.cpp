@@ -33,8 +33,6 @@ void Control::start()
 void Control::setServer()
 {
     myserver.initServer();
-    Parameter msg = Parameter(0x01, 0x06);
-    myserver.sendParameter(msg);
 
     // logic <-> network
     connect(&myserver, &MyTcpServer::receiveGameStart, &match, &Game::receiveGameStart);

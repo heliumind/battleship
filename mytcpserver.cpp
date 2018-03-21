@@ -69,7 +69,7 @@ void MyTcpServer::receiveData()
 
     //read first byte for identification
     uint8_t cmd = new_block[0];
-    qDebug()<< "Hier" <<new_block[0];
+    //qDebug()<< "Hier" <<new_block[0];
 
     switch(cmd)
     {
@@ -77,6 +77,8 @@ void MyTcpServer::receiveData()
 
     case 0x02:
     {               GameStart gamestart = GameStart(0x02, 0x00);
+                    qDebug() << "Gamstart cmd: " << gamestart._cmd;
+                    qDebug() << "Gemstart dlc: " << gamestart._dlc;
                     emit receiveGameStart();
     }
     break;
@@ -95,7 +97,7 @@ void MyTcpServer::receiveData()
 
         {            //fill in anser on gamestart;
                      AnswerGame answergame = AnswerGame(0x10, 0x01);
-                     qDebug() << answergame._status;
+                     qDebug() << "AnswerGAme:" << answergame._status;
                      // answergame._status = new_block[2];
                      emit receiveAnswerGame(answergame);
 
