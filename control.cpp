@@ -27,15 +27,14 @@ void Control::start()
 
     // Modus 1: Server
 
-    // myserver.sendParameterData();
-
-
 
 }
 
 void Control::setServer()
 {
     myserver.initServer();
+    Parameter msg = Parameter(0x01, 0x06);
+    myserver.sendParameter(msg);
 
     // logic <-> network
     //connect every Message

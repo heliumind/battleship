@@ -29,6 +29,7 @@ private:
     bool    _myturn;
     uint8_t _statuscode;
     coordinates _lastShot;
+    bool _start;
 
 signals:
     // logic -> gui
@@ -37,7 +38,7 @@ signals:
     void    updateField(coordinates point, int flag, bool own);
     void    shipDestroyed(int size);
 
-    // logic -> network
+    // logic -> network (Message to send)
     void    sendParameter(Parameter &msg);
     void    sendGameStart(GameStart &msg);
     void    sendShot(Shot &msg);

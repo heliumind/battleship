@@ -22,7 +22,15 @@ public:
 
 
 signals:
-    void messageSent(Message* msg);
+    // network -> logic (received Message)
+    void receiveParameter(Parameter &msg);
+    void receiveGameStart();
+    void receiveShot(Shot &msg);
+    void receiveAnswerGame(AnswerGame &msg);
+    void receiveShotAnswer(ShotAnswer &msg);
+    void receiveIdentificationGroup(IdentificationGroup &msg);
+
+    // network -> gui
     void gotServer();
 
 
@@ -30,7 +38,13 @@ public slots:
     void ConnectHost(QString ip, int port);
     void receiveServerData();
     void disconnectNow();
-    void sendMessage(Message *msg);
+
+    // logic -> network (Messages to send)
+    void sendGameStart(GameStart &msg);
+    void sendShot(Shot &msg);
+    void sendAnswerGame(AnswerGame &msg);
+    void sendShotAnswer(ShotAnswer &msg);
+    void sendIdentificationGroup(IdentificationGroup &msg);
 
 public:
     QTcpSocket *_socket;

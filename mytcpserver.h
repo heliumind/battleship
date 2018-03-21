@@ -21,9 +21,10 @@ public:
     MyTcpServer(MyTcpServer&&);
 
 signals:
-    void messageSent(Message* msg);
+    // network -> client
     void gotClient();
 
+    // network -> logic
     void    receiveGameStart();
     void    receiveShot(Shot &msg);
     void    receiveAnswerGame(AnswerGame &msg);
@@ -37,7 +38,7 @@ public slots:
     void initServer();
     //void sendMessage(Message *msg);
 
-
+    // logic -> network
     void    sendParameter(Parameter &msg);
     void    sendGameStart(GameStart &msg);
     void    sendShot(Shot &msg);
