@@ -162,7 +162,9 @@ void MyClient::receiveServerData()
          }
          break;
 
-         default:{}
+         default:{
+                     qDebug() << "Default Output in case 11";
+         }
              //in statusleiste wasausgeben
          break;
        }
@@ -176,7 +178,7 @@ void MyClient::receiveServerData()
                      emit receiveIdentificationGroup(id);
     }
 
-    default: qDebug() << "Unknown Message";
+    default: qDebug() << "Default out put ";
     break;
     }
 
