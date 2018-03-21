@@ -52,14 +52,22 @@ void Control::setClient()
 {
 
     // logic <-> network
-
+    //connect(&myclient, &MyClient::receiveParameter, &match, &Game::re) //
     connect(&myclient, &MyClient::receiveGameStart, &match, &Game::receiveGameStart);
     connect(&myclient, &MyClient::receiveShot, &match, &Game::receiveShot);
     connect(&myclient, &MyClient::receiveShotAnswer, &match, &Game::receiveShotAnswer);
     connect(&myclient, &MyClient::receiveAnswerGame, &match, &Game::receiveAnswerGame);
     //connect(&myclient, &MyClient::receiveIdentificationGroup, &match, &Game::receiveGroupId);
 
-     // connect every Message
+     // connect every Message#
+
+    connect(&match, &Game::sendGameStart, &myclient, &MyClient::sendGameStart);
+    connect(&match, &Game::sendShot, &myclient, &MyClient::sendShot);
+    connect(&match, &Game::sendAnswerGame, &myclient, &MyClient::sendAnswerGame);
+    connect(&match, &Game::sendShotAnswer, &myclient, &MyClient::sendShotAnswer);
+    //connect(&match, &Game::, &myclient, &MyClient::sendIdentificationGroup);
+
+
     // gui <-> network
     connect(&gui, &Gui::connectClient, &myclient, &MyClient::ConnectHost);
     connect(&myclient, &MyClient::gotServer, &gui, &Gui::foundServer);
