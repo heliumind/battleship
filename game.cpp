@@ -176,15 +176,15 @@ void Game::receiveShotAnswer(ShotAnswer &msg)
     _statuscode = code;
     switch(code) {
         case 0x00: // Nicht getroffen
-            _matchboard.setField(_lastShot, -2);
+            _enemyboard.setField(_lastShot, -2);
             emit updateField(_lastShot, -2, false);
             break;
         case 0x01: // Getroffen
-            _matchboard.setField(_lastShot, -1);
+            _enemyboard.setField(_lastShot, -1);
             emit updateField(_lastShot, -1, false);
             break;
         case 0x02: {// Getroffen und versenkt
-            _matchboard.setShip(location, false);
+            _enemyboard.setShip(location, false);
             for (auto point = location.begin(); point != location.end(); point++) {
                 emit updateField(*point, -3, false);
             }
@@ -192,7 +192,7 @@ void Game::receiveShotAnswer(ShotAnswer &msg)
             break;}
         case 0x03: // Getroffen und versenkt, Spielende
 
-            _matchboard.setShip(location, false);
+            _enemyboard.setShip(location, false);
             for (auto point = location.begin(); point != location.end(); point++) {
                 emit updateField(*point, -3, false);
             }
