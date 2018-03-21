@@ -231,22 +231,30 @@ void MyClient::sendShotAnswer(ShotAnswer &msg)
     quint8 data1 = msg._cmd;
     quint8 data2 = msg._dlc;
     quint8 data3 = msg._status;
+
+    outStream<< data1 << data2 << data3;
     if(data3 == 0x02 || data3 == 0x03)
     {
-            quint8 data4 = msg._position[0].first;
-            quint8 data5 = msg._position[0].second;
-            quint8 data6 = msg._position[1].first;
-            quint8 data7 = msg._position[1].second;
-            quint8 data8 = msg._position[2].first;
-            quint8 data9 = msg._position[2].second;
-            quint8 data10 = msg._position[3].first;
-            quint8 data11 = msg._position[3].second;
-            quint8 data12 = msg._position[4].first;
-            quint8 data13 = msg._position[4].second;
-            outStream << data1 << data2 << data3 << data4 <<
-                         data5 << data6 << data7 << data8 <<
-                         data9 << data10 << data11 << data12 <<
-                         data13;
+        std::vector<quint8> location = std::vector<quint8>(data2);
+        for (auto &point: msg._position) {
+            outStream << point.first << point.second;
+        }
+//    if(data3 == 0x02 || data3 == 0x03)
+//    {
+//            quint8 data4 = msg._position[0].first;
+//            quint8 data5 = msg._position[0].second;
+//            quint8 data6 = msg._position[1].first;
+//            quint8 data7 = msg._position[1].second;
+//            quint8 data8 = msg._position[2].first;
+//            quint8 data9 = msg._position[2].second;
+//            quint8 data10 = msg._position[3].first;
+//            quint8 data11 = msg._position[3].second;
+//            quint8 data12 = msg._position[4].first;
+//            quint8 data13 = msg._position[4].second;
+//            outStream << data1 << data2 << data3 << data4 <<
+//                         data5 << data6 << data7 << data8 <<
+//                         data9 << data10 << data11 << data12 <<
+//                         data13;
     }
     else
     {
