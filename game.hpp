@@ -56,6 +56,7 @@ public slots:
     void    receiveShot(Shot &msg);
     void    receiveAnswerGame(AnswerGame &msg);
     void    receiveShotAnswer(ShotAnswer &msg);
+    // void    receiveGroupId(IdentificationGroup &msg);
     // void    receiveMessage(Message* msg);
 
     // logic -> gui
