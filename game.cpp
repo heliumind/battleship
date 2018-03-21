@@ -87,6 +87,12 @@ void Game::receiveShot(Shot &msg)
     else { // Opponents turn
         int flag = _matchboard.getField(point);
         switch (flag) {
+            case -1:
+                break;
+            case -2:
+                break;
+            case -3:
+                break;
             case 0:
                 // No Hit
                 _statuscode = 0x00;
@@ -113,9 +119,9 @@ void Game::receiveShot(Shot &msg)
                 break;
         }
         checkWin();
-        if (_win) {
+        if (_win) { // I lost;
             _statuscode = 0x03;
-            emit sendWin(_win);
+            emit sendWin(false);
         }
     }
 
@@ -190,9 +196,7 @@ void Game::receiveShotAnswer(ShotAnswer &msg)
             for (auto point = location.begin(); point != location.end(); point++) {
                 emit updateField(*point, -3, false);
             }
-            checkWin();
-            if (_win == true) {
-                emit sendWin(_win);
+            emit sendWin(true);
             }
             break;
 
