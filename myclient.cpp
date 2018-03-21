@@ -45,7 +45,7 @@ void MyClient::receiveServerData()
     QDataStream inStream(_socket);
     quint8 block;
     //creat vector to catch all incoming bytes
-    std::vector<uint8_t> new_block;
+    std::vector<quint8> new_block;
     while(_socket->bytesAvailable()) {
         inStream >> block;
         new_block.push_back(block);
@@ -53,6 +53,7 @@ void MyClient::receiveServerData()
         qDebug()<< "Debug ausgabe in while: "<< block;
         qDebug() << "------unten";
     }
+
     //read first byte for identification
     uint8_t cmd=new_block[0];
     qDebug()<< "nach block[0]" << new_block[0];
@@ -127,11 +128,14 @@ void MyClient::receiveServerData()
                      ShotAnswer shotanswer = ShotAnswer(0x11, new_block[1]);
                      shotanswer._status = new_block[2];
                      position _location;
-                     std::vector<uint8_t>::iterator iter;
-                     for (iter += 3; iter != new_block.end(); iter+=2) {
-                         _location.push_back(std::make_pair(*iter, *iter++));
+                     for (size_t i = 3; i < new_block.size(); i+=2) {
+                         _location.push_back(std::make_pair(new_block[i], new_block[i+1]));
                      }
                      shotanswer._position = _location;
+//                     for (auto iter = new_block.begin() + 3; iter != new_block.end(); iter+=2) {
+//                         _location.push_back(std::make_pair(*iter, *iter++));
+//                     }
+
 //                     for(int i = 0; i >= shotanswer._dlc-3; i++)
 //                     {
 //                         //creat vector of coordinate pairs of sunken ship;
@@ -145,11 +149,15 @@ void MyClient::receiveServerData()
                       ShotAnswer shotanswer = ShotAnswer(0x11, new_block[1]);
                       shotanswer._status = new_block[2];
                       position _location;
-                      std::vector<uint8_t>::iterator iter;
-                      for (iter += 3; iter != new_block.end(); iter+=2) {
-                          _location.push_back(std::make_pair(*iter, *iter++));
+                      for (size_t i = 3; i < new_block.size(); i+=2) {
+                          _location.push_back(std::make_pair(new_block[i], new_block[i+1]));
                       }
                       shotanswer._position = _location;
+//                      std::vector<uint8_t>::iterator iter;
+//                      for (iter += 3; iter != new_block.end(); iter+=2) {
+//                          _location.push_back(std::make_pair(*iter, *iter++));
+//                      }
+//                      shotanswer._position = _location;
 //                      for(int i = 0; i >= shotanswer._dlc-3; i++)
 //                      {
 //                          //creat vector of coordinate pairs of sunken ship;
@@ -245,12 +253,14 @@ void MyClient::sendShotAnswer(ShotAnswer &msg)
     quint8 data2 = msg._dlc;
     quint8 data3 = msg._status;
 
-    outStream<< data1 << data2 << data3;
     if(data3 == 0x02 || data3 == 0x03)
     {
+        outStream<< data1 << data2 << data3;
         std::vector<quint8> location = std::vector<quint8>(data2-1);
+        qDebug() << "no points: " << msg._position.size();
         for (auto &point: msg._position) {
             outStream << point.first << point.second;
+            qDebug() << "point.first= " <<point.first << "; point.second= " << point.second;
         }
 //    if(data3 == 0x02 || data3 == 0x03)
 //    {

@@ -130,11 +130,15 @@ void MyTcpServer::receiveData()
                     ShotAnswer shotanswer = ShotAnswer(0x11, new_block[1]);
                     shotanswer._status = new_block[2];
                     position _location;
-                    std::vector<uint8_t>::iterator iter;
-                    for (iter += 3; iter != new_block.end(); iter+=2) {
-                        _location.push_back(std::make_pair(*iter, *iter++));
+                    for (size_t i = 3; i < new_block.size(); i+=2) {
+                        _location.push_back(std::make_pair(new_block[i], new_block[i+1]));
                     }
                     shotanswer._position = _location;
+//                    std::vector<uint8_t>::iterator iter;
+//                    for (iter += 3; iter != new_block.end(); iter+=2) {
+//                        _location.push_back(std::make_pair(*iter, *iter++));
+//                    }
+//                    shotanswer._position = _location;
 //                    for(int i = 0; i >= shotanswer._dlc-5; i++)
 //                    {
 //                        //creat vector of coordinate pairs of sunken ship;
@@ -148,11 +152,15 @@ void MyTcpServer::receiveData()
                      ShotAnswer shotanswer = ShotAnswer(0x11, new_block[1]);
                      shotanswer._status = new_block[2];
                      position _location;
-                     std::vector<uint8_t>::iterator iter;
-                     for (iter += 3; iter != new_block.end(); iter+=2) {
-                         _location.push_back(std::make_pair(*iter, *iter++));
+                     for (size_t i = 3; i < new_block.size(); i+=2) {
+                         _location.push_back(std::make_pair(new_block[i], new_block[i+1]));
                      }
                      shotanswer._position = _location;
+//                     std::vector<uint8_t>::iterator iter;
+//                     for (iter += 3; iter != new_block.end(); iter+=2) {
+//                         _location.push_back(std::make_pair(*iter, *iter++));
+//                     }
+//                     shotanswer._position = _location;
 //                     for(int i = 0; i >= shotanswer._dlc-5; i++)
 //                     {
 //                         //creat vector of coordinate pairs of sunken ship;
@@ -271,9 +279,8 @@ void MyTcpServer::sendShotAnswer(ShotAnswer &msg)
     outStream<< data1 << data2 << data3;
     if(data3 == 0x02 || data3 == 0x03)
     {
-        std::vector<quint8> location = std::vector<quint8>(data2-1);
         for (auto &point: msg._position) {
-            outStream << point.first << point.second;
+            outStream << quint8(point.first) << quint8(point.second);
         }
 
 //            quint8 data4 = msg._position[0].first;
