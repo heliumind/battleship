@@ -47,11 +47,11 @@ void MyClient::receiveServerData()
     while(_socket->bytesAvailable()) {
         inStream >> block;
         new_block.push_back(block);
-        qDebug()<<block;
+        qDebug()<< "Debug ausgabe in while: "<< block;
     }
     //read first byte for identification
     uint8_t cmd=new_block[0];
-    qDebug()<< new_block[0];
+    qDebug()<< "nach block[0]" << new_block[0];
     switch(cmd)
     {
     case 0x01:
@@ -70,6 +70,8 @@ void MyClient::receiveServerData()
 
     case 0x02:
     {                GameStart gamestart = GameStart(0x02, 0x00);
+        qDebug() << "Gamstart received cmd: " << gamestart._cmd;
+        qDebug() << "Gemstart received dlc: " << gamestart._dlc;
                      emit receiveGameStart();
 
     }
