@@ -72,7 +72,6 @@ void Gui::setupFields(){
             Button* b1 = new Button(i, j);
             _enemmap[i][j] = b1;
             ui->enemyfield->addWidget(b1, i,j);
-            //connect(b1, &Button::clickedPos, this, &Gui::output);
             connect(b1, &Button::clickedPos, this, &Gui::getShoot);
         }
     }
@@ -83,10 +82,159 @@ void Gui::setupFields(){
             Button *b2 = new Button(i, j);
             _map[i][j] = b2;
             ui->field->addWidget(b2, i, j);
-            //connect(b2, &Button::clickedPos, this, &Gui::output);
             connect(b2, &Button::clickedPos, this, &Gui::getCoordinates);
          }
     }
+}
+
+//going to server mode
+void Gui::setServer(){
+    if(_client==0 && _server==0){
+        _server=1;
+
+        _yourName = ui->nameline->text();
+        ui->nt_status->append("Gehe in Server Modus als " + _yourName );
+        ui->logic_status->append("Suche nach Spieler...");
+        ui->serverMode->setEnabled(0);
+        ui->clientMode->setEnabled(0);
+        ui->nameline->setEnabled(0);
+        ui->serverline->setEnabled(0);
+        ui->portline->setEnabled(0);
+        ui->client_connect->setEnabled(0);
+        ui->server_disconnect->setEnabled(1);
+        emit serverMode();
+    }
+}
+
+//going to client mode
+void Gui::setClient(){
+    if(_server==0 && _client==0){
+        _client=1;
+
+        _yourName = ui->nameline->text();
+        ui->nt_status->append("Gehe in Client Modus als " + _yourName);
+        ui->logic_status->append("Server und Client auswählen.");
+        ui->serverMode->setEnabled(0);
+        ui->clientMode->setEnabled(0);
+        ui->nameline->setEnabled(0);
+        ui->serverline->setEnabled(1);
+        ui->portline->setEnabled(1);
+        ui->client_connect->setEnabled(1);
+        ui->server_disconnect->setEnabled(0);
+        emit clientMode();
+    }
+}
+
+
+//connect or disconnet of client
+void Gui::connectclient(){
+    if(_client){
+        if(_connected){
+
+            emit disconnectClient();
+            _connected= 0;
+            _yourturn   = 0;
+            _setShipMode= 0;
+            _shipCounter= 0;
+            _gamerunning= 0;
+            _readyToStart=0;
+            for(int i=0; i<10; i++){ // row
+                for(int j=0; j<10; j++){ // col
+                    _map[i][j]->setStyleSheet("* { background-color: rgb(255,255,255) }");
+                    _enemmap[i][j]->setStyleSheet("* { background-color: rgb(255,255,255) }");
+                    _map[i][j]->setEnabled(1);
+                    _enemmap[i][j]->setEnabled(1);
+                }
+            }
+            ui->nt_status->append("Client: Getrennt von Server");
+        }   else {
+
+            QString server  = ui->serverline->text();
+            int port = ui->portline->text().toShort();
+
+            ui->nt_status->append("Verbinde zum Server " + server + " auf Port " + ui->portline->text() +"...");
+            ui->logic_status->append("Verbinde zum Server...");
+            emit connectClient(server, port);
+        }
+    }
+}
+
+//closing server
+void Gui::disconnectserver(){
+    if(_server){
+        if(_connected){
+
+            emit disconnectServer();
+            _connected=0;
+            _yourturn   = 0;
+            _setShipMode= 0;
+            _shipCounter= 0;
+            _gamerunning= 0;
+            _readyToStart=0;
+            for(int i=0; i<10; i++){ // row
+                for(int j=0; j<10; j++){ // col
+                    _map[i][j]->setStyleSheet("* { background-color: rgb(255,255,255) }");
+                    _enemmap[i][j]->setStyleSheet("* { background-color: rgb(255,255,255) }");
+                    _map[i][j]->setEnabled(1);
+                    _enemmap[i][j]->setEnabled(1);
+                }
+            }
+            ui->nt_status->append("Server wir geschlossen.");
+            ui->logic_status->append("Aktuelles Spiel wird beendet...");
+        }
+    }
+}
+
+//starting game or beginning ship placement
+void Gui::startButton(){
+
+    if(_connected==0 || _gamerunning==1) {
+        ui->logic_status->append("Gerade nicht möglich.");
+    }
+    else {
+        if(_readyToStart==0){
+
+            _gamerunning=1;
+            _setShipMode=1;
+            _shipnumber= 0;
+            _shipCounter= 0;
+            ui->logic_status->append("Beginne mit Plazierung der Schiffe.");
+            ui->logic_status->append("Setze Schlachtschiff (5 Felder klicken)");
+
+         }  else {
+                _readyToStart=0;
+                _setShipMode =0;
+                _gamerunning=1;
+                emit giveStart();
+                ui->logic_status->append("Spiel wird gestartet...");
+                ui->b50->setStyleSheet("* { background-color: rgb(025,225,055) }");
+                ui->b40->setStyleSheet("* { background-color: rgb(025,225,055) }");
+                ui->b41->setStyleSheet("* { background-color: rgb(025,225,055) }");
+                ui->b30->setStyleSheet("* { background-color: rgb(025,225,055) }");
+                ui->b31->setStyleSheet("* { background-color: rgb(025,225,055) }");
+                ui->b32->setStyleSheet("* { background-color: rgb(025,225,055) }");
+                ui->b20->setStyleSheet("* { background-color: rgb(025,225,055) }");
+                ui->b21->setStyleSheet("* { background-color: rgb(025,225,055) }");
+                ui->b22->setStyleSheet("* { background-color: rgb(025,225,055) }");
+                ui->b23->setStyleSheet("* { background-color: rgb(025,225,055) }");
+            }
+     }
+}
+
+//connected to server
+void Gui::foundServer(){
+    _connected= 1;
+    ui->nt_status->append("Verbunden mit Server.");
+    ui->gameStart->setEnabled(1);
+    ui->logic_status->append("Bereit für Spielstart. Drücke Start....");
+}
+
+//connected to client
+void Gui::foundClient(){
+    _connected= 1;
+    ui->gameStart->setEnabled(1);
+    ui->nt_status->append("Spieler gefunden.");
+    ui->logic_status->append("Bereit für Spielstart. Drücke Start...");
 }
 
 //check for illegal ship placement
@@ -243,7 +391,7 @@ void Gui::getCoordinates(std::pair<int, int> point){
                   for(int i=0; i<3; i++){
                       int x= _location[i].first;
                       int y= _location[i].second;
-                      _map[x][y]->setStyleSheet("* { background-color: rgb(125,225,055) }");   
+                      _map[x][y]->setStyleSheet("* { background-color: rgb(125,225,055) }");
                   }
                   if(_shipnumber< 5) ui->logic_status->append("Setze Zerstörer (3 Felder klicken)");
                   else ui->logic_status->append("Setze U-Boot(2 Felder klicken)");
@@ -279,7 +427,7 @@ void Gui::getCoordinates(std::pair<int, int> point){
                   for(int i=0; i<2; i++){
                       int x= _location[i].first;
                       int y= _location[i].second;
-                      _map[x][y]->setStyleSheet("* { background-color: rgb(125,225,055) }");  
+                      _map[x][y]->setStyleSheet("* { background-color: rgb(125,225,055) }");
                   }
                   if(_shipnumber==9) ui->logic_status->append("Bereit für Spielstart. Drücke Start.");
                   else ui->logic_status->append("Setze U-Boot(2 Felder klicken)");
@@ -302,163 +450,15 @@ void Gui::getCoordinates(std::pair<int, int> point){
     }
 }
 
-//void Gui::output(std::pair<int, int> point){
-//    ui->logic_status->append(QString::number(  point.first  ) + ", "+ QString::number(  point.second  )); //remove later//
-//}
-
-
-
-void Gui::setServer(){
-    if(_client==0 && _server==0){
-        _server=1;
-
-        _yourName = ui->nameline->text();
-        ui->nt_status->append("Gehe in Server Modus als " + _yourName );
-        ui->logic_status->append("Suche nach Spieler...");
-        ui->serverMode->setEnabled(0);
-        ui->clientMode->setEnabled(0);
-        ui->nameline->setEnabled(0);
-        ui->serverline->setEnabled(0);
-        ui->portline->setEnabled(0);
-        ui->client_connect->setEnabled(0);
-        ui->server_disconnect->setEnabled(1);
-        emit serverMode();
-    }
-}
-void Gui::setClient(){
-    if(_server==0 && _client==0){
-        _client=1;
-
-        _yourName = ui->nameline->text();
-        ui->nt_status->append("Gehe in Client Modus als " + _yourName);
-        ui->logic_status->append("Server und Client auswählen.");
-        ui->serverMode->setEnabled(0);
-        ui->clientMode->setEnabled(0);
-        ui->nameline->setEnabled(0);
-        ui->serverline->setEnabled(1);
-        ui->portline->setEnabled(1);
-        ui->client_connect->setEnabled(1);
-        ui->server_disconnect->setEnabled(0);
-        emit clientMode();
-    }
-}
-
-void Gui::startButton(){
-
-    if(_connected==0 || _gamerunning==1) {
-        ui->logic_status->append("Gerade nicht möglich.");
-    }
-    else {
-        if(_readyToStart==0){
-
-            _gamerunning=1;
-            _setShipMode=1;
-            _shipnumber= 0;
-            _shipCounter= 0;
-            ui->logic_status->append("Beginne mit Plazierung der Schiffe.");
-            ui->logic_status->append("Setze Schlachtschiff (5 Felder klicken)");
-
-         }  else {
-                _readyToStart=0;
-                _setShipMode =0;
-                _gamerunning=1;
-                emit giveStart();
-                ui->logic_status->append("Spiel wird gestartet...");
-                ui->b50->setStyleSheet("* { background-color: rgb(025,225,055) }");
-                ui->b40->setStyleSheet("* { background-color: rgb(025,225,055) }");
-                ui->b41->setStyleSheet("* { background-color: rgb(025,225,055) }");
-                ui->b30->setStyleSheet("* { background-color: rgb(025,225,055) }");
-                ui->b31->setStyleSheet("* { background-color: rgb(025,225,055) }");
-                ui->b32->setStyleSheet("* { background-color: rgb(025,225,055) }");
-                ui->b20->setStyleSheet("* { background-color: rgb(025,225,055) }");
-                ui->b21->setStyleSheet("* { background-color: rgb(025,225,055) }");
-                ui->b22->setStyleSheet("* { background-color: rgb(025,225,055) }");
-                ui->b23->setStyleSheet("* { background-color: rgb(025,225,055) }");
-            }
-     }
-}
-
-void Gui::connectclient(){
-    if(_client){
-        if(_connected){
-
-            emit disconnectClient();
-            _connected= 0;
-            _yourturn   = 0;
-            _setShipMode= 0;
-            _shipCounter= 0;
-            _gamerunning= 0;
-            _readyToStart=0;
-            for(int i=0; i<10; i++){ // row
-                for(int j=0; j<10; j++){ // col
-                    _map[i][j]->setStyleSheet("* { background-color: rgb(255,255,255) }");
-                    _enemmap[i][j]->setStyleSheet("* { background-color: rgb(255,255,255) }");
-                    _map[i][j]->setEnabled(1);
-                    _enemmap[i][j]->setEnabled(1);
-                }
-            }
-            ui->nt_status->append("Client: Getrennt von Server");
-        }   else {
-
-            QString server  = ui->serverline->text();
-            int port = ui->portline->text().toShort();
-
-            ui->nt_status->append("Verbinde zum Server " + server + " auf Port " + ui->portline->text() +"...");
-            ui->logic_status->append("Verbinde zum Server...");
-            emit connectClient(server, port);
-        }
-    }
-}
-
-void Gui::foundServer(){
-    _connected= 1;
-    ui->nt_status->append("Verbunden mit Server.");
-    ui->gameStart->setEnabled(1);
-    ui->logic_status->append("Bereit für Spielstart. Drücke Start....");
-}
-
-void Gui::foundClient(){
-    _connected= 1;
-    ui->gameStart->setEnabled(1);
-    ui->nt_status->append("Spieler gefunden.");
-    ui->logic_status->append("Bereit für Spielstart. Drücke Start...");
-}
-
-void Gui::disconnectserver(){
-    if(_server){
-        if(_connected){
-
-            emit disconnectServer();
-            _connected=0;
-            _yourturn   = 0;
-            _setShipMode= 0;
-            _shipCounter= 0;
-            _gamerunning= 0;
-            _readyToStart=0;
-            for(int i=0; i<10; i++){ // row
-                for(int j=0; j<10; j++){ // col
-                    _map[i][j]->setStyleSheet("* { background-color: rgb(255,255,255) }");
-                    _enemmap[i][j]->setStyleSheet("* { background-color: rgb(255,255,255) }");
-                    _map[i][j]->setEnabled(1);
-                    _enemmap[i][j]->setEnabled(1);
-                }
-            }
-            ui->nt_status->append("Server wir geschlossen.");
-            ui->logic_status->append("Aktuelles Spiel wird beendet...");
-        }
-    }
-}
-
-
-
-
+//sending own shot
 void Gui::getShoot(std::pair<int, int> loc){
     if(_yourturn){
-      emit giveShoot(loc);
       ui->logic_status->append("Schieße auf Feld "+ QString::number(loc.first)+", "+ QString::number(loc.second));
+      emit giveShoot(loc);
     } else ui->logic_status->append("Schuss nicht möglich. Nicht am Zug!");
 }
 
+//updating current turn
 void Gui::getYourTurn(bool turn){
     if(turn){
         ui->logic_status->append("DEIN ZUG!");
@@ -469,6 +469,7 @@ void Gui::getYourTurn(bool turn){
     }
 }
 
+//ending
 void Gui::getWin(bool win){
     _setShipMode= 0;
     _shipCounter= 0;
@@ -480,6 +481,7 @@ void Gui::getWin(bool win){
     ui->logic_status->append("DU HAST VERLOREN (T . T)");
 }
 
+//sending shots
 void Gui::getUpdateField(std::pair<int, int> point, int flag, bool own)
 {
 
@@ -510,6 +512,7 @@ void Gui::getUpdateField(std::pair<int, int> point, int flag, bool own)
         }
 }
 
+//updating target list
 void Gui::getShipDestroyed(int target){
     ui->logic_status->append("Schiff zerstört!");
     switch(target){
@@ -572,13 +575,14 @@ void Gui::getShipDestroyed(int target){
     }
 }
 
-
-void Gui::getChat(QString message){
-    ui->chat_box->append("Gegner: " +message);
-}
-
+//sending own message
 void Gui::chatButton(){
      QString message= ui->chat_line->text();
      ui->chat_box->append(_yourName +": " + message);
      emit giveChat(message);
+}
+
+//receiving enemy message
+void Gui::getChat(QString message){
+    ui->chat_box->append("Gegner: " +message);
 }

@@ -30,7 +30,13 @@ public:
     explicit Gui(QMainWindow *parent = 0);
     ~Gui();
 
-    void getError(position, int);
+    /**
+    * @brief check for correct ship placement
+    *
+    * @param loc vector of placed fields
+    * @param limit size of ship
+    */
+    void getError(position loc, int limit);
 
 private:
     Ui::Gui *ui;
@@ -72,72 +78,164 @@ private:
     //coordinate clicked
     std::pair<int, int> _waitCoordinates;
 
-    //extra features
+    //user name
     QString _yourName;
 
 
 
 private slots:
-    //set up two fields
+    /**
+    * @brief set up two fields
+    */
     void setupFields();
 
-    //initial mode
+    /**
+    * @brief initial Mode Server
+    */
     void setServer();
+    /**
+    * @brief initial Mode Server
+    */
     void setClient();
 
-    //connect and disconnect
-    void disconnectserver();
+    /**
+    * @brief connect and disconnect of client
+    */
     void connectclient();
+    /**
+    * @brief closing of server
+    */
+    void disconnectserver();
 
-    //set ships or start game
+    /**
+    * @brief start setting ships or start game
+    */
     void startButton();
 
-    //give out coordinate on status field
-    //void output(std::pair<int, int>);
+    /**
+    * @brief placing ships on own field
+    *
+    * @param coordinate of ship part
+    */
+    void getCoordinates(std::pair<int, int> point);
 
-    //placing ships on own field
-    void getCoordinates(std::pair<int, int>);
+    /**
+    * @brief choosing are target field where to shoot
+    *
+    * @param loc coordinates of target field
+    */
+    void getShoot(std::pair<int, int> loc);
 
-    //extra features
+    /**
+    * @brief message for chat
+    */
     void chatButton();
 
 
 signals:
 
     // gui -> logic
+    /**
+    * @brief sending full ship to logic
+    *
+    * @param position location of ship
+    */
     void giveShip(position);
+    /**
+    * @brief sending target of own shot to logic
+    *
+    * @param coordinates coordinate of shot
+    */
     void giveShoot(coordinates);
+    /**
+    * @brief sending ready to start game to logic
+    */
     void giveStart();
-    void sendLocation(std::pair<int, int>);
 
     // gui -> control
+    /**
+    * @brief sending Server Mode
+    */
     void serverMode();
+    /**
+    * @brief sending Client Mode
+    */
     void clientMode();
 
     //gui -> network
+    /**
+    * @brief sending closing server to network
+    */
     void disconnectServer();
+    /**
+    * @brief sending disconnection from server to network
+    */
     void disconnectClient();
+    /**
+    * @brief sending connection to server to network
+    *
+    * @param QString IP adress of server
+    * @param int port
+    */
     void connectClient(QString, int);
 
-    //extra features
+    /**
+    * @brief sending chat message to network
+    *
+    * @param QString message
+    */
     void giveChat(QString);
 
 
 public slots:
-
-    //connection logic -> gui
-    void getUpdateField(std::pair<int, int> point, int flag, bool own);
-    void getShoot(std::pair<int, int>);
-    void getYourTurn(bool);
-    void getWin(bool);
-    void getShipDestroyed(int);
-
     //connection network -> gui
-    void foundClient();
+    /**
+    * @brief getting client succesfully connected to server
+    */
     void foundServer();
 
-    //extra features
-    void getChat(QString);
+    /**
+    * @brief getting client succesfully connected to server
+    */
+    void foundClient();
+
+    //connection logic -> gui
+    /**
+    * @brief getting enemy shot on own field
+    *
+    * @param point coordinate where own or enemy shot hit
+    * @param flag determination of hit, miss or destroying of ship
+    * @param own enemy or own field
+    */
+    void getUpdateField(std::pair<int, int> point, int flag, bool own);
+
+    /**
+    * @brief getting status of which ones turn it is
+    *
+    * @param turn own or enemy turn
+    */
+    void getYourTurn(bool turn);
+
+    /**
+    * @brief getting ending of game
+    *
+    * @param win own or enemy win
+    */
+    void getWin(bool win);
+
+    /**
+    * @brief getting update of target list on gui for destryed enemy ships
+    *
+    * @param target which enemy ship was destroyed
+    */
+    void getShipDestroyed(int target);
+
+    /**
+    * @brief getting chat message from enemy
+    *
+    * @param message message send
+    */
+    void getChat(QString message);
 
 };
 
