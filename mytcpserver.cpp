@@ -88,8 +88,8 @@ void MyTcpServer::receiveData()
     case 0x03:       //fill in coordinates that where shot at
     {                Shot shot = Shot(0x03, 0x02);
                      //shot._cmd = block[0];
-                     shot._coordinates_x = 1; // new_block[2];
-                     shot._coordinates_y = 1; //new_block[3];
+                     shot._coordinates_x = new_block[2];
+                     shot._coordinates_y = new_block[3];
                      //emitiert das shot angekommen ist
                      emit receiveShot(shot);
     }
@@ -187,7 +187,9 @@ void MyTcpServer::receiveData()
     {              //print in status window unknown message
                    qDebug() << "Unknown Message";
     }
+    break;
     }
+
 
 }
 
