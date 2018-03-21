@@ -88,8 +88,8 @@ void MyTcpServer::receiveData()
     case 0x03:       //fill in coordinates that where shot at
     {                Shot shot = Shot(0x03, 0x02);
                      //shot._cmd = block[0];
-                     shot._coordinates_x = 1; // new_block[2];
-                     shot._coordinates_y = 1; //new_block[3];
+                     shot._coordinates_x = new_block[2];
+                     shot._coordinates_y = new_block[3];
                      //emitiert das shot angekommen ist
                      emit receiveShot(shot);
     }
@@ -109,19 +109,20 @@ void MyTcpServer::receiveData()
 
    case 0x11:       //fill in shot answer
     {
-
         uint8_t status = new_block[2];
         switch(status)
         {
         case 0x00: { //case not hit
                      ShotAnswer shotanswer = ShotAnswer(0x11,0x01);
                      shotanswer._status = new_block[2];
+                     qDebug() << "Antwort schuss mit value :0";
                      emit receiveShotAnswer(shotanswer);
         }
         break;
         case 0x01: {//case hit
                     ShotAnswer shotanswer = ShotAnswer(0x11,0x01);
                     shotanswer._status = new_block[2];
+                    qDebug() << "Antwort schuss mit value :1";
                     emit receiveShotAnswer(shotanswer);
         }
         break;
@@ -134,6 +135,7 @@ void MyTcpServer::receiveData()
                         //creat vector of coordinate pairs of sunken ship;
                         shotanswer._position.push_back(std::make_pair(new_block[3+2*i],new_block[4+2*i]));
                     }
+                    qDebug() << "Antwort schuss mit value :2";
                     emit receiveShotAnswer(shotanswer);
         }
         break;
@@ -146,12 +148,14 @@ void MyTcpServer::receiveData()
                          //creat vector of coordinate pairs of sunken ship;
                          shotanswer._position.push_back(std::make_pair(new_block[3+2*i],new_block[4+2*i]));
                      }
+                     qDebug() << "Antwort schuss mit value :3";
                      emit receiveShotAnswer(shotanswer);
         }
         break;
         case 0x10: {
                     ShotAnswer shotanswer = ShotAnswer(0x11, 0x01);
                     shotanswer._status = new_block[2];
+                    qDebug() << "Antwort schuss mit value :10";
                     emit receiveShotAnswer(shotanswer);
         }
         break;
@@ -169,13 +173,16 @@ void MyTcpServer::receiveData()
         }
         break;
 
-        default:{}
+        default:{
+                    qDebug() << "Default output in case 11";
+        }
             //in statusleiste wasausgeben
         break;
       }
 
     }
     break;
+
     case 0x80: //fill in groupNumber
                      {
                      IdentificationGroup id = IdentificationGroup(0x80, 0x01);
@@ -183,13 +190,15 @@ void MyTcpServer::receiveData()
                      emit receiveGroupId(id);
     }
     break;
+
     default:
     {              //print in status window unknown message
-                   qDebug() << "Unknown Message";
+                   qDebug() << "Default message";
     }
+    break;
     }
-
 }
+
 
 // gui-> click
 void MyTcpServer::disconnectNow()

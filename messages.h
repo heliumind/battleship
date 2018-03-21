@@ -26,12 +26,12 @@ class Parameter: public Message
 public:
     Parameter(uint8_t cmd,uint8_t dlc);
 
-    uint8_t _field_x = 0x10;
-    uint8_t _field_y = 0x10;
-    uint8_t _n_battleship = 0x01;
-    uint8_t _n_cruiser = 0x02;
-    uint8_t _n_destroyer = 0x03;
-    uint8_t _n_submarine = 0x04;
+    uint8_t _field_x = 10;
+    uint8_t _field_y = 10;
+    uint8_t _n_battleship = 1;
+    uint8_t _n_cruiser = 2;
+    uint8_t _n_destroyer = 3;
+    uint8_t _n_submarine = 4;
 
 
     //slot for interface with logic

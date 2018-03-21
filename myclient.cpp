@@ -112,12 +112,14 @@ void MyClient::receiveServerData()
                       emit receiveShotAnswer(shotanswer);
          }
          break;
+
          case 0x01: {//case hit
                      ShotAnswer shotanswer = ShotAnswer(0x11,0x01);
                      shotanswer._status = new_block[2];
                      emit receiveShotAnswer(shotanswer);
          }
          break;
+
          case 0x02:{//case hit and sunk
                      ShotAnswer shotanswer = ShotAnswer(0x11, new_block[1]);
                      shotanswer._status = new_block[2];
@@ -130,6 +132,7 @@ void MyClient::receiveServerData()
                      emit receiveShotAnswer(shotanswer);
          }
          break;
+
          case 0x03:{     //case sunken ship and game end
                       ShotAnswer shotanswer = ShotAnswer(0x11, new_block[1]);
                       shotanswer._status = new_block[2];
@@ -142,12 +145,14 @@ void MyClient::receiveServerData()
                       emit receiveShotAnswer(shotanswer);
          }
          break;
+
          case 0x10: {
                      ShotAnswer shotanswer = ShotAnswer(0x11, 0x01);
                      shotanswer._status = new_block[2];
                      emit receiveShotAnswer(shotanswer);
          }
          break;
+
          case 0x11:{
                      ShotAnswer shotanswer = ShotAnswer(0x11, 0x01);
                      shotanswer._status = new_block[2];
@@ -155,6 +160,7 @@ void MyClient::receiveServerData()
 
          }
          break;
+
          case 0x20:{
                      ShotAnswer shotanswer = ShotAnswer(0x11, 0x01);
                      shotanswer._status = new_block[2];
@@ -162,12 +168,15 @@ void MyClient::receiveServerData()
          }
          break;
 
-         default:{}
+         default:{
+                     qDebug() << "Default Output in case 11";
+         }
              //in statusleiste wasausgeben
          break;
        }
 
      }
+    break;
 
     case 0x80: //fill in groupNumber
                      {
@@ -175,8 +184,9 @@ void MyClient::receiveServerData()
                      id._groupNumber = new_block[2];
                      emit receiveIdentificationGroup(id);
     }
+    break;
 
-    default: qDebug() << "Unknown Message";
+    default: qDebug() << "Default out put ";
     break;
     }
 
@@ -204,9 +214,6 @@ void MyClient::sendShot(Shot &msg)
     quint8 data3 = msg._coordinates_x;
     quint8 data4 = msg._coordinates_y;
     outStream << data1 << data2 << data3 <<data4;
-    QObject::connect(_socket, &QTcpSocket::readyRead,
-              this, &MyClient::receiveServerData);
-
 }
 
 void MyClient::sendAnswerGame(AnswerGame &msg)
@@ -216,9 +223,6 @@ void MyClient::sendAnswerGame(AnswerGame &msg)
     quint8 data2 = msg._dlc;
     quint8 data3 = msg._status;
     outStream << data1 << data2 << data3;
-    QObject::connect(_socket, &QTcpSocket::readyRead,
-              this, &MyClient::receiveServerData);
-
 }
 
 void MyClient::sendShotAnswer(ShotAnswer &msg)
@@ -248,9 +252,6 @@ void MyClient::sendShotAnswer(ShotAnswer &msg)
     {
         outStream<< data1 << data2 << data3;
     }
-    QObject::connect(_socket, &QTcpSocket::readyRead,
-              this, &MyClient::receiveServerData);
-
 }
 
 void MyClient::sendIdentificationGroup(IdentificationGroup &msg)
@@ -261,7 +262,4 @@ void MyClient::sendIdentificationGroup(IdentificationGroup &msg)
     quint8 data3 = msg._groupNumber;
 
     outStream << data1 << data2 << data3;
-    QObject::connect(_socket, &QTcpSocket::readyRead,
-              this, &MyClient::receiveServerData);
-
 }

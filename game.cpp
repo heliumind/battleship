@@ -149,7 +149,7 @@ void Game::sendShotGui(const coordinates point)
 {
     _lastShot = point;
     // Pack point in a message and send to network
-    Shot shot = Shot(0x02, 0x02);
+    Shot shot = Shot(0x03, 0x02);
     uint8_t x = point.first;
     uint8_t y = point.second;
     shot._coordinates_x = x;

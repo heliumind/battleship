@@ -98,6 +98,7 @@ void Gui::getError(position loc, int limit){
     bool flag4 = 0;
 
     std::sort(loc.begin(), loc.end());
+
     int before= loc[0].first;
     int cons= loc[0].second;
 
@@ -109,6 +110,7 @@ void Gui::getError(position loc, int limit){
          if(loc[i].first!=before-i) flag2=1;
          if(loc[i].second!=cons)  flag2=1;
      }
+
      before= loc[0].second;
      cons= loc[0].first;
      for(int i=0 ;i<limit; i++){
