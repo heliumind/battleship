@@ -216,7 +216,7 @@ void Gui::disconnectserver(){
 void Gui::startButton(){
 
     if(_connected==0 || _gamerunning==1) {
-        ui->logic_status->append("Gerade nicht möglich.");
+        // ui->logic_status->append("Gerade nicht möglich.");
     }
     else {
         if(_readyToStart==0){
