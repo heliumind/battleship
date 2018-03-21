@@ -170,7 +170,7 @@
      <rect>
       <x>430</x>
       <y>450</y>
-      <width>311</width>
+      <width>341</width>
       <height>321</height>
      </rect>
     </property>
@@ -238,7 +238,7 @@
       <x>830</x>
       <y>40</y>
       <width>371</width>
-      <height>141</height>
+      <height>182</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="targetlist">

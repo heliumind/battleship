@@ -10,17 +10,14 @@ Gui::Gui(QMainWindow *parent) :
 
     ui->setupUi(this);
 
-    //initialize _map
+    //initialize _maps
     _map        = std::vector< std::vector<Button*> >(10, std::vector< Button* >(10));
     _enemmap    = std::vector< std::vector<Button*> >(10, std::vector< Button* >(10));
-
+    _location =std::vector<std::pair<int, int>>(5);
     setupFields();
 
-    _4count=0;
-    _3count=0;
-    _2count=0;
 
-    //initial server mode
+    //initialize variables
     _server     = 0;
     _client     = 0;
     _connected  = 0;
@@ -30,8 +27,12 @@ Gui::Gui(QMainWindow *parent) :
     _gamerunning= 0;
     _readyToStart=0;
     _waitCoordinates=std::make_pair(-1, -1);
-    _location =std::vector<std::pair<int, int>>(5);
 
+    _4count=0;
+    _3count=0;
+    _2count=0;
+
+    //initialize start buttons enabled
     ui->serverline->setEnabled(0);
     ui->portline->setEnabled(0);
     ui->client_connect->setEnabled(0);
@@ -48,9 +49,13 @@ Gui::Gui(QMainWindow *parent) :
 
     //connect start button
     connect(ui->gameStart, SIGNAL(clicked()), this, SLOT(startButton()));
+
+    //connect extra features
+    connect(ui->chat_send, SIGNAL(clicked()), this, SLOT(chatButton()));
+    _yourName = "Du";
+
+    //start message
     ui->nt_status->append("Bitte den Modus einstellen.");
-
-
 }
 
 Gui::~Gui()
@@ -86,32 +91,32 @@ void Gui::setupFields(){
 
 void Gui::getError(position loc, int limit){
 
+    std::vector<int> xvec(limit);
+    std::vector<int> yvec(limit);
+    for(int i=0; i<limit; i++){
+        xvec.push_back(loc[i].first);
+        yvec.push_back(loc[i].second);
+    }
+    std::sort(xvec.begin(), xvec.begin()+limit-1);
+    std::sort(yvec.begin(), yvec.begin()+limit-1);
     bool flag1 = 0;
     bool flag2 = 0;
-    bool flag3 = 0;
-    bool flag4 = 0;
-    int before= loc[0].first;
-    int cons= loc[0].second;
+    int before= xvec[0];
+    int cons=   yvec[0];
 
-     for(int i=0 ;i<limit; i++){
-         if(loc[i].first!=before+i) flag1=1;
-         if(loc[i].second!=cons)  flag1=1;
+     for(int i=1 ;i<limit; i++){
+         if(xvec[i] != before+i) flag1=1;
+         if(yvec[i] != cons)  flag1=1;
      }
-     for(int i=0 ;i<limit; i++){
-         if(loc[i].first!=before-i) flag2=1;
-         if(loc[i].second!=cons)  flag2=1;
+
+     before= yvec[0];
+     cons=   yvec[0];
+     for(int i=1 ;i<limit; i++){
+         if(yvec[i] != before+i) flag2=1;
+         if(xvec[i] != cons)     flag2=1;
      }
-     before= loc[0].second;
-     cons= loc[0].first;
-     for(int i=0 ;i<limit; i++){
-         if(loc[i].second!=before+i) flag3=1;
-         if(loc[i].first!=cons)     flag3=1;
-     }
-     for(int i=0 ;i<limit; i++){
-         if(loc[i].second!=before-i) flag4=1;
-         if(loc[i].first!=cons)     flag4=1;
-     }
-    if(flag1==0 || flag2==0 || flag3==0 || flag4==0) errorcheck=1;
+
+    if(flag1==0 || flag2==0) errorcheck=1;
     else errorcheck=0;
 }
 
@@ -153,7 +158,7 @@ void Gui::getCoordinates(std::pair<int, int> point){
                                 int y= _location[i].second;
                                 _map[x][y]->setStyleSheet("* { background-color: rgb(125,225,055) }");
                             }
-                            ui->logic_status->append("Setze mittelhalbgroßes Schiff(4 Felder klicken)");
+                            ui->logic_status->append("Setze Kreuzer (4 Felder klicken)");
                             _shipnumber++;
                             errorcheck=0;
                         } else {
@@ -195,8 +200,8 @@ void Gui::getCoordinates(std::pair<int, int> point){
                       int y= _location[i].second;
                       _map[x][y]->setStyleSheet("* { background-color: rgb(125,225,055) }");
                   }
-                  if(_shipnumber== 1) ui->logic_status->append("Setze mittelhalbgroßes Schiff(4 Felder klicken)");
-                  else ui->logic_status->append("Setze mittelhalbgroßes Schiff(3 Felder klicken)");
+                  if(_shipnumber== 1) ui->logic_status->append("Setze Kreuzer (4 Felder klicken)");
+                  else ui->logic_status->append("Setze Zerstörer (3 Felder klicken)");
                   _shipnumber++;
                   errorcheck=0;
               } else {
@@ -234,7 +239,7 @@ void Gui::getCoordinates(std::pair<int, int> point){
                       int y= _location[i].second;
                       _map[x][y]->setStyleSheet("* { background-color: rgb(125,225,055) }");   
                   }
-                  if(_shipnumber< 5) ui->logic_status->append("Setze mittelhalbgroßes Schiff(3 Felder klicken)");
+                  if(_shipnumber< 5) ui->logic_status->append("Setze Zerstörer (3 Felder klicken)");
                   else ui->logic_status->append("Setze U-Boot(2 Felder klicken)");
                   _shipnumber++;
                   errorcheck=0;
@@ -270,7 +275,7 @@ void Gui::getCoordinates(std::pair<int, int> point){
                       int y= _location[i].second;
                       _map[x][y]->setStyleSheet("* { background-color: rgb(125,225,055) }");  
                   }
-                  if(_shipnumber==9) ui->logic_status->append("Bereit um Spielstart. Drücke Start");
+                  if(_shipnumber==9) ui->logic_status->append("Bereit für Spielstart. Drücke Start.");
                   else ui->logic_status->append("Setze U-Boot(2 Felder klicken)");
                   _shipnumber++;
                   _readyToStart=1;
@@ -301,8 +306,8 @@ void Gui::setServer(){
     if(_client==0 && _server==0){
         _server=1;
 
-        QString name = ui->nameline->text();
-        ui->nt_status->append("Gehe in Server Modus als " + name );
+        _yourName = ui->nameline->text();
+        ui->nt_status->append("Gehe in Server Modus als " + _yourName );
         ui->logic_status->append("Suche nach Spieler...");
         ui->serverMode->setEnabled(0);
         ui->clientMode->setEnabled(0);
@@ -318,8 +323,9 @@ void Gui::setClient(){
     if(_server==0 && _client==0){
         _client=1;
 
-        QString name = ui->nameline->text();
-        ui->nt_status->append("Gehe in Client Modus als " + name);
+        _yourName = ui->nameline->text();
+        ui->nt_status->append("Gehe in Client Modus als " + _yourName);
+        ui->logic_status->append("Server und Client auswählen.");
         ui->serverMode->setEnabled(0);
         ui->clientMode->setEnabled(0);
         ui->nameline->setEnabled(0);
@@ -393,22 +399,23 @@ void Gui::connectclient(){
 
             emit connectClient(server, port);
             ui->nt_status->append("Verbinde zum Server " + server + " auf Port " + ui->portline->text() +"...");
+            ui->logic_status->append("Verbinde zum Server...");
         }
     }
 }
 
 void Gui::foundServer(){
     _connected= 1;
-    ui->nt_status->append("Client: Verbunden mit Server.");
+    ui->nt_status->append("Verbunden mit Server.");
     ui->gameStart->setEnabled(1);
-    ui->nt_status->append("Bereit für Spielstart.");
+    ui->logic_status->append("Bereit für Spielstart. Drücke Start.");
 }
 
 void Gui::foundClient(){
     _connected= 1;
     ui->gameStart->setEnabled(1);
     ui->nt_status->append("Spieler gefunden.");
-    ui->nt_status->append("Bereit für Spielstart.");
+    ui->logic_status->append("Bereit für Spielstart. Drücke Start.");
 }
 
 void Gui::disconnectserver(){
@@ -430,7 +437,8 @@ void Gui::disconnectserver(){
                     _enemmap[i][j]->setEnabled(1);
                 }
             }
-            ui->nt_status->append("Client: Getrennt von Server");
+            ui->nt_status->append("Server wir geschlossen.");
+            ui->logic_status->append("Aktuelles Spiel wird beendet...");
         }
     }
 }
@@ -442,11 +450,13 @@ void Gui::getShoot(std::pair<int, int> loc){
     if(_yourturn){
       emit giveShoot(loc);
       _yourturn=0;
-    }
+      ui->logic_status->append("Schieße auf Feld "+ QString::number(loc.first)+", "+ QString::number(loc.second));
+    } else ui->logic_status->append("Schuss nicht möglich. Nicht am Zug!");
 }
 
 void Gui::getYourTurn(bool turn){
     if(turn){
+        ui->logic_status->append("DEIN ZUG!");
         _yourturn=1;
     }
 }
@@ -458,13 +468,14 @@ void Gui::getWin(bool win){
     _readyToStart=0;
 
     if(win)
-    ui->logic_status->append("YOU WIN");
+    ui->logic_status->append("DU GEWINNST \(^ 0 ^)/");
     else
-    ui->logic_status->append("YOU LOOSE");
+    ui->logic_status->append("DU HAST VERLOREN (T . T)");
 }
 
 void Gui::getUpdateField(std::pair<int, int> point, int flag, bool own)
 {
+    ui->logic_status->append("Gegner schießt...");
     if(own){
 
         if(flag== -1){
@@ -482,7 +493,7 @@ void Gui::getUpdateField(std::pair<int, int> point, int flag, bool own)
 
             if(flag== -1){
                 _enemmap[point.first][point.second]->setStyleSheet("* { background-color: rgb(225,125,055) }");
-                ui->logic_status->append("Treffer (^ o ^) ");
+                ui->logic_status->append("Treffer (^ _ ^) ");
             }
             if(flag== -2){
                 _enemmap[point.first][point.second]->setStyleSheet("* { background-color: rgb(025,125,255) }");
@@ -493,6 +504,7 @@ void Gui::getUpdateField(std::pair<int, int> point, int flag, bool own)
 }
 
 void Gui::getShipDestroyed(int target){
+    ui->logic_status->append("Schiff zerstört!");
     switch(target){
     case 5: ui->b50->setStyleSheet("* { background-color: rgb(225,025,055) }");
             ui->b50->setEnabled(0);
@@ -551,4 +563,15 @@ void Gui::getShipDestroyed(int target){
 
     default: ui->logic_status->append("Explosion Error.");
     }
+}
+
+
+void Gui::getChat(QString message){
+    ui->chat_box->append("Gegner: " +message);
+}
+
+void Gui::chatButton(){
+     QString message= ui->chat_line->text();
+     ui->chat_box->append(_yourName +": " + message);
+     emit giveChat(message);
 }

@@ -45,26 +45,35 @@ private:
     //enable enemy field buttons
     bool _yourturn;
 
-    //enable field buttons
+    //enable fieldand start buttons
     bool _setShipMode;
     bool _gamerunning;
     bool _readyToStart;
+
+    //check if ship is legit
     bool errorcheck;
 
+    //counts ships placed
     int _shipCounter;
+    int _shipnumber;
 
+    //counts ships destroyed
     int _4count;
     int _3count;
     int _2count;
 
+    //field buttons
     std::vector< std::vector<Button*> > _map;
     std::vector< std::vector<Button*> > _enemmap;
 
-
+    //location of one ship
     std::vector<std::pair<int, int>> _location;
-    int _shipnumber;
 
+    //coordinate clicked
     std::pair<int, int> _waitCoordinates;
+
+    //extra features
+    QString _yourName;
 
 
 
@@ -76,49 +85,59 @@ private slots:
     void setServer();
     void setClient();
 
-    //connect server
+    //connect and disconnect
     void disconnectserver();
-
-    //connect client
     void connectclient();
 
-    //set ships
+    //set ships or start game
     void startButton();
+
+    //give out coordinate on status field
+    //void output(std::pair<int, int>);
+
+    //placing ships on own field
+    void getCoordinates(std::pair<int, int>);
+
+    //extra features
+    void chatButton();
 
 
 signals:
-    void sendLocation(std::pair<int, int>);
 
-    // logic gui
+    // gui -> logic
     void giveShip(position);
     void giveShoot(coordinates);
     void giveStart();
+    void sendLocation(std::pair<int, int>);
 
     // gui -> control
     void serverMode();
     void clientMode();
 
-    //gui ->network
+    //gui -> network
     void disconnectServer();
     void disconnectClient();
     void connectClient(QString, int);
 
+    //extra features
+    void giveChat(QString);
+
 
 public slots:
-    //void output(std::pair<int, int>);
-    void getCoordinates(std::pair<int, int>);
 
-
-    //connection logic gui
+    //connection logic -> gui
     void getUpdateField(std::pair<int, int> point, int flag, bool own);
     void getShoot(std::pair<int, int>);
     void getYourTurn(bool);
     void getWin(bool);
     void getShipDestroyed(int);
 
-    //connection network gui
+    //connection network -> gui
     void foundClient();
     void foundServer();
+
+    //extra features
+    void getChat(QString);
 
 };
 
