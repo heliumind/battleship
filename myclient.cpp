@@ -49,7 +49,9 @@ void MyClient::receiveServerData()
     while(_socket->bytesAvailable()) {
         inStream >> block;
         new_block.push_back(block);
+        qDebug() <<"------ oben";
         qDebug()<< "Debug ausgabe in while: "<< block;
+        qDebug() << "------unten";
     }
     //read first byte for identification
     uint8_t cmd=new_block[0];
@@ -124,12 +126,17 @@ void MyClient::receiveServerData()
          case 0x02:{//case hit and sunk
                      ShotAnswer shotanswer = ShotAnswer(0x11, new_block[1]);
                      shotanswer._status = new_block[2];
-                     //std::vector<std::pair<uint8_t,uint8_t>> position;
-                     for(int i = 0; i >= shotanswer._dlc-5; i++)
-                     {
-                         //creat vector of coordinate pairs of sunken ship;
-                         shotanswer._position.push_back(std::make_pair(new_block[3+2*i],new_block[4+2*i]));
+                     position _location;
+                     std::vector<uint8_t>::iterator iter;
+                     for (iter += 3; iter != new_block.end(); iter+=2) {
+                         _location.push_back(std::make_pair(*iter, *iter++));
                      }
+                     shotanswer._position = _location;
+//                     for(int i = 0; i >= shotanswer._dlc-3; i++)
+//                     {
+//                         //creat vector of coordinate pairs of sunken ship;
+//                         shotanswer._position.push_back(std::make_pair(new_block[3+2*i],new_block[4+2*i]));
+//                     }
                      emit receiveShotAnswer(shotanswer);
          }
          break;
@@ -137,12 +144,17 @@ void MyClient::receiveServerData()
          case 0x03:{     //case sunken ship and game end
                       ShotAnswer shotanswer = ShotAnswer(0x11, new_block[1]);
                       shotanswer._status = new_block[2];
-                      //std::vector<std::pair<uint8_t,uint8_t>> position;
-                      for(int i = 0; i >= shotanswer._dlc-5; i++)
-                      {
-                          //creat vector of coordinate pairs of sunken ship;
-                          shotanswer._position.push_back(std::make_pair(new_block[3+2*i],new_block[4+2*i]));
+                      position _location;
+                      std::vector<uint8_t>::iterator iter;
+                      for (iter += 3; iter != new_block.end(); iter+=2) {
+                          _location.push_back(std::make_pair(*iter, *iter++));
                       }
+                      shotanswer._position = _location;
+//                      for(int i = 0; i >= shotanswer._dlc-3; i++)
+//                      {
+//                          //creat vector of coordinate pairs of sunken ship;
+//                          shotanswer._position.push_back(std::make_pair(new_block[3+2*i],new_block[4+2*i]));
+//                      }
                       emit receiveShotAnswer(shotanswer);
          }
          break;
