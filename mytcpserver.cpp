@@ -273,7 +273,7 @@ void MyTcpServer::sendShotAnswer(ShotAnswer &msg)
     {
         std::vector<quint8> location = std::vector<quint8>(data2-1);
         for (auto &point: msg._position) {
-            outStream << point.first << point.second;
+            outStream << quint8(point.first) << quint8(point.second);
         }
 
 //            quint8 data4 = msg._position[0].first;
