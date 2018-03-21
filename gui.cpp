@@ -91,32 +91,32 @@ void Gui::setupFields(){
 
 void Gui::getError(position loc, int limit){
 
-    std::vector<int> xvec(limit);
-    std::vector<int> yvec(limit);
-    for(int i=0; i<limit; i++){
-        xvec.push_back(loc[i].first);
-        yvec.push_back(loc[i].second);
-    }
-    std::sort(xvec.begin(), xvec.begin()+limit-1);
-    std::sort(yvec.begin(), yvec.begin()+limit-1);
     bool flag1 = 0;
     bool flag2 = 0;
-    int before= xvec[0];
-    int cons=   yvec[0];
+    bool flag3 = 0;
+    bool flag4 = 0;
+    int before= loc[0].first;
+    int cons= loc[0].second;
 
-     for(int i=1 ;i<limit; i++){
-         if(xvec[i] != before+i) flag1=1;
-         if(yvec[i] != cons)  flag1=1;
+     for(int i=0 ;i<limit; i++){
+         if(loc[i].first!=before+i) flag1=1;
+         if(loc[i].second!=cons)  flag1=1;
      }
-
-     before= yvec[0];
-     cons=   yvec[0];
-     for(int i=1 ;i<limit; i++){
-         if(yvec[i] != before+i) flag2=1;
-         if(xvec[i] != cons)     flag2=1;
+     for(int i=0 ;i<limit; i++){
+         if(loc[i].first!=before-i) flag2=1;
+         if(loc[i].second!=cons)  flag2=1;
      }
-
-    if(flag1==0 || flag2==0) errorcheck=1;
+     before= loc[0].second;
+     cons= loc[0].first;
+     for(int i=0 ;i<limit; i++){
+         if(loc[i].second!=before+i) flag3=1;
+         if(loc[i].first!=cons)     flag3=1;
+     }
+     for(int i=0 ;i<limit; i++){
+         if(loc[i].second!=before-i) flag4=1;
+         if(loc[i].first!=cons)     flag4=1;
+     }
+    if(flag1==0 || flag2==0 || flag3==0 || flag4==0) errorcheck=1;
     else errorcheck=0;
 }
 
