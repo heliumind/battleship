@@ -1,7 +1,7 @@
 #include "game.hpp"
 
 Game::Game(QObject *parent)
-    : QObject(parent), _win(false)
+    : QObject(parent), _lost(false)
 {
     _matchboard = Board();
 }
@@ -13,16 +13,16 @@ Game::Game(Game &&test)
 }
 
 
-bool Game::get_win() const
+bool Game::get_lost() const
 {
-    if (_win == true) {
+    if (_lost == true) {
         std::cout << "Game Won!" << std::endl;
 
     }
     else {
         std::cout << "Still going" << std::endl;
     }
-    return _win;
+    return _lost;
 }
 
 void Game::update_myturn()
@@ -45,20 +45,19 @@ Board Game::getBoard() const
 
 void Game::checkWin()
 {
-    bool win = true;
+    bool lost = true;
     std::vector< std::vector<int> >::iterator row;
     std::vector<int>::iterator col;
     // Iterate through every row
     for (row = _matchboard._board.begin(); row != _matchboard._board.end(); row++) {
         // Iterator through every column
         for (col = row->begin(); col != row->end(); col++) {
-            if (*col != 0 && *col != -1 && *col != -2 && *col != 3) {
-                win = false;
+            if (*col != 0 && *col != -1 && *col != -2 && *col != -3) {
+                lost = false;
             }
         }
     }
-
-    _win = win;
+    _lost = lost;
 }
 
 void Game::receiveGameStart()
@@ -118,9 +117,9 @@ void Game::receiveShot(Shot &msg)
                 break;
         }
         checkWin();
-        if (_win) { // I lost;
+        if (_lost) { // I lost;
             _statuscode = 0x03;
-            emit sendWin(false);
+            emit sendWin(false); // Notify gui we lost
         }
     }
 

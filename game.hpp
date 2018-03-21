@@ -2,6 +2,7 @@
 #define GAME_HPP
 
 #include <QCoreApplication>
+#include <QDebug>
 #include "datatypes.hpp"
 #include "board.hpp"
 #include "ship.hpp"
@@ -14,7 +15,7 @@ public:
     explicit Game(QObject *parent = 0);
     Game(Game&&);
     Game(Game&) = default;
-    bool    get_win() const;
+    bool    get_lost() const;
     void    update_myturn();
     Board   getBoard() const;
     void    checkWin();
@@ -23,7 +24,7 @@ public:
     void    restart();
     Board   _matchboard;
 private:
-    bool    _win;
+    bool    _lost;
 //    Board   _matchboard;
     Board   _enemyboard;
     bool    _myturn;
