@@ -34,6 +34,8 @@ void Control::start()
 void Control::setServer()
 {
     // logic <-> network
+    connect(&myserver, &MyTcpServer::gotClient, &match, &Game::sendParameterNet);
+    // send ID
     connect(&myserver, &MyTcpServer::receiveGameStart, &match, &Game::receiveGameStart);
     connect(&myserver, &MyTcpServer::receiveShot, &match, &Game::receiveShot);
     connect(&myserver, &MyTcpServer::receiveAnswerGame, &match, &Game::receiveAnswerGame);
@@ -58,7 +60,7 @@ void Control::setClient()
 {
 
     // logic <-> network
-    //connect(&myclient, &MyClient::receiveParameter, &match, &Game::re) //
+    connect(&myclient, &MyClient::receiveParameter, &match, &Game::receiveParameter);
     connect(&myclient, &MyClient::receiveGameStart, &match, &Game::receiveGameStart);
     connect(&myclient, &MyClient::receiveShot, &match, &Game::receiveShot);
     connect(&myclient, &MyClient::receiveShotAnswer, &match, &Game::receiveShotAnswer);

@@ -51,12 +51,13 @@ signals:
 
 public slots:
     // logic -> network
-    // void    receiveParameter(Parameter &msg);
+    void    receiveParameter(Parameter &msg);
     void    receiveGameStart();
     void    receiveShot(Shot &msg);
     void    receiveAnswerGame(AnswerGame &msg);
     void    receiveShotAnswer(ShotAnswer &msg);
     // void    receiveGroupId(IdentificationGroup &msg);
+    void    sendParameterNet();
 
     // logic -> gui
     void    start();

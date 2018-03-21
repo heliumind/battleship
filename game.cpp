@@ -60,6 +60,10 @@ void Game::checkWin()
     _lost = lost;
 }
 
+void Game::receiveParameter(Parameter &msg)
+{
+}
+
 void Game::receiveGameStart()
 {
     _startMessage = true;
@@ -202,6 +206,12 @@ void Game::receiveShotAnswer(ShotAnswer &msg)
     }
 
     update_myturn();
+}
+
+void Game::sendParameterNet()
+{
+    Parameter param = Parameter(0x01, 0x06);
+    emit sendParameter(param);
 }
 
 void Game::start()

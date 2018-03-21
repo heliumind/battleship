@@ -482,7 +482,7 @@ void Gui::getShoot(std::pair<int, int> loc){
     if(_yourturn){
       ui->logic_status->append("Schieße auf Feld "+ QString::number(loc.first)+", "+ QString::number(loc.second));
       emit giveShoot(loc);
-    } else ui->logic_status->append("Schuss nicht möglich. Nicht am Zug!");
+    }
 }
 
 //updating current turn
