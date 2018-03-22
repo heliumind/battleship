@@ -45,3 +45,8 @@ IdentificationGroup::IdentificationGroup(uint8_t cmd,uint8_t dlc)
 
 }
 
+Chat::Chat(uint8_t cmd, uint8_t dlc)
+    :Message(cmd, dlc)
+{
+
+}
