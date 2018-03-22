@@ -2,6 +2,9 @@
 <ui version="4.0">
  <class>Gui</class>
  <widget class="QMainWindow" name="Gui">
+  <property name="windowModality">
+   <enum>Qt::NonModal</enum>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -20,7 +23,7 @@
       <x>50</x>
       <y>260</y>
       <width>241</width>
-      <height>271</height>
+      <height>291</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout_2">
@@ -53,6 +56,14 @@
      </item>
      <item row="0" column="1" colspan="2" alignment="Qt::AlignHCenter">
       <widget class="QLabel" name="client">
+       <property name="font">
+        <font>
+         <family>Roboto</family>
+         <pointsize>12</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
        <property name="text">
         <string>CLIENT</string>
        </property>
@@ -67,6 +78,14 @@
      </item>
      <item row="6" column="1" colspan="2" alignment="Qt::AlignHCenter">
       <widget class="QLabel" name="server">
+       <property name="font">
+        <font>
+         <family>Roboto</family>
+         <pointsize>12</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
        <property name="text">
         <string>SERVER</string>
        </property>
@@ -105,6 +124,9 @@
     </layout>
    </widget>
    <widget class="QTextEdit" name="logic_status">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>340</x>
@@ -146,6 +168,14 @@
      </item>
      <item row="0" column="0" colspan="3" alignment="Qt::AlignHCenter">
       <widget class="QLabel" name="mode">
+       <property name="font">
+        <font>
+         <family>Roboto</family>
+         <pointsize>12</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
        <property name="text">
         <string>MODE</string>
        </property>
@@ -177,6 +207,9 @@
      </rect>
     </property>
     <layout class="QGridLayout" name="enemyfield">
+     <property name="sizeConstraint">
+      <enum>QLayout::SetDefaultConstraint</enum>
+     </property>
      <property name="spacing">
       <number>0</number>
      </property>
@@ -192,6 +225,9 @@
      </rect>
     </property>
     <layout class="QGridLayout" name="field">
+     <property name="sizeConstraint">
+      <enum>QLayout::SetDefaultConstraint</enum>
+     </property>
      <property name="spacing">
       <number>0</number>
      </property>
@@ -201,13 +237,18 @@
     <property name="geometry">
      <rect>
       <x>90</x>
-      <y>620</y>
+      <y>630</y>
       <width>161</width>
       <height>81</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+     </font>
+    </property>
     <property name="text">
-     <string>Game Start</string>
+     <string>Spiel Start</string>
     </property>
    </widget>
    <widget class="QWidget" name="gridLayoutWidget_6">
@@ -222,6 +263,14 @@
     <layout class="QGridLayout" name="chat_grid">
      <item row="0" column="0" colspan="3" alignment="Qt::AlignHCenter|Qt::AlignTop">
       <widget class="QLabel" name="chat">
+       <property name="font">
+        <font>
+         <family>Roboto</family>
+         <pointsize>12</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
        <property name="text">
         <string>CHAT</string>
        </property>
@@ -233,7 +282,7 @@
      <item row="2" column="0" colspan="3">
       <widget class="QPushButton" name="chat_send">
        <property name="text">
-        <string>Send</string>
+        <string>Senden</string>
        </property>
       </widget>
      </item>
@@ -255,7 +304,7 @@
       <x>830</x>
       <y>40</y>
       <width>371</width>
-      <height>182</height>
+      <height>189</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="targetlist">
@@ -362,6 +411,14 @@
      </item>
      <item row="0" column="0" colspan="9" alignment="Qt::AlignHCenter">
       <widget class="QLabel" name="target">
+       <property name="font">
+        <font>
+         <family>Roboto</family>
+         <pointsize>12</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
        <property name="text">
         <string>TARGET LIST</string>
        </property>
@@ -615,6 +672,25 @@
       </spacer>
      </item>
     </layout>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>920</x>
+      <y>710</y>
+      <width>261</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Lobster Two</family>
+      <pointsize>36</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Die 6y Flotte</string>
+    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">

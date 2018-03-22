@@ -51,6 +51,8 @@ Gui::Gui(QMainWindow *parent) :
     ui->gameStart->setEnabled(0);
     ui->server_connect->setEnabled(0);
     ui->server_line->setEnabled(0);
+    ui->chat_send->setEnabled(0);
+    ui->chat_line->setEnabled(0);
 
     //connect mode buttons
     connect(ui->serverMode, SIGNAL(clicked()), this, SLOT(setServer()));
@@ -58,7 +60,9 @@ Gui::Gui(QMainWindow *parent) :
 
     //connect network buttons
     connect(ui->client_connect, SIGNAL(clicked()), this, SLOT(connectclient()));
+    connect(ui->portline, SIGNAL(returnPressed()), this, SLOT(connectclient()));
     connect(ui->server_connect, SIGNAL(clicked()), this, SLOT(connectserver()));
+    connect(ui->server_line, SIGNAL(returnPressed()), this, SLOT(connectserver()));
     connect(ui->server_disconnect, SIGNAL(clicked()), this, SLOT(disconnectserver()));
 
     //connect start button
@@ -151,6 +155,8 @@ void Gui::connectclient(){
         if(_connected){
 
             emit disconnectClient();
+            ui->chat_send->setEnabled(0);
+            ui->chat_line->setEnabled(0);
             _connected= 0;
             _yourturn   = 0;
             _setShipMode= 0;
@@ -193,6 +199,8 @@ void Gui::disconnectserver(){
         if(_connected){
 
             emit disconnectServer();
+            ui->chat_send->setEnabled(0);
+            ui->chat_line->setEnabled(0);
             _connected=0;
             _yourturn   = 0;
             _setShipMode= 0;
@@ -254,6 +262,8 @@ void Gui::foundServer(){
     ui->nt_status->append("Verbunden mit Server.");
     ui->gameStart->setEnabled(1);
     ui->logic_status->append("Bereit für Spielstart. Drücke Start....");
+    ui->chat_send->setEnabled(1);
+    ui->chat_line->setEnabled(1);
 }
 
 //connected to client
@@ -262,6 +272,8 @@ void Gui::foundClient(){
     ui->gameStart->setEnabled(1);
     ui->nt_status->append("Spieler gefunden.");
     ui->logic_status->append("Bereit für Spielstart. Drücke Start...");
+    ui->chat_send->setEnabled(1);
+    ui->chat_line->setEnabled(1);
 }
 
 //check for illegal ship placement
@@ -543,14 +555,14 @@ void Gui::getUpdateField(std::pair<int, int> point, int flag, bool own)
 void Gui::getShipDestroyed(int target){
     ui->logic_status->append("Schiff zerstört!");
     switch(target){
-    case 5: ui->b50->setStyleSheet("* { background-color: rgb(225,055,055) }");
+    case 5: ui->b50->setStyleSheet("* { background-color: rgb(255,055,055) }");
         break;
 
     case 4: switch(_4count){
-            case 0: ui->b40->setStyleSheet("* { background-color: rgb(225,055,005) }");
+            case 0: ui->b40->setStyleSheet("* { background-color: rgb(255,055,055) }");
                     _4count++;
                 break;
-            case 1: ui->b41->setStyleSheet("* { background-color: rgb(225,055,005) }");
+            case 1: ui->b41->setStyleSheet("* { background-color: rgb(255,055,055) }");
                     _4count++;
                 break;
             default: ui->logic_status->append("Error: Schiff bereits zerstört.");
@@ -558,13 +570,13 @@ void Gui::getShipDestroyed(int target){
         break;
 
     case 3: switch(_3count){
-        case 0: ui->b30->setStyleSheet("* { background-color: rgb(225,005,055) }");
+        case 0: ui->b30->setStyleSheet("* { background-color: rgb(255,055,055) }");
                 _3count++;
             break;
-        case 1: ui->b31->setStyleSheet("* { background-color: rgb(225,005,055) }");
+        case 1: ui->b31->setStyleSheet("* { background-color: rgb(255,055,055) }");
                 _3count++;
             break;
-        case 2: ui->b32->setStyleSheet("* { background-color: rgb(225,005,055) }");
+        case 2: ui->b32->setStyleSheet("* { background-color: rgb(255,055,055) }");
                 _3count++;
             break;
         default: ui->logic_status->append("Error: Schiff bereits zerstört.");
@@ -572,16 +584,16 @@ void Gui::getShipDestroyed(int target){
         break;
 
     case 2: switch(_2count){
-        case 0: ui->b20->setStyleSheet("* { background-color: rgb(225,005,005) }");
+        case 0: ui->b20->setStyleSheet("* { background-color: rgb(255,055,055) }");
                 _2count++;
             break;
-        case 1: ui->b21->setStyleSheet("* { background-color: rgb(225,005,005) }");
+        case 1: ui->b21->setStyleSheet("* { background-color: rgb(255,055,055) }");
                 _2count++;
             break;
-        case 2: ui->b22->setStyleSheet("* { background-color: rgb(225,005,005) }");
+        case 2: ui->b22->setStyleSheet("* { background-color: rgb(255,055,055) }");
                 _2count++;
             break;
-        case 3: ui->b23->setStyleSheet("* { background-color: rgb(225,005,005) }");
+        case 3: ui->b23->setStyleSheet("* { background-color: rgb(255,055,055) }");
                 _2count++;
             break;
         default: ui->logic_status->append("Error: Schiff bereits zerstört.");
@@ -594,10 +606,12 @@ void Gui::getShipDestroyed(int target){
 
 //sending own message
 void Gui::chatButton(){
+
      QString message= ui->chat_line->text();
      ui->chat_box->append(_yourName +": " + message);
      ui->chat_line->clear();
      emit giveChat(message);
+
 }
 
 //receiving enemy message
