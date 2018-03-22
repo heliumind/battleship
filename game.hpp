@@ -131,6 +131,9 @@ signals:
      */
     void    sendShotAnswer(ShotAnswer &msg);
 
+    /**
+     * @brief emits signal when game parameter does not correspond
+     */
     void    disconnect();
 
 public slots:
