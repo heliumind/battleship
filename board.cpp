@@ -48,32 +48,6 @@ matrix Board::getBoard() const
     return _board;
 }
 
-bool Board::receiveShot(coordinates field)
-{
-    if (!checkCoordinates(field)) {
-        return false;
-    }
-    else {
-        int ID = getField(field);
-        switch(ID) {
-            case 0:
-                std::cout << "Missed!" << std::endl;
-                break;
-            case -2:
-                std::cout << "You have already shot here! (Water)" << std::endl;
-                break;
-            case -1:
-                std::cout << "You have already shot here! (Ship)" << std::endl;
-                break;
-            default:
-                std::cout << "Hit!" << std::endl;
-                setField(field, -1);
-                break;
-        }
-        return true;
-    }
-}
-
 void Board::printBoard()
 {
     std::vector< std::vector<int> >::iterator row;

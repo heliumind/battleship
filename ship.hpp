@@ -1,10 +1,9 @@
 /*******************************************************************************************************************//**
- *	@file		ship.hpp
- *  @brief		This file holds the needed definitions to use the exxampleTask.
-                The canTask does no calculates and only sends dummy messages.
- *  @version 	V1.0
+ *  @file		ship.hpp
+ *  @brief		This file holds the needed definitions to use the ship class.
+ *  @version 		V1.0
  *  @date		22.03.2018
- *	@author		Henry He (Student @ TUM)
+ *  @author		Henry He (Student @ TUM)
  **********************************************************************************************************************/
 
 #ifndef SHIP_HPP
@@ -18,67 +17,74 @@
 
 /**
  * @brief The Ship class
+ *
+ * The Ship class implement the game piece in the battleship game.
  */
 class Ship
 {
 
-friend class Game;
+friend class Game; /// adds Game class as friend to access private members
 
 public:
     /**
      * @brief The shipclass enum
+     *
+     * In addition to a classic ID number a ship has a specifier
+     * in form of its type.
      */
     enum shipclass {Battleship, Cruiser, Destroyer, Submarine};
 
     /**
-     * @brief Ship
+     * @brief Ship constructor
+     *
+     * Empty / default constructor is need for _ships map.
      */
-    Ship(); // empty constructor needed for _ships map
+    Ship();
 
     /**
-     * @brief Ship
-     * @param ID
-     * @param location
+     * @brief Ship constructor
+     * @param ID        unique identification number of a ship instance
+     * @param location  holds the coordinates the ship is located at
      */
     Ship(const int ID, const position &location);
 
     /**
-     * @brief getID
-     * @return
+     * @brief 	_ID getter
+     * @return 	ship's ID
      */
     int getID() const;
 
     /**
-     * @brief getLocation
-     * @return
+     * @brief 	_location getter
+     * @return	ships's location
      */
     position getLocation() const;
 
     /**
-     * @brief getLength
-     * @return
+     * @brief 	Length getter
+     * @return	length of the _location vector
      */
     int getLength() const;
 
 
 private:
     /**
-     * @brief _ID
+     * @brief _ID 	unique integer number to identify the ship
      */
     const int _ID;
 
     /**
-     * @brief _location
+     * @brief _location	holds the coordinates the ship is located at
      */
     const position _location;
 
     /**
-     * @brief _length
+     * @brief _length		holds the ships's length
      */
     const int _length;
 
     /**
-     * @brief _shipclass
+     * @brief _shipclass	holds one of the declared textbased identifier of the ship
      */
     shipclass _shipclass;
 };

@@ -12,19 +12,6 @@ Game::Game(Game &&test)
 
 }
 
-
-bool Game::get_lost() const
-{
-    if (_lost == true) {
-        std::cout << "Game Won!" << std::endl;
-
-    }
-    else {
-        std::cout << "Still going" << std::endl;
-    }
-    return _lost;
-}
-
 void Game::update_myturn()
 {
     bool allow = false;
@@ -36,11 +23,6 @@ void Game::update_myturn()
         _myturn = !_myturn;
         emit sendMyturn(_myturn);
     }
-}
-
-Board Game::getBoard() const
-{
-    return _matchboard;
 }
 
 void Game::checkWin()

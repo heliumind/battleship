@@ -8,7 +8,6 @@ Control::Control(QObject *parent)
 
 void Control::connectGui()
 {
-
     // logic <-> gui
     connect(&gui, &Gui::giveStart, &match, &Game::start);
     connect(&match, &Game::sendMyturn, &gui, &Gui::getYourTurn);
@@ -25,10 +24,6 @@ void Control::connectGui()
 void Control::start()
 {
     gui.show();
-
-    // Modus 1: Server
-
-
 }
 
 void Control::setServer()
@@ -61,7 +56,6 @@ void Control::setServer()
 
 void Control::setClient()
 {
-
     // logic <-> network
     connect(&myclient, &MyClient::receiveParameter, &match, &Game::receiveParameter);
     connect(&myclient, &MyClient::receiveGameStart, &match, &Game::receiveGameStart);
@@ -70,14 +64,11 @@ void Control::setClient()
     connect(&myclient, &MyClient::receiveAnswerGame, &match, &Game::receiveAnswerGame);
     //connect(&myclient, &MyClient::receiveIdentificationGroup, &match, &Game::receiveGroupId);
 
-     // connect every Message#
-
     connect(&match, &Game::sendGameStart, &myclient, &MyClient::sendGameStart);
     connect(&match, &Game::sendShot, &myclient, &MyClient::sendShot);
     connect(&match, &Game::sendAnswerGame, &myclient, &MyClient::sendAnswerGame);
     connect(&match, &Game::sendShotAnswer, &myclient, &MyClient::sendShotAnswer);
     //connect(&match, &Game::, &myclient, &MyClient::sendIdentificationGroup);
-
 
     // gui <-> network
     connect(&gui, &Gui::connectClient, &myclient, &MyClient::ConnectHost);
