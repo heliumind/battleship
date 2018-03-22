@@ -203,6 +203,12 @@ void Game::sendParameterNet()
     emit sendParameter(param);
 }
 
+void Game::receiveGroupID(IdentificationGroup &msg)
+{
+    int enemyname = msg._groupNumber;
+    emit sendName(enemyname);
+}
+
 void Game::start()
 {
    GameStart gamestart = GameStart(0x02, 0x00);

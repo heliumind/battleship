@@ -323,6 +323,7 @@ public slots:
     */
     void getChat(QString message);
 
+    void getName(int name);
 };
 
 #endif // GUI_H

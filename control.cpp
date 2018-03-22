@@ -18,6 +18,7 @@ void Control::connectGui()
     connect(&gui, &Gui::serverMode, this, &Control::setServer);
     connect(&gui, &Gui::clientMode, this, &Control::setClient);
     connect(&match, &Game::shipDestroyed, &gui, &Gui::getShipDestroyed);
+    connect(&match, &Game::sendName, &gui, &Gui::getName);
 }
 
 
