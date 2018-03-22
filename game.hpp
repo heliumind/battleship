@@ -50,15 +50,13 @@ public:
 
     /**
      * @brief updates _myturn depending on who's turn it is
-     *
      * Notifys a change everytime via signal to gui
      */
     void    update_myturn();
 
     /**
      * @brief checks if the running game is over
-     *
-     * Iterates through the own board and checks if it merely consists
+     * Iterates through the own board and checks if it merely consists of 0, -1, -2 or -3.
      */
     void    checkWin();
 
