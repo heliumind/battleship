@@ -9,16 +9,6 @@
 
 MyClient::MyClient(QObject *parent) : QObject(parent)
 {
-//    _socket = new QTcpSocket(this);
-//    _dataStream.setDevice(_socket);
-
-//    //init. sending shot coordinates to server -> senden nur bei funktionsaudfruf durch die logik
-//    connect(_socket, &QTcpSocket::readyRead,
-//            this, &MyClient::sendShotToServer);
-
-    //init. reading from server
-//    connect(_socket, &QTcpSocket::readyRead,
-//            this, &MyClient::receiveServerData);
 
 
 }
@@ -41,7 +31,6 @@ void MyClient::ConnectHost(QString ip, int port)
 //receive shot data from server
 void MyClient::receiveServerData()
 {
-    qDebug() << "In receive";
     QDataStream inStream(_socket);
     quint8 block;
     //creat vector to catch all incoming bytes
@@ -49,14 +38,12 @@ void MyClient::receiveServerData()
     while(_socket->bytesAvailable()) {
         inStream >> block;
         new_block.push_back(block);
-        qDebug() <<"------ oben";
-        qDebug()<< "Debug ausgabe in while: "<< block;
-        qDebug() << "------unten";
+
     }
 
     //read first byte for identification
     uint8_t cmd=new_block[0];
-    qDebug()<< "nach block[0]" << new_block[0];
+
     switch(cmd)
     {
     case 0x01:
@@ -75,8 +62,6 @@ void MyClient::receiveServerData()
 
     case 0x02:
     {                GameStart gamestart = GameStart(0x02, 0x00);
-        qDebug() << "Gamstart received cmd: " << gamestart._cmd;
-        qDebug() << "Gemstart received dlc: " << gamestart._dlc;
                      emit receiveGameStart();
 
     }
@@ -85,11 +70,9 @@ void MyClient::receiveServerData()
 
     case 0x03:       //fill in coordinates that where shot at
     {                Shot shot = Shot(0x03, 0x02);
-                     qDebug() << shot._coordinates_x;
                      //shot._cmd = block[0];
                      shot._coordinates_x = new_block[2];
                      shot._coordinates_y = new_block[3];
-                     qDebug() << shot._coordinates_x;
                      //emitiert das shot angekommen ist
                      emit receiveShot(shot);
     }
@@ -98,7 +81,6 @@ void MyClient::receiveServerData()
     case 0x10:
         {            //fill in anser on gamestart;
                      AnswerGame answergame = AnswerGame(0x10, 0x01);
-                     qDebug() << answergame._status;
                      answergame._status = new_block[2];
                      emit receiveAnswerGame(answergame);
         }
@@ -175,7 +157,7 @@ void MyClient::receiveServerData()
          default:{
                      qDebug() << "Default Output in case 11";
          }
-             //in statusleiste wasausgeben
+
          break;
        }
 
@@ -201,7 +183,7 @@ void MyClient::receiveServerData()
     }
     break;
 
-    default: qDebug() << "Default out put ";
+    default: qDebug() << "Default Output ";
     break;
     }
 
@@ -250,10 +232,8 @@ void MyClient::sendShotAnswer(ShotAnswer &msg)
     if(data3 == 0x02 || data3 == 0x03)
     {
         outStream<< data1 << data2 << data3;
-        qDebug() << "no points: " << msg._position.size();
         for (auto &point: msg._position) {
             outStream << quint8(point.first) << quint8(point.second);
-            qDebug() << "point.first= " <<point.first << "; point.second= " << point.second;
         }
 
     }

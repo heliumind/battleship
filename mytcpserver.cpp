@@ -25,7 +25,7 @@ void MyTcpServer::initServer(int port)
         // whenever a user connects, it will emit signal
         connect(server, &QTcpServer::newConnection,
                 this, &MyTcpServer::newConnection);
-        //sendShot();
+
 
     }
 
@@ -37,10 +37,6 @@ void MyTcpServer::newConnection()
     _stream.setDevice(_socket);
     //w8ing for the next connection
     _socket = server->nextPendingConnection();
-
-    //send shot data to client -> data ready permanent activated
-
-
 
     connect(_socket, &QTcpSocket::readyRead,
              this, &MyTcpServer::receiveData);
@@ -65,12 +61,11 @@ void MyTcpServer::receiveData()
 
         inStream>> block;
         new_block.push_back(block);
-        //qDebug()<<block;
+
     }
 
     //read first byte for identification
     uint8_t cmd = new_block[0];
-    //qDebug()<< "Hier" <<new_block[0];
 
     switch(cmd)
     {
@@ -78,8 +73,6 @@ void MyTcpServer::receiveData()
 
     case 0x02:
     {               GameStart gamestart = GameStart(0x02, 0x00);
-                    qDebug() << "Gamstart cmd: " << gamestart._cmd;
-                    qDebug() << "Gemstart dlc: " << gamestart._dlc;
                     emit receiveGameStart();
 
     }
@@ -87,7 +80,6 @@ void MyTcpServer::receiveData()
 
     case 0x03:       //fill in coordinates that where shot at
     {                Shot shot = Shot(0x03, 0x02);
-                     //shot._cmd = block[0];
                      shot._coordinates_x = new_block[2];
                      shot._coordinates_y = new_block[3];
                      //emitiert das shot angekommen ist
@@ -99,7 +91,6 @@ void MyTcpServer::receiveData()
 
         {            //fill in anser on gamestart;
                      AnswerGame answergame = AnswerGame(0x10, 0x01);
-                     qDebug() << "AnswerGAme:" << answergame._status;
                      // answergame._status = new_block[2];
                      emit receiveAnswerGame(answergame);
 
@@ -115,14 +106,12 @@ void MyTcpServer::receiveData()
         case 0x00: { //case not hit
                      ShotAnswer shotanswer = ShotAnswer(0x11,0x01);
                      shotanswer._status = new_block[2];
-                     qDebug() << "Antwort schuss mit value :0";
                      emit receiveShotAnswer(shotanswer);
         }
         break;
         case 0x01: {//case hit
                     ShotAnswer shotanswer = ShotAnswer(0x11,0x01);
                     shotanswer._status = new_block[2];
-                    qDebug() << "Antwort schuss mit value :1";
                     emit receiveShotAnswer(shotanswer);
         }
         break;
@@ -153,7 +142,6 @@ void MyTcpServer::receiveData()
         case 0x10: {
                     ShotAnswer shotanswer = ShotAnswer(0x11, 0x01);
                     shotanswer._status = new_block[2];
-                    qDebug() << "Antwort schuss mit value :10";
                     emit receiveShotAnswer(shotanswer);
         }
         break;
@@ -212,7 +200,6 @@ void MyTcpServer::receiveData()
 // gui-> click
 void MyTcpServer::disconnectNow()
 {
-    qDebug() << "wir sind bei disconnect";
     emit disconnectGuiServer();
     _socket->close();
 
