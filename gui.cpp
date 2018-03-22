@@ -27,6 +27,7 @@ Gui::Gui(QMainWindow *parent) :
     _gamerunning= 0;
     _readyToStart=0;
     _waitCoordinates=std::make_pair(-1, -1);
+    _enemygroup  =0;
 
     _4count=0;
     _3count=0;
@@ -261,6 +262,7 @@ void Gui::foundServer(){
     _connected= 1;
     ui->nt_status->append("Verbunden mit Server.");
     ui->gameStart->setEnabled(1);
+    ui->logic_status->append("Du bist verbunden mit Gruppe "+ QString::number(_enemygroup)+ ". SHOOT 'EM!!");
     ui->logic_status->append("Bereit für Spielstart. Drücke Start....");
     ui->chat_send->setEnabled(1);
     ui->chat_line->setEnabled(1);
@@ -271,6 +273,7 @@ void Gui::foundClient(){
     _connected= 1;
     ui->gameStart->setEnabled(1);
     ui->nt_status->append("Spieler gefunden.");
+    ui->logic_status->append("Du bist verbunden mit Gruppe "+ QString::number(_enemygroup)+ ". SHOOT 'EM!!");
     ui->logic_status->append("Bereit für Spielstart. Drücke Start...");
     ui->chat_send->setEnabled(1);
     ui->chat_line->setEnabled(1);
@@ -616,6 +619,11 @@ void Gui::chatButton(){
 
 //receiving enemy message
 void Gui::getChat(QString message){
-    ui->chat_box->append("Gegner: " +message);
+    ui->chat_box->append("Gruppe "+ QString::number(_enemygroup) + ": " +message);
+}
+
+//receiving name of enemy group
+void Gui::getName(int name){
+    _enemygroup= name;
 }
 
