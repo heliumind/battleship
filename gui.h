@@ -140,11 +140,6 @@ private:
      * @brief good movie
      */
     QString _yourName;
-    /**
-     * @brief Name of enemy
-     */
-    int _enemygroup;
-
 
 private slots:
     /**
@@ -325,13 +320,6 @@ public slots:
     * @param message Message send
     */
     void getChat(QString message);
-
-    /**
-    * @brief Getting name of enemy group
-    *
-    * @param name Integer for group
-    */
-    void getName(int name);
 };
 
 #endif // GUI_H
