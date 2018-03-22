@@ -85,6 +85,9 @@ signals:
      */
     void    receiveChat(QString text);
 
+    /**
+     * @brief sendparams emits signal when parameter data is received
+     */
     void    sendparams();
 
 public slots:
