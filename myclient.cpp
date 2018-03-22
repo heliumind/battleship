@@ -212,7 +212,7 @@ void MyClient::receiveServerData()
         QString text;
         for(size_t i=2; i<new_block.size(); i++)
         {
-            text = text + new_block[i];
+            text = text + (char)new_block[i];
         }
         emit receiveChat(text);
     }
