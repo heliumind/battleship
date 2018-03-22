@@ -134,17 +134,7 @@ void MyTcpServer::receiveData()
                         _location.push_back(std::make_pair(new_block[i], new_block[i+1]));
                     }
                     shotanswer._position = _location;
-//                    std::vector<uint8_t>::iterator iter;
-//                    for (iter += 3; iter != new_block.end(); iter+=2) {
-//                        _location.push_back(std::make_pair(*iter, *iter++));
-//                    }
-//                    shotanswer._position = _location;
-//                    for(int i = 0; i >= shotanswer._dlc-5; i++)
-//                    {
-//                        //creat vector of coordinate pairs of sunken ship;
-//                        shotanswer._position.push_back(std::make_pair(new_block[3+2*i],new_block[4+2*i]));
-//                    }
-//                    qDebug() << "Antwort schuss mit value :2";
+
                     emit receiveShotAnswer(shotanswer);
         }
         break;
@@ -156,17 +146,7 @@ void MyTcpServer::receiveData()
                          _location.push_back(std::make_pair(new_block[i], new_block[i+1]));
                      }
                      shotanswer._position = _location;
-//                     std::vector<uint8_t>::iterator iter;
-//                     for (iter += 3; iter != new_block.end(); iter+=2) {
-//                         _location.push_back(std::make_pair(*iter, *iter++));
-//                     }
-//                     shotanswer._position = _location;
-//                     for(int i = 0; i >= shotanswer._dlc-5; i++)
-//                     {
-//                         //creat vector of coordinate pairs of sunken ship;
-//                         shotanswer._position.push_back(std::make_pair(new_block[3+2*i],new_block[4+2*i]));
-//                     }
-//                     qDebug() << "Antwort schuss mit value :3";
+
                      emit receiveShotAnswer(shotanswer);
         }
         break;
