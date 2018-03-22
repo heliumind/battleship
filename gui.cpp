@@ -66,6 +66,7 @@ Gui::Gui(QMainWindow *parent) :
 
     //connect extra features
     connect(ui->chat_send, SIGNAL(clicked()), this, SLOT(chatButton()));
+    connect(ui->chat_line, SIGNAL(returnPressed()), this, SLOT(chatButton()));
     _yourName = "Du";
 
     //start message
@@ -595,6 +596,7 @@ void Gui::getShipDestroyed(int target){
 void Gui::chatButton(){
      QString message= ui->chat_line->text();
      ui->chat_box->append(_yourName +": " + message);
+     ui->chat_line->clear();
      emit giveChat(message);
 }
 

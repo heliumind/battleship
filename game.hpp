@@ -19,17 +19,15 @@ public:
     void    update_myturn();
     Board   getBoard() const;
     void    checkWin();
-    // void    receiveShot(const coordinates point);
-    // void    receiveShotAnswer(const uint8_t code, position location);
-    void    restart();
-    Board   _matchboard;
+
 private:
-    bool    _lost;
-//    Board   _matchboard;
-    Board   _enemyboard;
-    bool    _myturn;
-    uint8_t _statuscode;
-    coordinates _lastShot;
+    bool          _lost;
+    Board         _matchboard;
+    Board         _enemyboard;
+    bool          _myturn;
+    uint8_t       _statuscode;
+    coordinates   _lastShot;
+    int           _startmsgcounter;
 
 signals:
     // logic -> gui
