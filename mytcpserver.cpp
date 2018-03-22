@@ -291,8 +291,7 @@ void MyTcpServer::sendGroupId()
     quint8 data1 = 0x80;
     quint8 data2 = 0x01;
     quint8 data3 = 0x06;
-    outStream << data1 << data2 << data3;
-
+    outStream << quint8(data1) << quint8(data2) << quint8(data3);
 }
 
 

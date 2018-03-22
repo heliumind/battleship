@@ -1,7 +1,7 @@
 #include "game.hpp"
 
 Game::Game(QObject *parent)
-    : QObject(parent), _lost(false), _myturn(true), _startmsgcounter()
+    : QObject(parent), _lost(false), _myturn(true), _startmsgcounter(0), _paramcounter(0)
 {
     _matchboard = Board();
 }
@@ -44,23 +44,15 @@ void Game::checkWin()
 
 void Game::receiveParameter(Parameter &msg)
 {
-}
-
-void Game::receiveGameStart()
-{
-    _startmsgcounter++;
-    if(_startmsgcounter == 1) {
-        _myturn = false;
-    }
+    _paramcounter++;
     AnswerGame answergame = AnswerGame(0x10, 0x01);
-    if (_matchboard._maxID == 10) { // All ships set
+    answergame._status = 0x02;
+    if (msg._field_x == 10 && msg._field_y == 10 && msg._n_battleship == 1 && msg._n_cruiser == 2 && msg._n_destroyer == 3 && msg._n_submarine == 4) {
         answergame._status = 0x00;
-        if(_startmsgcounter == 2) {
-            emit sendMyturn(_myturn);
-        }
     }
-    else { // Not all ships are set
-        answergame._status = 0x01;
+
+    if (answergame._status == 0x02) {
+        emit disconnect();
     }
     emit sendAnswerGame(answergame);
 }
@@ -134,9 +126,28 @@ void Game::receiveShot(Shot &msg)
     update_myturn();
 }
 
+void Game::receiveGameStart()
+{
+    _startmsgcounter++;
+    if(_startmsgcounter == 1) {
+        _myturn = false;
+    }
+    AnswerGame answergame = AnswerGame(0x10, 0x01);
+    if (_matchboard._maxID == 10) { // All ships set
+        answergame._status = 0x00;
+        if(_startmsgcounter == 2) {
+            emit sendMyturn(_myturn);
+        }
+    }
+    else { // Not all ships are set
+        answergame._status = 0x01;
+    }
+    emit sendAnswerGame(answergame);
+}
+
 void Game::receiveAnswerGame(AnswerGame &msg)
 {
-    if(msg._status == 0x00 && _startmsgcounter == 2) {
+    if(msg._status == 0x00 && _startmsgcounter == 2 && _paramcounter == 1) {
         emit sendMyturn(_myturn);
         }
 }
@@ -201,13 +212,6 @@ void Game::sendParameterNet()
 {
     Parameter param = Parameter(0x01, 0x06);
     emit sendParameter(param);
-}
-
-void Game::receiveGroupID(IdentificationGroup &msg)
-{
-    int enemyname = msg._groupNumber;
-    qDebug() << "Enemy: Group" << enemyname;
-    emit sendName(enemyname);
 }
 
 void Game::start()

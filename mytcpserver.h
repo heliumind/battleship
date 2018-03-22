@@ -85,6 +85,8 @@ signals:
      */
     void    receiveChat(QString text);
 
+    void    sendparams();
+
 public slots:
     /**
      * @brief newConnection method that listen for a client

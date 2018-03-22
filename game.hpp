@@ -63,9 +63,6 @@ public:
     void    checkWin();
 
 private:
-    /**
-     * @brief
-     */
     bool          _lost;
     Board         _matchboard;
     Board         _enemyboard;
@@ -73,6 +70,7 @@ private:
     uint8_t       _statuscode;
     coordinates   _lastShot;
     int           _startmsgcounter;
+    int           _paramcounter;
 
 signals:
     // logic -> gui
@@ -133,11 +131,7 @@ signals:
      */
     void    sendShotAnswer(ShotAnswer &msg);
 
-    /**
-     * @brief sendName
-     * @param enemyname
-     */
-    void    sendName(int enemyname);
+    void    disconnect();
 
 public slots:
     // logic -> network
@@ -175,12 +169,6 @@ public slots:
      * @brief sends player's desired game parameters to network
      */
     void    sendParameterNet();
-
-    /**
-     * @brief receives the opponents group ID
-     * @param msg contains the opponents group ID
-     */
-    void    receiveGroupID(IdentificationGroup &msg);
 
     // logic -> gui
     /**

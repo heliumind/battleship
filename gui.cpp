@@ -226,7 +226,7 @@ void Gui::disconnectserver(){
 void Gui::startButton(){
 
     if(_connected==0 || _gamerunning==1) {
-        // ui->logic_status->append("Gerade nicht möglich.");
+        ui->logic_status->append("Gerade nicht möglich.");
     }
     else {
         if(_readyToStart==0){
@@ -235,6 +235,7 @@ void Gui::startButton(){
             _setShipMode=1;
             _shipnumber= 0;
             _shipCounter= 0;
+            ui->logic_status->append("Du bist verbunden mit Gruppe "+ QString::number(_enemygroup)+ ". SHOOT 'EM!!");
             ui->logic_status->append("Beginne mit Plazierung der Schiffe.");
             ui->logic_status->append("Setze Schlachtschiff (5 Felder klicken)");
 
@@ -262,7 +263,6 @@ void Gui::foundServer(){
     _connected= 1;
     ui->nt_status->append("Verbunden mit Server.");
     ui->gameStart->setEnabled(1);
-    ui->logic_status->append("Du bist verbunden mit Gruppe "+ QString::number(_enemygroup)+ ". SHOOT 'EM!!");
     ui->logic_status->append("Bereit für Spielstart. Drücke Start....");
     ui->chat_send->setEnabled(1);
     ui->chat_line->setEnabled(1);
@@ -273,7 +273,6 @@ void Gui::foundClient(){
     _connected= 1;
     ui->gameStart->setEnabled(1);
     ui->nt_status->append("Spieler gefunden.");
-    ui->logic_status->append("Du bist verbunden mit Gruppe "+ QString::number(_enemygroup)+ ". SHOOT 'EM!!");
     ui->logic_status->append("Bereit für Spielstart. Drücke Start...");
     ui->chat_send->setEnabled(1);
     ui->chat_line->setEnabled(1);
