@@ -30,7 +30,6 @@ private:
     bool    _myturn;
     uint8_t _statuscode;
     coordinates _lastShot;
-    bool _startMessage;
 
 signals:
     // logic -> gui

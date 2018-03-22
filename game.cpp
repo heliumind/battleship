@@ -1,7 +1,7 @@
 #include "game.hpp"
 
 Game::Game(QObject *parent)
-    : QObject(parent), _lost(false)
+    : QObject(parent), _lost(false), _myturn(true)
 {
     _matchboard = Board();
 }
@@ -66,11 +66,13 @@ void Game::receiveParameter(Parameter &msg)
 
 void Game::receiveGameStart()
 {
-    _startMessage = true;
+    _myturn = false;
     AnswerGame answergame = AnswerGame(0x10, 0x01);
-    answergame._status = 0x01; // Not ready
-    if (_matchboard._maxID == 10) { // Ready
+    if (_matchboard._maxID == 10) { // All ships set
         answergame._status = 0x00;
+    }
+    else { // Not all ships are set
+        answergame._status = 0x01;
     }
     emit sendAnswerGame(answergame);
 }
@@ -146,10 +148,9 @@ void Game::receiveShot(Shot &msg)
 
 void Game::receiveAnswerGame(AnswerGame &msg)
 {
-    if (msg._status == 0x00) {
-        _myturn = true;
+    if(msg._status == 0x00) {
         emit sendMyturn(_myturn);
-    }
+        }
 }
 
 void Game::sendShotGui(const coordinates point)
@@ -217,12 +218,5 @@ void Game::sendParameterNet()
 void Game::start() //
 {
    GameStart gamestart = GameStart(0x02, 0x00);
-   if (!_startMessage) {
-    _startMessage = true;
-    emit sendGameStart(gamestart);
-   }
-   else {
-       _myturn = false;
-       emit sendMyturn(_myturn);
-   }
+   emit sendGameStart(gamestart);
 }
