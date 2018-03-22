@@ -132,15 +132,7 @@ void MyClient::receiveServerData()
                          _location.push_back(std::make_pair(new_block[i], new_block[i+1]));
                      }
                      shotanswer._position = _location;
-//                     for (auto iter = new_block.begin() + 3; iter != new_block.end(); iter+=2) {
-//                         _location.push_back(std::make_pair(*iter, *iter++));
-//                     }
 
-//                     for(int i = 0; i >= shotanswer._dlc-3; i++)
-//                     {
-//                         //creat vector of coordinate pairs of sunken ship;
-//                         shotanswer._position.push_back(std::make_pair(new_block[3+2*i],new_block[4+2*i]));
-//                     }
                      emit receiveShotAnswer(shotanswer);
          }
          break;
@@ -153,16 +145,7 @@ void MyClient::receiveServerData()
                           _location.push_back(std::make_pair(new_block[i], new_block[i+1]));
                       }
                       shotanswer._position = _location;
-//                      std::vector<uint8_t>::iterator iter;
-//                      for (iter += 3; iter != new_block.end(); iter+=2) {
-//                          _location.push_back(std::make_pair(*iter, *iter++));
-//                      }
-//                      shotanswer._position = _location;
-//                      for(int i = 0; i >= shotanswer._dlc-3; i++)
-//                      {
-//                          //creat vector of coordinate pairs of sunken ship;
-//                          shotanswer._position.push_back(std::make_pair(new_block[3+2*i],new_block[4+2*i]));
-//                      }
+
                       emit receiveShotAnswer(shotanswer);
          }
          break;
@@ -210,9 +193,11 @@ void MyClient::receiveServerData()
     case 0x82: //get the text msg
     {
         QString text;
-        for(size_t i=2; i<new_block.size(); i++)
+        for(size_t i=4; i<new_block.size(); i++)
         {
-            text = text + new_block[i];
+
+            text = text + (QChar)new_block[i];
+
         }
         emit receiveChat(text);
     }
@@ -292,11 +277,10 @@ void MyClient::sendIdentificationGroup(IdentificationGroup &msg)
 
 void MyClient::sendChat(QString _text)
 {
-    Chat msg = Chat(0x82, _text.length());
     QDataStream outStream(_socket);
-    quint8 data1 = msg._cmd;
-    quint8 data2 = msg._dlc;
-    QString data3 = msg._text;
+    quint8 data1 = 0x82;
+    quint8 data2 = 0x01;
+    QString data3 = _text;
 
     outStream << data1 << data2 << data3;
 }

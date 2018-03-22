@@ -59,7 +59,7 @@ void MyTcpServer::receiveData()
      QDataStream inStream(_socket);
      quint8 block;
     //creat vector to catch all incoming bytes
-    std::vector<uint8_t> new_block;
+    std::vector<quint8> new_block;
     //save all incoming data into the vector
     while(_socket->bytesAvailable()) {
 
@@ -134,17 +134,7 @@ void MyTcpServer::receiveData()
                         _location.push_back(std::make_pair(new_block[i], new_block[i+1]));
                     }
                     shotanswer._position = _location;
-//                    std::vector<uint8_t>::iterator iter;
-//                    for (iter += 3; iter != new_block.end(); iter+=2) {
-//                        _location.push_back(std::make_pair(*iter, *iter++));
-//                    }
-//                    shotanswer._position = _location;
-//                    for(int i = 0; i >= shotanswer._dlc-5; i++)
-//                    {
-//                        //creat vector of coordinate pairs of sunken ship;
-//                        shotanswer._position.push_back(std::make_pair(new_block[3+2*i],new_block[4+2*i]));
-//                    }
-//                    qDebug() << "Antwort schuss mit value :2";
+
                     emit receiveShotAnswer(shotanswer);
         }
         break;
@@ -156,17 +146,7 @@ void MyTcpServer::receiveData()
                          _location.push_back(std::make_pair(new_block[i], new_block[i+1]));
                      }
                      shotanswer._position = _location;
-//                     std::vector<uint8_t>::iterator iter;
-//                     for (iter += 3; iter != new_block.end(); iter+=2) {
-//                         _location.push_back(std::make_pair(*iter, *iter++));
-//                     }
-//                     shotanswer._position = _location;
-//                     for(int i = 0; i >= shotanswer._dlc-5; i++)
-//                     {
-//                         //creat vector of coordinate pairs of sunken ship;
-//                         shotanswer._position.push_back(std::make_pair(new_block[3+2*i],new_block[4+2*i]));
-//                     }
-//                     qDebug() << "Antwort schuss mit value :3";
+
                      emit receiveShotAnswer(shotanswer);
         }
         break;
@@ -214,7 +194,7 @@ void MyTcpServer::receiveData()
                     QString text;
                     for(size_t i=2; i<new_block.size(); i++)
                     {
-                        text = text + new_block[i];
+                        text = text + (QChar)new_block[i];
                     }
                     emit receiveChat(text);
     }
@@ -318,11 +298,10 @@ void MyTcpServer::sendGroupId(IdentificationGroup &msg)
 
 void MyTcpServer::sendChat(QString _text)
 {
-    Chat msg = Chat(0x82, _text.length());
     QDataStream outStream(_socket);
-    quint8 data1 = msg._cmd;
-    quint8 data2 = msg._dlc;
-    QString data3 = msg._text;
+    quint8 data1 = 0x82;
+    quint8 data2 = 0x01;
+    QString data3 = _text;
 
     outStream << data1 << data2 << data3;
 }
