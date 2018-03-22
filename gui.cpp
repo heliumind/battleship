@@ -234,7 +234,6 @@ void Gui::startButton(){
             _setShipMode=1;
             _shipnumber= 0;
             _shipCounter= 0;
-            ui->logic_status->append("Du bist verbunden mit Gruppe "+ QString::number(_enemygroup)+ ". SHOOT 'EM!!");
             ui->logic_status->append("Beginne mit Plazierung der Schiffe.");
             ui->logic_status->append("Setze Schlachtschiff (5 Felder klicken)");
 
