@@ -5,7 +5,7 @@ Die 6y Flotte is a C++ based implementation of the classic Game [Battleship](htt
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
 ### Prerequisites
 
@@ -52,10 +52,6 @@ Explain what these tests test and why
 ```
 Give an example
 ```
-
-## Deployment
-
-Add additional notes about how to deploy this on a live system
 
 ## Built With
 
