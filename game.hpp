@@ -63,13 +63,44 @@ public:
     void    checkWin();
 
 private:
+    /**
+     * @brief _lost contains whether or not player has lost the game
+     */
     bool          _lost;
+
+    /**
+     * @brief _matchboard contains the player's matchboard
+     */
     Board         _matchboard;
+
+    /**
+     * @brief _enemyboard contains the enemy's matchboard to save our hits
+     */
     Board         _enemyboard;
+
+    /**
+     * @brief _myturn holds whether or not is the player's turn
+     */
     bool          _myturn;
+
+    /**
+     * @brief _statuscode holds the response to an enemy's shot
+     */
     uint8_t       _statuscode;
+
+    /**
+     * @brief _lastShot holds the coordinates of player's last shot
+     */
     coordinates   _lastShot;
+
+    /**
+     * @brief _startmsgcounter counter needed to determine which player starts
+     */
     int           _startmsgcounter;
+
+    /**
+     * @brief _startmsgcounter counter needed to determine which player starts
+     */
     int           _paramcounter;
 
 signals:
