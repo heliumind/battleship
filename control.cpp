@@ -31,19 +31,18 @@ void Control::setServer()
 {
     // logic <-> network
     connect(&myserver, &MyTcpServer::gotClient, &match, &Game::sendParameterNet);
-    // send ID
+    connect(&myserver, &MyTcpServer::gotClient, &myserver, &MyTcpServer::sendGroupId);
     connect(&myserver, &MyTcpServer::receiveGameStart, &match, &Game::receiveGameStart);
     connect(&myserver, &MyTcpServer::receiveShot, &match, &Game::receiveShot);
     connect(&myserver, &MyTcpServer::receiveAnswerGame, &match, &Game::receiveAnswerGame);
     connect(&myserver, &MyTcpServer::receiveShotAnswer, &match, &Game::receiveShotAnswer);
-    // connect(&myserver, &MyTcpServer::receiveGroupId, &match, &Game::receiveGroupId);
+    connect(&myserver, &MyTcpServer::receiveGroupId, &match, &Game::receiveGroupID);
 
     connect(&match, &Game::sendParameter, &myserver, &MyTcpServer::sendParameter);
     connect(&match, &Game::sendGameStart, &myserver, &MyTcpServer::sendGameStart);
     connect(&match, &Game::sendShot, &myserver, &MyTcpServer::sendShot);
     connect(&match, &Game::sendAnswerGame, &myserver, &MyTcpServer::sendAnswerGame);
     connect(&match, &Game::sendShotAnswer, &myserver, &MyTcpServer::sendShotAnswer);
-    // connect(&match, &Game::sendGroupId, &myserver, MyTcpServer::sendGroupId)
 
     // gui <-> network
     connect(&myserver, &MyTcpServer::gotClient, &gui, &Gui::foundClient);
@@ -63,17 +62,17 @@ void Control::setClient()
     connect(&myclient, &MyClient::receiveShot, &match, &Game::receiveShot);
     connect(&myclient, &MyClient::receiveShotAnswer, &match, &Game::receiveShotAnswer);
     connect(&myclient, &MyClient::receiveAnswerGame, &match, &Game::receiveAnswerGame);
-    //connect(&myclient, &MyClient::receiveIdentificationGroup, &match, &Game::receiveGroupId);
+    connect(&myclient, &MyClient::receiveIdentificationGroup, &match, &Game::receiveGroupID);
 
     connect(&match, &Game::sendGameStart, &myclient, &MyClient::sendGameStart);
     connect(&match, &Game::sendShot, &myclient, &MyClient::sendShot);
     connect(&match, &Game::sendAnswerGame, &myclient, &MyClient::sendAnswerGame);
     connect(&match, &Game::sendShotAnswer, &myclient, &MyClient::sendShotAnswer);
-    //connect(&match, &Game::, &myclient, &MyClient::sendIdentificationGroup);
 
     // gui <-> network
     connect(&gui, &Gui::connectClient, &myclient, &MyClient::ConnectHost);
     connect(&myclient, &MyClient::gotServer, &gui, &Gui::foundServer);
+    connect(&myclient, &MyClient::gotServer, &myclient, &MyClient::sendIdentificationGroup);
     connect(&gui, &Gui::disconnectClient, &myclient, &MyClient::disconnectNow);
     //gui -> network
     connect(&gui, &Gui::giveChat, &myclient, &MyClient::sendChat);

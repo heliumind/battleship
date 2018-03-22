@@ -206,6 +206,7 @@ void Game::sendParameterNet()
 void Game::receiveGroupID(IdentificationGroup &msg)
 {
     int enemyname = msg._groupNumber;
+    qDebug() << "Enemy: Group" << enemyname;
     emit sendName(enemyname);
 }
 

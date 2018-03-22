@@ -285,12 +285,12 @@ void MyTcpServer::sendShotAnswer(ShotAnswer &msg)
     }
 }
 
-void MyTcpServer::sendGroupId(IdentificationGroup &msg)
+void MyTcpServer::sendGroupId()
 {
     QDataStream outStream(_socket);
-    quint8 data1 = msg._cmd;
-    quint8 data2 = msg._dlc;
-    quint8 data3 = msg._groupNumber;
+    quint8 data1 = 0x80;
+    quint8 data2 = 0x01;
+    quint8 data3 = 0x06;
     outStream << data1 << data2 << data3;
 
 }

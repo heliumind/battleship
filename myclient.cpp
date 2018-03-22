@@ -263,12 +263,12 @@ void MyClient::sendShotAnswer(ShotAnswer &msg)
     }
 }
 
-void MyClient::sendIdentificationGroup(IdentificationGroup &msg)
+void MyClient::sendIdentificationGroup()
 {
     QDataStream outStream(_socket);
-    quint8 data1 = msg._cmd;
-    quint8 data2 = msg._dlc;
-    quint8 data3 = msg._groupNumber;
+    quint8 data1 = 0x80;
+    quint8 data2 = 0x01;
+    quint8 data3 = 0x06;
 
     outStream << data1 << data2 << data3;
 }

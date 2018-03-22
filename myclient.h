@@ -138,9 +138,8 @@ public slots:
 
     /**
      * @brief sendIdentificationGroup method that sends the group id to the server.
-     * @param msg
      */
-    void sendIdentificationGroup(IdentificationGroup &msg);
+    void sendIdentificationGroup();
 
     /**
      * @brief sendChat  method that sends the chat message to the server.
