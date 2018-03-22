@@ -53,6 +53,9 @@ void Control::setServer()
     connect(&myserver, &MyTcpServer::gotClient, &gui, &Gui::foundClient);
     connect(&gui, &Gui::disconnectServer, &myserver, &MyTcpServer::disconnectNow);
     connect(&gui, &Gui::openServer, &myserver, &MyTcpServer::initServer);
+    //chat gui -> network
+    connect(&gui, &Gui::giveChat, &myserver, &MyTcpServer::sendChat);
+    connect(&myserver, &MyTcpServer::receiveChat, &gui, &Gui::getChat);
 
 }
 
@@ -80,5 +83,8 @@ void Control::setClient()
     connect(&gui, &Gui::connectClient, &myclient, &MyClient::ConnectHost);
     connect(&myclient, &MyClient::gotServer, &gui, &Gui::foundServer);
     connect(&gui, &Gui::disconnectClient, &myclient, &MyClient::disconnectNow);
+    //gui -> network
+    connect(&gui, &Gui::giveChat, &myclient, &MyClient::sendChat);
+    connect(&myclient, &MyClient::receiveChat, &gui, &Gui::getChat);
 
 }

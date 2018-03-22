@@ -33,6 +33,9 @@ signals:
     void    receiveShotAnswer(ShotAnswer &msg);
     void    receiveGroupId(IdentificationGroup &msg);
 
+    //network -> gui
+    void    receiveChat(QString text);
+
 public slots:
     void newConnection();
     void receiveData();
@@ -47,6 +50,9 @@ public slots:
     void    sendAnswerGame(AnswerGame &msg);
     void    sendShotAnswer(ShotAnswer &msg);
     void    sendGroupId(IdentificationGroup &msg);
+
+    //gui ->network
+    void    sendChat(QString _text);
 
 private:
     QTcpServer *server;

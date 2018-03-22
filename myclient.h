@@ -34,6 +34,9 @@ signals:
     void gotServer();
     void disconnectGui();
 
+    //network -> gui
+    void receiveChat(QString text);
+
 
 public slots:
     void ConnectHost(QString ip, int port);
@@ -46,6 +49,9 @@ public slots:
     void sendAnswerGame(AnswerGame &msg);
     void sendShotAnswer(ShotAnswer &msg);
     void sendIdentificationGroup(IdentificationGroup &msg);
+
+    //gui -> network
+    void sendChat(QString _text);
 
 public:
     QTcpSocket *_socket;

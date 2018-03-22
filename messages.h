@@ -98,5 +98,12 @@ public:
 
 };
 
+class Chat: public Message
+{
+public:
+    Chat(uint8_t _cmd, uint8_t _dlc);
+
+    QString _text;
+};
 
 #endif // SHOT_H
