@@ -1,6 +1,16 @@
+/*******************************************************************************************************************//**
+ *	@file		gui.h
+ *  @brief		This file holds the data regarding gui and interface.
+ *  @version 	V1.0
+ *  @date		22.03.2018
+ *	@author		Niklas Schwarz (Student @ TUM)
+ **********************************************************************************************************************/
 #ifndef GUI_H
 #define GUI_H
 
+/********************************************//**
+ * Includes
+ ***********************************************/
 #include <QWidget>
 #include <QMainWindow>
 #include <QPushButton>
@@ -22,6 +32,9 @@ namespace Ui {
 class Gui;
 }
 
+/**
+ * @brief The Gui
+ */
 class Gui : public QMainWindow
 {
     Q_OBJECT
@@ -31,107 +44,164 @@ public:
     ~Gui();
 
     /**
-    * @brief check for correct ship placement
+    * @brief Check if ship is correctly placed on own map
     *
-    * @param loc vector of placed fields
-    * @param limit size of ship
+    * Sorts incoming vector of selected coordinates of ship parts
+    * and checks if all coordinates are all connected, in a straight line
+    * and not colliding with another ship
+    *
+    * @param loc Vector of chosen coordinates for the ship (vector of x-y-coordiante pairs)
+    * @param limit Size of ship
     */
     void getError(position loc, int limit);
 
 private:
     Ui::Gui *ui;
 
-    //server or client mode
+    /**
+     * @brief Etering game as Server
+     */
     bool _server;
+    /**
+     * @brief Entering game as Client
+     */
     bool _client;
 
-    //connected or disconnected
+    /**
+     * @brief Being connected to Server or Client
+     */
     bool _connected;
 
-    //enable enemy field buttons
+    /**
+     * @brief Enable enemy field during own turn
+     */
     bool _yourturn;
 
-    //enable fieldand start buttons
+    /**
+     * @brief Enable own field to set ships
+     */
     bool _setShipMode;
+    /**
+     * @brief Game is currently running
+     */
     bool _gamerunning;
+    /**
+     * @brief All ships set and ready to start game
+     */
     bool _readyToStart;
 
-    //check if ship is legit
+    /**
+     * @brief Ship was placed correctly
+     */
     bool errorcheck;
 
-    //counts ships placed
+    /**
+     * @brief Counts already placed ships
+     */
     int _shipCounter;
+    /**
+     * @brief Counts already placed parts of one ship
+     */
     int _shipnumber;
 
-    //counts ships destroyed
+    /**
+     * @brief Counts how many enemy cruiser are destroyed
+     */
     int _4count;
+    /**
+     * @brief Counts how many enemy destroyers are destroyed
+     */
     int _3count;
+    /**
+     * @brief Counts how many enemy submarines are destroyed
+     */
     int _2count;
 
-    //field buttons
+    /**
+     * @brief Button field for player ships (10*10 matrix with x-y-coordinate pairs)
+     */
     std::vector< std::vector<Button*> > _map;
+    /**
+     * @brief Button field for enemy player ships (10*10 matrix with x-y-coordinate pairs)
+     */
     std::vector< std::vector<Button*> > _enemmap;
 
-    //location of one ship
+    /**
+     * @brief Vector of x and y coordinates with location of last placed ship
+     */
     std::vector<std::pair<int, int>> _location;
 
-    //coordinate clicked
+    /**
+     * @brief x and y Coordinate of last clicked field
+     */
     std::pair<int, int> _waitCoordinates;
 
-    //user name
+    /**
+     * @brief good movie
+     */
     QString _yourName;
 
 
 
 private slots:
     /**
-    * @brief set up two fields
+    * @brief set up two 10*10 button fields for player and enemy
+    *
+    * Generates 100 buttons in two grid-layouts which are initialized
+    * with a coordinate each
     */
     void setupFields();
 
     /**
-    * @brief initial Mode Server
+    * @brief Setting up gui for actiong as Server
     */
     void setServer();
     /**
-    * @brief initial Mode Server
+    * @brief Setting up gui for acting as Client
     */
     void setClient();
 
     /**
-    * @brief connect and disconnect of client
+    * @brief Searching as Client for a Server or disconnect from it
     */
     void connectclient();
     /**
-    * @brief creating server
+    * @brief Creating a Server
     */
     void connectserver();
     /**
-    * @brief closing of server
+    * @brief Closing the Server
     */
     void disconnectserver();
 
     /**
-    * @brief start setting ships or start game
+    * @brief Start setting ships or start the game after all ships being placed
     */
     void startButton();
 
     /**
-    * @brief placing ships on own field
+    * @brief Placing ships on own field
     *
-    * @param coordinate of ship part
+    * Runs through switch cases to document the number of complete ships placed
+    * and runs through even more swithc cases to collect
+    * the number of currently selected coordinates for ship-parts
+    * #switchception
+    * Also checks for correct placement of each ship and sends the location of
+    * all complete ships to the Logic
+    *
+    * @param point Coordinate of ship part
     */
     void getCoordinates(std::pair<int, int> point);
 
     /**
-    * @brief choosing are target field where to shoot
+    * @brief Choosing are target field where to shoot on players turn
     *
-    * @param loc coordinates of target field
+    * @param loc Coordinates of target field
     */
     void getShoot(std::pair<int, int> loc);
 
     /**
-    * @brief message for chat
+    * @brief Message for chat
     */
     void chatButton();
 
@@ -140,60 +210,60 @@ signals:
 
     // gui -> logic
     /**
-    * @brief sending full ship to logic
+    * @brief Sending a complete ship to logic
     *
-    * @param position location of ship
+    * @param position Location of ship (vector of coordinates)
     */
     void giveShip(position);
     /**
-    * @brief sending target of own shot to logic
+    * @brief Sending target of own shot to logic
     *
-    * @param coordinates coordinate of shot
+    * @param coordinates Coordinate (x and y) of shot
     */
     void giveShoot(coordinates);
     /**
-    * @brief sending ready to start game to logic
+    * @brief Sending all ships placed and ready to start game to logic
     */
     void giveStart();
 
     // gui -> control
     /**
-    * @brief sending Server Mode
+    * @brief Sending that player acts as Server
     */
     void serverMode();
     /**
-    * @brief sending Client Mode
+    * @brief Sending that player acts as Client
     */
     void clientMode();
 
     //gui -> network
     /**
-    * @brief sending open the Server
+    * @brief Sending open the Server on selected port to Network
     *
-    * @param port where server is opened
+    * @param int Port where server is opened
     */
     void openServer(int);
 
     /**
-    * @brief sending closing server to network
+    * @brief Sending closing the Server to Network
     */
     void disconnectServer();
     /**
-    * @brief sending disconnection from server to network
+    * @brief Sending disconnection from Server to Network
     */
     void disconnectClient();
     /**
-    * @brief sending connection to server to network
+    * @brief Sending connection to Server to Network
     *
     * @param QString IP adress of server
-    * @param int port
+    * @param int Port
     */
     void connectClient(QString, int);
 
     /**
-    * @brief sending chat message to network
+    * @brief Sending chat message to Network
     *
-    * @param QString message
+    * @param QString Message
     */
     void giveChat(QString);
 
@@ -201,50 +271,55 @@ signals:
 public slots:
     //connection network -> gui
     /**
-    * @brief getting client succesfully connected to server
+    * @brief Getting Client succesfully connected to Server
     */
     void foundServer();
 
     /**
-    * @brief getting client succesfully connected to server
+    * @brief Getting Server succesfully connected to Client
     */
     void foundClient();
 
     //connection logic -> gui
     /**
-    * @brief getting enemy shot on own field
+    * @brief Getting enemy or own shot on field
     *
-    * @param point coordinate where own or enemy shot hit
-    * @param flag determination of hit, miss or destroying of ship
-    * @param own enemy or own field
+    * Updates both field (with colors red, blue or black) to see where hits land and wheter they
+    * hit, miss or destroy an enemy ship
+    *
+    * @param point Coordinate where own or enemy shot hit
+    * @param flag Determination of hit, miss or destroying of ship
+    * @param own Enemy or own field to update
     */
     void getUpdateField(std::pair<int, int> point, int flag, bool own);
 
     /**
-    * @brief getting status of which ones turn it is
+    * @brief Getting status of which ones turn it is
     *
-    * @param turn own or enemy turn
+    * @param turn Own or enemy turn
     */
     void getYourTurn(bool turn);
 
     /**
-    * @brief getting ending of game
+    * @brief Getting ending of game
     *
-    * @param win own or enemy win
+    * @param win Own or enemy win
     */
     void getWin(bool win);
 
     /**
-    * @brief getting update of target list on gui for destryed enemy ships
+    * @brief Getting update of target list on gui for destryed enemy ships
     *
-    * @param target which enemy ship was destroyed
+    * Changes color of enemy ship on target list from green to red if a ship is destroyed
+    *
+    * @param target Which enemy ship was destroyed
     */
     void getShipDestroyed(int target);
 
     /**
-    * @brief getting chat message from enemy
+    * @brief Getting chat message from enemy
     *
-    * @param message message send
+    * @param message Message send
     */
     void getChat(QString message);
 

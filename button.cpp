@@ -9,14 +9,10 @@ Button::Button(  int x,  int y)
 {
 
     connect(this, &QPushButton::clicked, this, &Button::forwardClick);
-    _used=0;
-
 }
 
-
+//sending out coordinates
 void Button::forwardClick(){
 
     emit Button::clickedPos(_point);
-  //  emit clickedPos(std::make_pair(0,0 ));
-
 }
