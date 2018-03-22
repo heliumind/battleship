@@ -2,56 +2,34 @@
 
 Die 6y Flotte is a C++ based implementation of the classic Game [Battleship](https://de.wikipedia.org/wiki/Schiffe_versenken). It features a GUI written in QT5 and online playing capabilities.
 
-
+![Demo](screenshot.png)
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
-### Prerequisites
-
-What things you need to install the software and how to install them
-
-```
-Give examples
-```
-
 ### Installing
 
-A step by step series of examples that tell you have to get a development env running
-
-Say what the step will be
-
-```
-Give the example
-```
-
-And repeat
-
-```
-until finished
-```
-
-End with an example of getting some data out of the system or using it for a little demo
+You will need [QT Creator](https://www.qt.io/download) to build a playable Application Window on your chosen OS.
 
 ## How to play
 
-Explain how to run the automated tests for this system
-
 ### Find an opponent
 
-Explain what these tests test and why
+Select if you want to start the game as Server or Client by clicking either the **ServerMode** or **ClientMode** button.
+
+* **ServerMode**: Enter port number in the port field and click on *lauschen*
+* **ClientMode**: Enter IP address and port number of the server you want to connect with.
 
 ```
-Give an example
+IP address: localhost
+Port: 1234
 ```
+Set your ships by clicking the desired button in the bottom matchboard.
+Hit **Spiel Start** to start the game.
 
 ### Start to sink those sheeeps!
 
-Explain what these tests test and why
-
-```
-Give an example
-```
+Click fields on the top matchboard you want to shot!
 
 ## Built With
 
