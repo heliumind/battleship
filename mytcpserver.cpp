@@ -192,7 +192,7 @@ void MyTcpServer::receiveData()
     case 0x82: //get the text msg
     {
                     QString text;
-                    for(size_t i=2; i<new_block.size(); i++)
+                    for(size_t i=6; i<new_block.size(); i++)
                     {
                         text = text + (QChar)new_block[i];
                     }
