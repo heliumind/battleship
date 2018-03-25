@@ -29,17 +29,13 @@ Hit **Spiel Start** to start the game.
 
 ### Start to sink those sheeeps!
 
-Click fields on the top matchboard you want to shot!
+Click fields on the top matchboard you want to shoot!
 
 ## Built With
 
 * [C++](http://www.dropwizard.io/1.0.2/docs/) - Used for backend
 * [QT5](https://www.qt.io/) - The GUI and TCP toolkit used
 
-
-## Versioning
-
-We use [Gitlab](https://gitlab.com/) for versioning.
 
 ## Authors
 
